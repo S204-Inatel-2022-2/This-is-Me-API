@@ -8,6 +8,12 @@ group = 'br.inatel'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -21,6 +27,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools:2.7.3'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// Add these START
+bootJar {
+	archiveClassifier.set('boot')
+}
+
+jar {
+	archiveClassifier.set('')
 }
 
 tasks.named('test') {
