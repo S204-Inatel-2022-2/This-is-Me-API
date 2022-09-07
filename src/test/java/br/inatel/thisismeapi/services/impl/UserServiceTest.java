@@ -3,22 +3,18 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.controllers.exceptions.PasswordVerifyIsNotEqualException;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.repositories.UserRepository;
-import com.mongodb.client.MongoClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 public class UserServiceTest {
 
     @InjectMocks

@@ -1,6 +1,5 @@
 package br.inatel.thisismeapi.controllers;
 
-import br.inatel.thisismeapi.controllers.exceptions.PasswordVerifyIsNotEqualException;
 import br.inatel.thisismeapi.controllers.wrapper.CreateUserContext;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.services.UserService;
@@ -23,7 +22,6 @@ public class UserController {
     public void createNewAccount(@RequestBody CreateUserContext createUserContext) {
         User user = createUserContext.getUser();
         String verifyPassword = createUserContext.getVerifyPassword();
-        System.out.println("passou aqui 1");
         User res = userService.createNewAccount(user.getEmail(), user.getPassword(), verifyPassword);
     }
 }
