@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.controllers.wrapper;
 
 import br.inatel.thisismeapi.entities.User;
+import com.google.gson.Gson;
 
 public class CreateUserContext {
     private User user;
@@ -20,5 +21,11 @@ public class CreateUserContext {
 
     public void setVerifyPassword(String verifyPassword) {
         this.verifyPassword = verifyPassword;
+    }
+
+    public String toStringJson(){
+        String jsonInString = new Gson().toJson(this);
+        return jsonInString;
+        //JSONObject mJSONObject = new JSONObject(jsonInString);
     }
 }
