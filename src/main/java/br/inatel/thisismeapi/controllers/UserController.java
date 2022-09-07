@@ -21,9 +21,6 @@ public class UserController {
         User user = createUserContext.getUser();
         String verifyPassword = createUserContext.getVerifyPassword();
 
-        if (!user.getPassword().equals(verifyPassword))
-            throw new PasswordVerifyIsNotEqualException("As Senhas não coincidem!");
-
-        userService.createNewAccount(user.getEmail(), user.getPassword());
+        userService.createNewAccount(user.getEmail(), user.getPassword(), verifyPassword);
     }
 }
