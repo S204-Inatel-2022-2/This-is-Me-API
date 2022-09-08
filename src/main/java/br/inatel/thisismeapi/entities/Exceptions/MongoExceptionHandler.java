@@ -15,15 +15,15 @@ import java.time.Instant;
 public class MongoExceptionHandler {
 
     @ExceptionHandler(MongoWriteException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<StandardError> mongoWrite(MongoWriteException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
-        error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
-        error.setError("Unprocessable Entity");
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setError(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(this.getMsgByMongoErrorMessage(e.getMessage()));
         error.setPath(request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(error);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     private String getMsgByMongoErrorMessage(String msg) {

@@ -77,7 +77,7 @@ public class UserControllerTests {
                         .contentType("application/json")
                         .content(createUserContext.toStringJson())
                 )
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 
@@ -97,7 +97,6 @@ public class UserControllerTests {
                         .contentType("application/json")
                         .content(createUserContext.toStringJson())
                 )
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
-
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
