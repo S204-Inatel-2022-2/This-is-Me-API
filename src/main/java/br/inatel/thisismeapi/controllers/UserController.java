@@ -20,8 +20,32 @@ public class UserController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public void createNewAccount(@RequestBody CreateUserContext createUserContext) {
-        User user = createUserContext.getUser();
-        String verifyPassword = createUserContext.getVerifyPassword();
-        User res = userService.createNewAccount(user.getEmail(), user.getPassword(), verifyPassword);
+        User user = new User(
+                createUserContext.getUserDtoInput().getEmail(), createUserContext.getUserDtoInput().getPassword());
+
+        user.verifyPassword(createUserContext.getVerifyPassword());
+
+        userService.createNewAccount(user);
     }
+/*
+    @GetMapping
+    public @ResponseBody User login(@RequestBody UserDtoInput userDtoInput){
+        User user = new User();
+        User userLogged = userService.login(user);
+
+
+
+        String jwt = JWT.create()
+                .withClaim("idUserLogged", user.getId())
+                .sign(Algorithm.HMAC256("${KEY}"));
+        Cookie cookie = new Cookie("token", jwt);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60 * 30); // 30 segundos
+        response.addCookie(cookie);
+
+        return userLogged;
+    }
+
+ */
 }
