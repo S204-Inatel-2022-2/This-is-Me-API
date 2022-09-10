@@ -6,5 +6,5 @@ public interface UserService {
 
     User createNewAccount(User user);
 
-    //User login(User user);
+    String login(User user);
 }
