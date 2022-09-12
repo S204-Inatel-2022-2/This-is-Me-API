@@ -53,3 +53,8 @@ jobs:
           name: jacoco-badge
           path: .github/badges/jacoco.svg
 
+      - name: Upload JaCoCo site
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-site
+          path: build/reports/jacoco/test/html
