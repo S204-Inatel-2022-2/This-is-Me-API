@@ -23,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{github.head_ref}}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -54,8 +56,6 @@ jobs:
           path: .github/badges/jacoco.svg
 
       - name: Commit the badge (if it changed
-        with:
-          ref: ${{github.head_ref}}
         run: |
           if [[ `git status --porcelain` ]]; then
             git config --global user.name gabrielhs
