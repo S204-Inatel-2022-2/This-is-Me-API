@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.entities;
 import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
@@ -25,6 +26,9 @@ public class User {
     @NotNull()
     @NotBlank()
     private String password;
+
+    @DBRef
+    private Character character;
 
     public User() {
     }
@@ -71,6 +75,14 @@ public class User {
     public void verifyPassword(String verifyPassword) {
         if (!password.equals(verifyPassword))
             throw new ConstraintViolationException("As Senhas não coincidem!");
+    }
+
+    public Character getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(Character character) {
+        this.character = character;
     }
 
     @Override

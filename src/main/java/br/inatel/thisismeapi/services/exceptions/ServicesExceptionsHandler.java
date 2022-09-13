@@ -14,14 +14,14 @@ import java.time.Instant;
 @ControllerAdvice
 public class ServicesExceptionsHandler {
     @ExceptionHandler(UnregisteredUserException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<StandardError> unregisteredUserException(UnregisteredUserException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
-        error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setError(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        error.setStatus(HttpStatus.UNAUTHORIZED.value());
+        error.setError(HttpStatus.UNAUTHORIZED.getReasonPhrase());
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }

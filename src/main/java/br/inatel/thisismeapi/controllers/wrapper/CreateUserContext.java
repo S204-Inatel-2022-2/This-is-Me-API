@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class CreateUserContext implements Serializable {
     private UserDtoInput userDtoInput;
     private String verifyPassword;
+    private String characterName;
 
     public UserDtoInput getUserDtoInput() {
         return userDtoInput;
@@ -23,6 +24,14 @@ public class CreateUserContext implements Serializable {
 
     public void setVerifyPassword(String verifyPassword) {
         this.verifyPassword = verifyPassword;
+    }
+
+    public String getCharacterName() {
+        return characterName;
+    }
+
+    public void setCharacterName(String characterName) {
+        this.characterName = characterName;
     }
 
     public String toStringJson(){

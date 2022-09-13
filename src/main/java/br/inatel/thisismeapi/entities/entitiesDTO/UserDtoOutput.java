@@ -1,9 +1,22 @@
 package br.inatel.thisismeapi.entities.entitiesDTO;
 
 
+import br.inatel.thisismeapi.entities.Character;
+
 public class UserDtoOutput {
 
     String id;
+
+    Character character;
+    public Character getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(Character character) {
+        this.character = character;
+    }
+
+
 
     public UserDtoOutput() {
     }
