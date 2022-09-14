@@ -8,6 +8,15 @@ public class UserDtoOutput {
     String id;
 
     Character character;
+
+    public UserDtoOutput() {
+    }
+
+    public UserDtoOutput(String id, Character character) {
+        this.id = id;
+        this.character = character;
+    }
+
     public Character getCharacter() {
         return character;
     }
@@ -18,8 +27,7 @@ public class UserDtoOutput {
 
 
 
-    public UserDtoOutput() {
-    }
+
 
     public UserDtoOutput(String id) {
         this.id = id;

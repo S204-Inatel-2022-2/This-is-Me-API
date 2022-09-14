@@ -25,6 +25,7 @@ public class SecurityConfig  {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/admin/**", "/admin").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user/register").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated()
@@ -40,3 +41,5 @@ public class SecurityConfig  {
     }
 
 }
+
+

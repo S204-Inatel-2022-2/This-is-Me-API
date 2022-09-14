@@ -7,18 +7,16 @@ import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
 import br.inatel.thisismeapi.repositories.UserRepository;
-import br.inatel.thisismeapi.services.UserService;
-import br.inatel.thisismeapi.services.exceptions.UnregisteredUserException;
+import br.inatel.thisismeapi.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private UserRepository userRepository;
@@ -29,8 +27,6 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
     @Override
     public User createNewAccount(User user, String characterName) {
         if (!(user.getPassword().length() >= 5 && user.getPassword().length() <= 30))
@@ -39,6 +35,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
         List<Roles> roles = new ArrayList<>();
+        roles.add(new Roles(RoleName.ROLE_ADMIN));
         roles.add(new Roles(RoleName.ROLE_USER));
 
         user.setRoles(roles);
@@ -49,21 +46,4 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
-
-
-    @Override
-    public User login(User user) {
-        Optional<User> opUser = userRepository.findByEmail(user.getEmail());
-
-        if (opUser.isEmpty())
-            throw new UnregisteredUserException("Nenhuma conta cadastrada com esse email!");
-
-
-        if (!passwordEncoder().matches(user.getPassword(), opUser.get().getPassword()))
-            throw new ConstraintViolationException("Senha incorreta!");
-
-        return opUser.get();
-    }
-
-
 }

@@ -5,10 +5,6 @@ import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.entities.entitiesDTO.UserDtoInput;
 import br.inatel.thisismeapi.entities.entitiesDTO.UserDtoOutput;
 import br.inatel.thisismeapi.services.UserService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.EntityResponse;
-import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,14 +41,13 @@ public class UserController {
     }
 
 
-
     @PostMapping("/login")
-    public ResponseEntity<UserDtoOutput> login(@RequestBody UserDtoInput userDtoInput, HttpServletResponse response, HttpServletRequest request){
+    public ResponseEntity<UserDtoOutput> login(@RequestBody UserDtoInput userDtoInput, HttpServletResponse response, HttpServletRequest request) {
         User user = new User(userDtoInput.getEmail(), userDtoInput.getPassword());
-        String id = userService.login(user);
+        User userLogged = userService.login(user);
 
-        UserDtoOutput userDtoOutput = new UserDtoOutput(id);
-
+        UserDtoOutput userDtoOutput = new UserDtoOutput(userLogged.getId(), userLogged.getCharacter());
+        /*
         String jwt;
         Cookie token = WebUtils.getCookie(request, "token");
 
@@ -83,10 +75,17 @@ public class UserController {
             }
         }
 
+         */
 
 
         //return ResponseEntity.ok().header(jwt).body(userDtoOutput);
         return ResponseEntity.ok().body(userDtoOutput);
+    }
+
+
+    @GetMapping("/helloUser")
+    public String helloUser() {
+        return "Hello User";
     }
 
 }

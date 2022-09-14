@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Document
 public class User {
@@ -29,6 +30,8 @@ public class User {
 
     @DBRef
     private Character character;
+
+    private List<Roles> roles;
 
     public User() {
     }
@@ -83,6 +86,14 @@ public class User {
 
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
     }
 
     @Override
