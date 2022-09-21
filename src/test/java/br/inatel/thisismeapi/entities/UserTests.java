@@ -1,15 +1,26 @@
 package br.inatel.thisismeapi.entities;
 
+import br.inatel.thisismeapi.enums.RoleName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = {ServletWebServerFactoryAutoConfiguration.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
+@ActiveProfiles("dev")
 public class UserTests {
 
     @Test
-    public void testIfTwoUsersWithTheSameEmailIsTheSameUser(){
+    public void testIfTwoUsersWithTheSameEmailIsTheSameUser() {
         String email = "test@email.com";
         User user1 = new User();
         user1.setEmail(email);
@@ -22,7 +33,7 @@ public class UserTests {
 
 
     @Test
-    public void testIfTwoUsersWithDifferentEmailIsNotTheSameUser(){
+    public void testIfTwoUsersWithDifferentEmailIsNotTheSameUser() {
         String email = "test@email.com";
         User user1 = new User();
         user1.setEmail(email);
@@ -34,7 +45,7 @@ public class UserTests {
     }
 
     @Test
-    public void testIfIstheSameObjectUser(){
+    public void testIfIstheSameObjectUser() {
         String email = "test@email.com";
         User user1 = new User();
         user1.setEmail(email);
@@ -45,7 +56,7 @@ public class UserTests {
     }
 
     @Test
-    public void testUserIsNotEqualNull(){
+    public void testUserIsNotEqualNull() {
         String email = "test@email.com";
         User user1 = new User();
         user1.setEmail(email);
@@ -56,7 +67,7 @@ public class UserTests {
     }
 
     @Test
-    public void testUserIsNotEqualADifferentObject(){
+    public void testUserIsNotEqualADifferentObject() {
         String email = "test@email.com";
         User user1 = new User();
         user1.setEmail(email);
@@ -70,9 +81,23 @@ public class UserTests {
     }
 
     @Test
-    public void testUserGetId(){
+    public void testUserGetId() {
         User user1 = new User();
 
         assertNull(user1.getId());
+    }
+
+    @Test
+    public void testUserGetRoles() {
+        User user = new User();
+        List<Roles> roles = new ArrayList<>();
+        roles.add(new Roles(RoleName.ROLE_USER));
+        roles.add(new Roles(RoleName.ROLE_ADMIN));
+        user.setRoles(roles);
+
+        List<Roles> actual = user.getRoles();
+        assertEquals(roles.get(0).getRoleName(), actual.get(0).getRoleName());
+        assertEquals(roles.get(1).getRoleName(), actual.get(1).getRoleName());
+        assertEquals(roles, actual);
     }
 }

@@ -1,5 +1,7 @@
 package br.inatel.thisismeapi.entities;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +18,8 @@ public class Character {
     private Long level;
 
     public Character() {
+        this.xp = 0L;
+        this.level = 0L;
     }
 
     public Character(String characterName) {
@@ -40,15 +44,21 @@ public class Character {
         return xp;
     }
 
-    public void setXp(Long xp) {
-        this.xp = xp;
+    public void addXp(Long xp) {
+        this.xp += xp;
     }
 
     public Long getLevel() {
         return level;
     }
 
-    public void setLevel(Long level) {
-        this.level = level;
+    public void upLevel() {
+        this.level++;
+    }
+
+
+    public String toStringJson() {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        return gson.toJson(this);
     }
 }

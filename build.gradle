@@ -37,9 +37,13 @@ dependencies {
 
 
 
+
 	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc
-	testImplementation 'io.rest-assured:spring-mock-mvc:5.1.1'
+	testImplementation 'io.rest-assured:spring-mock-mvc:5.2.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
+	testImplementation 'org.springframework.security:spring-security-test:5.7.3'
+
 }
 
 // Add these START
@@ -63,6 +67,16 @@ jacocoTestReport{
 		csv.enabled true
 		html.enabled true
 	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"br/inatel/thisismeapi/TimeApplication.class",
+					"br/inatel/thisismeapi/config/ValidationConfig.class",
+					"br/inatel/thisismeapi/security/**"
+			])
+		}))
+	}
+
 	finalizedBy jacocoTestCoverageVerification
 }
 

@@ -4,7 +4,6 @@ import br.inatel.thisismeapi.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserPrincipal implements UserDetails {
@@ -13,14 +12,13 @@ public class UserPrincipal implements UserDetails {
 
     Collection<? extends GrantedAuthority> grantedAuthorities;
 
-
     public UserPrincipal(User user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.grantedAuthorities = user.getRoles();
     }
 
-    public static UserPrincipal create(User user){
+    public static UserPrincipal create(User user) {
         return new UserPrincipal(user);
     }
 
@@ -58,4 +56,5 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

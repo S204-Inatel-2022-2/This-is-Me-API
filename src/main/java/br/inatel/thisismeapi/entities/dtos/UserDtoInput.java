@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.entities.entitiesDTO;
+package br.inatel.thisismeapi.entities.dtos;
 
 
 public class UserDtoInput {

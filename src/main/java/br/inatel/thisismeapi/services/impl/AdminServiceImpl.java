@@ -8,6 +8,8 @@ import br.inatel.thisismeapi.enums.RoleName;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.AdminService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -27,8 +30,11 @@ public class AdminServiceImpl implements AdminService {
     private BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     public User createNewAccount(User user, String characterName) {
+
+        LOGGER.info("m=createNewAccount, type=Admin, email={}, characterName={}", user.getEmail(), characterName);
         if (!(user.getPassword().length() >= 5 && user.getPassword().length() <= 30))
             throw new ConstraintViolationException("Senha deve conter no minimo 5 e no maximo 30 digitos!");
 
@@ -37,11 +43,9 @@ public class AdminServiceImpl implements AdminService {
         List<Roles> roles = new ArrayList<>();
         roles.add(new Roles(RoleName.ROLE_ADMIN));
         roles.add(new Roles(RoleName.ROLE_USER));
-
         user.setRoles(roles);
 
         Character character = characterRepository.save(new Character(characterName));
-
         user.setCharacter(character);
 
         return userRepository.save(user);

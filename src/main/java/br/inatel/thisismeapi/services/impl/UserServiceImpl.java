@@ -9,16 +9,23 @@ import br.inatel.thisismeapi.repositories.CharacterRepository;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.UserService;
 import br.inatel.thisismeapi.services.exceptions.UnregisteredUserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -33,6 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNewAccount(User user, String characterName) {
+
+        LOGGER.info("m=createNewAccount, type=User , email={}, characterName={}", user.getEmail(), characterName);
         if (!(user.getPassword().length() >= 5 && user.getPassword().length() <= 30))
             throw new ConstraintViolationException("Senha deve conter no minimo 5 e no maximo 30 digitos!");
 
@@ -40,30 +49,25 @@ public class UserServiceImpl implements UserService {
 
         List<Roles> roles = new ArrayList<>();
         roles.add(new Roles(RoleName.ROLE_USER));
-
         user.setRoles(roles);
 
         Character character = characterRepository.save(new Character(characterName));
-
         user.setCharacter(character);
 
         return userRepository.save(user);
     }
 
-
     @Override
-    public User login(User user) {
-        Optional<User> opUser = userRepository.findByEmail(user.getEmail());
+    public Character findCharacterByEmail(String email) {
+        LOGGER.info("m=findCharacterByEmail, email={}", email);
+        Optional<User> opUser = userRepository.findByEmail(email);
 
         if (opUser.isEmpty())
             throw new UnregisteredUserException("Nenhuma conta cadastrada com esse email!");
 
-
-        if (!passwordEncoder().matches(user.getPassword(), opUser.get().getPassword()))
-            throw new ConstraintViolationException("Senha incorreta!");
-
-        return opUser.get();
+        LOGGER.info("m=findCharacterByEmail, email={}, characterName={}",
+                email, opUser.get().getCharacter().getCharacterName());
+        return opUser.get().getCharacter();
     }
-
 
 }

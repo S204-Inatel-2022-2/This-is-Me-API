@@ -1,6 +1,6 @@
 package br.inatel.thisismeapi.controllers.wrapper;
 
-import br.inatel.thisismeapi.entities.entitiesDTO.UserDtoInput;
+import br.inatel.thisismeapi.entities.dtos.UserDtoInput;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class CreateUserContext implements Serializable {
         this.characterName = characterName;
     }
 
-    public String toStringJson(){
+    public String toStringJson() {
         return new Gson().toJson(this);
     }
 }

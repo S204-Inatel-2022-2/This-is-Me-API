@@ -1,0 +1,299 @@
+package br.inatel.thisismeapi.controllers;
+
+
+import br.inatel.thisismeapi.consts.EmailConst;
+import br.inatel.thisismeapi.consts.PasswordConst;
+import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
+import br.inatel.thisismeapi.controllers.wrapper.CreateUserContext;
+import br.inatel.thisismeapi.entities.Character;
+import br.inatel.thisismeapi.entities.Roles;
+import br.inatel.thisismeapi.entities.User;
+import br.inatel.thisismeapi.entities.dtos.UserDtoInput;
+import br.inatel.thisismeapi.enums.RoleName;
+import br.inatel.thisismeapi.services.impl.UserServiceImpl;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(value = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@ActiveProfiles("dev")
+public class UserControllerTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext wac;
+
+
+    @MockBean
+    private UserServiceImpl userService;
+
+    private final static String ENDPOINT_REGISTER = "/user/register";
+
+
+    @Test
+    public void testCreateNewAccountSuccess() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput(EmailConst.EMAIL_MAX_LENGHT_255, "12345");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+        User user = new User(userDtoInput.getEmail(), userDtoInput.getPassword());
+
+        when(userService.createNewAccount(any(User.class), any(String.class))).thenReturn(user);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+
+    @Test
+    public void testCreateNewAccountWithEmailInvalid() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@", "12345");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Email inválido!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithEmailNull() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput(null, "12345");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Email não pode ser nulo!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithEmailWithSpacesOnly() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("    ", "12345");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Email não pode ser deixado em branco!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithEmailWithMoreMaxCharacter() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput(EmailConst.EMAIL_WITH_MORE_MAX_LENGHT_256, "12345");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Email não pode ser ter mais de 255 digitos!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithVerifyPasswordDifferent() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@email.com", "12345");
+        String verifyPassword = "123";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("As Senhas não coincidem!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithPasswordWithLessThanMinNumberOfCharacters() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@email.com", PasswordConst.PASSWORD_WITH_LESS_MIN_LENGHT_4);
+        String verifyPassword = PasswordConst.PASSWORD_WITH_LESS_MIN_LENGHT_4;
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        when(userService.createNewAccount(any(User.class), any(String.class)))
+                .thenThrow(ConstraintViolationException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testCreateNewAccountWithPasswordWithMoreThanMaxNumberOfCharacters() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@email.com", PasswordConst.PASSWORD_WITH_MORE_MAX_LENGHT_31);
+        String verifyPassword = PasswordConst.PASSWORD_WITH_MORE_MAX_LENGHT_31;
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        when(userService.createNewAccount(any(User.class), any(String.class)))
+                .thenThrow(ConstraintViolationException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testCreateNewAccountWithPasswordNull() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@email.com", null);
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Senha não pode ser nula!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testCreateNewAccountWithPasswordWithSpacesOnly() throws Exception {
+        UserDtoInput userDtoInput = new UserDtoInput("test@email.com", "    ");
+        String verifyPassword = "12345";
+        CreateUserContext createUserContext = new CreateUserContext();
+        createUserContext.setUserDtoInput(userDtoInput);
+        createUserContext.setVerifyPassword(verifyPassword);
+        createUserContext.setCharacterName("Character Name");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(createUserContext.toStringJson())
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Senha não pode ser deixada em branco!", Objects.requireNonNull(result.getResolvedException()).getMessage());
+    }
+
+    @Test
+    public void testHelloUser() throws Exception {
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/helloUser")
+                        .accept("application/json")
+                        .contentType("application/json")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        assertEquals("Hello User", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testGetCharacterSuccess() throws Exception {
+
+        Character character = new Character();
+        String email = "test@test.com";
+        character.setCharacterName("Character Name");
+
+        List<Roles> rolesList = new ArrayList<>();
+        rolesList.add(new Roles(RoleName.ROLE_ADMIN));
+        rolesList.add(new Roles(RoleName.ROLE_USER));
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken("admin@admin.com", null, rolesList);
+
+        when(userService.findCharacterByEmail(any(String.class))).thenReturn(character);
+
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/getCharacter")
+                        .principal(auth)
+                        .accept("application/json")
+                        .sessionAttr(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, auth)
+                        .contentType("application/json")
+                        .content("")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        assertEquals(character.toStringJson(), result.getResponse().getContentAsString());
+    }
+}

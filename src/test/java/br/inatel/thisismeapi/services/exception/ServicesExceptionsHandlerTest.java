@@ -1,11 +1,8 @@
-package br.inatel.thisismeapi.entities.exceptions;
+package br.inatel.thisismeapi.services.exception;
 
 import br.inatel.thisismeapi.config.exceptions.StandardError;
-import br.inatel.thisismeapi.entities.Exceptions.MongoExceptionHandler;
-import com.mongodb.MongoWriteException;
-import com.mongodb.ServerAddress;
-import com.mongodb.WriteError;
-import org.bson.BsonDocument;
+import br.inatel.thisismeapi.services.exceptions.ServicesExceptionsHandler;
+import br.inatel.thisismeapi.services.exceptions.UnregisteredUserException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,25 +22,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
 @ActiveProfiles("dev")
-public class MongoExceptionHandlerTests {
+public class ServicesExceptionsHandlerTest {
 
     @Mock
     HttpServletRequest httpServletRequest;
 
     @Test
-    public void testWriteErrorE11000() {
-        WriteError writeError = new WriteError(11000, "code=11000, message=", new BsonDocument());
-        MongoWriteException mongoWriteException = new MongoWriteException(writeError, new ServerAddress());
-        MongoExceptionHandler mongoExceptionHandler = new MongoExceptionHandler();
+    public void testUnregisteredUserException() {
+        UnregisteredUserException unregisteredUserException = new UnregisteredUserException("msg");
+        ServicesExceptionsHandler servicesExceptionsHandler = new ServicesExceptionsHandler();
+        ResponseEntity<StandardError> responseEntity = servicesExceptionsHandler.unregisteredUserException(
+                unregisteredUserException, httpServletRequest);
 
-        ResponseEntity<StandardError> responseEntity = mongoExceptionHandler
-                .mongoWrite(mongoWriteException, httpServletRequest);
-
-        assertEquals("Já Existe uma conta cadastrada com esse e-mail!",
+        assertEquals("msg",
                 Objects.requireNonNull(responseEntity.getBody()).getMessage());
-        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
-        assertEquals(HttpStatus.CONFLICT.getReasonPhrase(), responseEntity.getBody().getError());
-        assertEquals(HttpStatus.CONFLICT.value(), responseEntity.getBody().getStatus());
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), responseEntity.getBody().getError());
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getBody().getStatus());
 
     }
 }

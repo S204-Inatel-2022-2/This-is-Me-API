@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.entities;
 
 import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -29,6 +30,7 @@ public class User {
     private String password;
 
     @DBRef
+    @JsonIgnore
     private Character character;
 
     private List<Roles> roles;
