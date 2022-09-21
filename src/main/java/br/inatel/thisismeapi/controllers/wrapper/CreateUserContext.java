@@ -1,6 +1,6 @@
 package br.inatel.thisismeapi.controllers.wrapper;
 
-import br.inatel.thisismeapi.entities.entitiesDTO.UserDtoInput;
+import br.inatel.thisismeapi.entities.dtos.UserDtoInput;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class CreateUserContext implements Serializable {
     private UserDtoInput userDtoInput;
     private String verifyPassword;
+    private String characterName;
 
     public UserDtoInput getUserDtoInput() {
         return userDtoInput;
@@ -25,7 +26,15 @@ public class CreateUserContext implements Serializable {
         this.verifyPassword = verifyPassword;
     }
 
-    public String toStringJson(){
+    public String getCharacterName() {
+        return characterName;
+    }
+
+    public void setCharacterName(String characterName) {
+        this.characterName = characterName;
+    }
+
+    public String toStringJson() {
         return new Gson().toJson(this);
     }
 }

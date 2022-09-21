@@ -2,6 +2,8 @@ package br.inatel.thisismeapi.entities.Exceptions;
 
 import br.inatel.thisismeapi.config.exceptions.StandardError;
 import com.mongodb.MongoWriteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,9 +16,12 @@ import java.time.Instant;
 @ControllerAdvice
 public class MongoExceptionHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoExceptionHandler.class);
+
     @ExceptionHandler(MongoWriteException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<StandardError> mongoWrite(MongoWriteException e, HttpServletRequest request) {
+        LOGGER.info("m=mongoWrite, statusCode={}, msg={}", HttpStatus.BAD_REQUEST.value(), e.getMessage());
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
         error.setStatus(HttpStatus.CONFLICT.value());

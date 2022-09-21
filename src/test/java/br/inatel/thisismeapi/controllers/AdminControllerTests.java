@@ -5,21 +5,15 @@ import br.inatel.thisismeapi.consts.EmailConst;
 import br.inatel.thisismeapi.consts.PasswordConst;
 import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
 import br.inatel.thisismeapi.controllers.wrapper.CreateUserContext;
-import br.inatel.thisismeapi.entities.Character;
-import br.inatel.thisismeapi.entities.Roles;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.entities.dtos.UserDtoInput;
-import br.inatel.thisismeapi.enums.RoleName;
-import br.inatel.thisismeapi.services.impl.UserServiceImpl;
+import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,8 +22,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,9 +29,9 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(value = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@WebMvcTest(value = AdminController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ActiveProfiles("dev")
-public class UserControllerTests {
+public class AdminControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,11 +39,10 @@ public class UserControllerTests {
     @Autowired
     private WebApplicationContext wac;
 
-
     @MockBean
-    private UserServiceImpl userService;
+    private AdminServiceImpl adminService;
 
-    private final static String ENDPOINT_REGISTER = "/user/register";
+    private final static String ENDPOINT_REGISTER = "/admin/register";
 
 
     @Test
@@ -64,7 +55,7 @@ public class UserControllerTests {
         createUserContext.setCharacterName("Character Name");
         User user = new User(userDtoInput.getEmail(), userDtoInput.getPassword());
 
-        when(userService.createNewAccount(any(User.class), any(String.class))).thenReturn(user);
+        when(adminService.createNewAccount(any(User.class), any(String.class))).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
                         .accept("application/json")
@@ -184,7 +175,7 @@ public class UserControllerTests {
         createUserContext.setVerifyPassword(verifyPassword);
         createUserContext.setCharacterName("Character Name");
 
-        when(userService.createNewAccount(any(User.class), any(String.class)))
+        when(adminService.createNewAccount(any(User.class), any(String.class)))
                 .thenThrow(ConstraintViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
@@ -204,7 +195,7 @@ public class UserControllerTests {
         createUserContext.setVerifyPassword(verifyPassword);
         createUserContext.setCharacterName("Character Name");
 
-        when(userService.createNewAccount(any(User.class), any(String.class)))
+        when(adminService.createNewAccount(any(User.class), any(String.class)))
                 .thenThrow(ConstraintViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
@@ -258,42 +249,13 @@ public class UserControllerTests {
     @Test
     public void testHelloUser() throws Exception {
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/helloUser")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/admin/helloAdmin")
                         .accept("application/json")
                         .contentType("application/json")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        assertEquals("Hello User", result.getResponse().getContentAsString());
-    }
-
-    @Test
-    public void testGetCharacterSuccess() throws Exception {
-
-        Character character = new Character();
-        String email = "test@test.com";
-        character.setCharacterName("Character Name");
-
-        List<Roles> rolesList = new ArrayList<>();
-        rolesList.add(new Roles(RoleName.ROLE_ADMIN));
-        rolesList.add(new Roles(RoleName.ROLE_USER));
-        Authentication auth =
-                new UsernamePasswordAuthenticationToken("admin@admin.com", null, rolesList);
-
-        when(userService.findCharacterByEmail(any(String.class))).thenReturn(character);
-
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/getCharacter")
-                        .principal(auth)
-                        .accept("application/json")
-                        .sessionAttr(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, auth)
-                        .contentType("application/json")
-                        .content("")
-                )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        assertEquals(character.toStringJson(), result.getResponse().getContentAsString());
+        assertEquals("Hello Admin", result.getResponse().getContentAsString());
     }
 }

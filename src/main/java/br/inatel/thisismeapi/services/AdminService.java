@@ -1,11 +1,7 @@
 package br.inatel.thisismeapi.services;
 
-import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
 
-public interface UserService {
-
+public interface AdminService {
     User createNewAccount(User user, String characterName);
-
-    Character findCharacterByEmail(String email);
 }
