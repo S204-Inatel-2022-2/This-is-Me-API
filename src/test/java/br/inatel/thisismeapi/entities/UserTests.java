@@ -100,4 +100,12 @@ public class UserTests {
         assertEquals(roles.get(1).getRoleName(), actual.get(1).getRoleName());
         assertEquals(roles, actual);
     }
+
+    @Test
+    public void testGetTokenResetPassword() {
+        User user = new User();
+        user.setTokenResetPassword("123456");
+
+        assertEquals("123456", user.getTokenResetPassword());
+    }
 }

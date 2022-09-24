@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/admin/**", "/admin", "/swagger-ui/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/user/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/reset/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated()
                 .and()

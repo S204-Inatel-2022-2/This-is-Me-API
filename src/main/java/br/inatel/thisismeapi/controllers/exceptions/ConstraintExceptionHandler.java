@@ -23,7 +23,7 @@ public class ConstraintExceptionHandler {
 
         LOGGER.info("m=constraintViolation, statusCode={}, msg={}", HttpStatus.BAD_REQUEST.value(), e.getMessage());
         StandardError error = new StandardError();
-        error.setTimestamp(Instant.now());
+        error.setTimestamp(Instant.now().toString());
         error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setError(HttpStatus.BAD_REQUEST.getReasonPhrase());
         error.setMessage(e.getMessage());

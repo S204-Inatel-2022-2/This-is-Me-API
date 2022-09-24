@@ -1,10 +1,9 @@
 package br.inatel.thisismeapi.config.exceptions;
 
 import java.io.Serializable;
-import java.time.Instant;
 
 public class StandardError implements Serializable {
-    private Instant timestamp;
+    private String timestamp;
     private Integer status;
     private String error;
     private String message;
@@ -13,11 +12,11 @@ public class StandardError implements Serializable {
     public StandardError() {
     }
 
-    public Instant getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

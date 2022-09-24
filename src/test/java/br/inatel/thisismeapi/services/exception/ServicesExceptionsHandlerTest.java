@@ -2,9 +2,12 @@ package br.inatel.thisismeapi.services.exception;
 
 import br.inatel.thisismeapi.config.exceptions.StandardError;
 import br.inatel.thisismeapi.services.exceptions.ServicesExceptionsHandler;
+import br.inatel.thisismeapi.services.exceptions.TokenExpiredException;
+import br.inatel.thisismeapi.services.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.services.exceptions.UnregisteredUserException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
@@ -24,13 +27,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("dev")
 public class ServicesExceptionsHandlerTest {
 
+    private ServicesExceptionsHandler servicesExceptionsHandler;
+
     @Mock
     HttpServletRequest httpServletRequest;
+
+    public ServicesExceptionsHandlerTest() {
+        servicesExceptionsHandler = new ServicesExceptionsHandler();
+    }
 
     @Test
     public void testUnregisteredUserException() {
         UnregisteredUserException unregisteredUserException = new UnregisteredUserException("msg");
-        ServicesExceptionsHandler servicesExceptionsHandler = new ServicesExceptionsHandler();
+
         ResponseEntity<StandardError> responseEntity = servicesExceptionsHandler.unregisteredUserException(
                 unregisteredUserException, httpServletRequest);
 
@@ -39,6 +48,28 @@ public class ServicesExceptionsHandlerTest {
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
         assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), responseEntity.getBody().getError());
         assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getBody().getStatus());
+    }
 
+    @Test
+    public void testTokenHandlerException() {
+
+        TokenExpiredException tokenHandler = new TokenExpiredException("msg");
+        ResponseEntity<StandardError> responseEntity = servicesExceptionsHandler.tokenHandler(
+                tokenHandler, httpServletRequest);
+
+        assertEquals("msg",
+                Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), responseEntity.getBody().getError());
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), responseEntity.getBody().getStatus());
+    }
+
+    @Test
+    public void testNewInstanceOfTokenInvalidException() {
+
+        TokenInvalidException exception = new TokenInvalidException("msg");
+
+        assertEquals(TokenInvalidException.class, exception.getClass());
+        assertEquals("msg", exception.getMessage());
     }
 }
