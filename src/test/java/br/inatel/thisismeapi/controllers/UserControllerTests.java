@@ -1,16 +1,25 @@
 package br.inatel.thisismeapi.controllers;
 
 
-import br.inatel.thisismeapi.consts.EmailConst;
-import br.inatel.thisismeapi.consts.PasswordConst;
+import br.inatel.thisismeapi.classestotest.EmailConst;
+import br.inatel.thisismeapi.classestotest.PasswordConst;
+import br.inatel.thisismeapi.config.exceptions.StandardError;
 import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
 import br.inatel.thisismeapi.controllers.wrapper.CreateUserContext;
+import br.inatel.thisismeapi.controllers.wrapper.ResetPasswordContext;
+import br.inatel.thisismeapi.controllers.wrapper.VerifyResetContext;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Roles;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.entities.dtos.UserDtoInput;
 import br.inatel.thisismeapi.enums.RoleName;
+import br.inatel.thisismeapi.services.exceptions.TokenInvalidException;
+import br.inatel.thisismeapi.services.exceptions.UnregisteredUserException;
+import br.inatel.thisismeapi.services.impl.MailServiceImpl;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
+import com.google.gson.Gson;
+import io.swagger.v3.core.util.Json;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +37,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
@@ -47,12 +57,22 @@ public class UserControllerTests {
     @Autowired
     private WebApplicationContext wac;
 
+    @MockBean
+    private MailServiceImpl mailService;
 
     @MockBean
     private UserServiceImpl userService;
 
     private final static String ENDPOINT_REGISTER = "/user/register";
+    private final static String ENDPOINT_USER_RESET = "/user/reset/";
 
+    @BeforeEach
+    public void setUp() {
+        mockMvc = webAppContextSetup(wac).addFilter(((request, response, chain) -> {
+            response.setCharacterEncoding("UTF-8");
+            chain.doFilter(request, response);
+        })).build();
+    }
 
     @Test
     public void testCreateNewAccountSuccess() throws Exception {
@@ -284,7 +304,7 @@ public class UserControllerTests {
         when(userService.findCharacterByEmail(any(String.class))).thenReturn(character);
 
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/getCharacter")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/get-character")
                         .principal(auth)
                         .accept("application/json")
                         .sessionAttr(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, auth)
@@ -295,5 +315,114 @@ public class UserControllerTests {
                 .andReturn();
 
         assertEquals(character.toStringJson(), result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testForgotPasswordSendEmailSuccess() throws Exception {
+        String email = "test@test.com";
+        String responseExpected = "Código enviado para seu email: " + email;
+
+        doNothing().when(mailService).sendEmailForgotPassword(email);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "forgot-password")
+                        .accept("application/json")
+                        .param("email", email)
+                        .contentType("application/json")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(responseExpected));
+    }
+
+    @Test
+    public void testForgotPasswordSendEmailFail() throws Exception {
+        String email = "testcom";
+
+        doThrow(UnregisteredUserException.class).when(mailService).sendEmailForgotPassword(email);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "forgot-password")
+                        .accept("application/json")
+                        .param("email", email)
+                        .contentType("application/json")
+                )
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+
+    @Test
+    public void testVerifyCodeResetSuccess() throws Exception {
+        VerifyResetContext verifyResetContext = new VerifyResetContext();
+        verifyResetContext.setEmail("test@test.com");
+        verifyResetContext.setNumber("123456");
+
+        when(mailService.verifyNumberPassword(verifyResetContext.getEmail(), verifyResetContext.getNumber()))
+                .thenReturn("jwt");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "verify-code-reset")
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(Json.pretty(verifyResetContext))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.cookie().value("token_reset", "jwt"));
+    }
+
+    @Test
+    public void testVerifyCodeResetThrowTokenInvalidException() throws Exception {
+        VerifyResetContext verifyResetContext = new VerifyResetContext();
+        verifyResetContext.setEmail("test@test.com");
+        verifyResetContext.setNumber("123456");
+
+        doThrow(TokenInvalidException.class).when(mailService).verifyNumberPassword(
+                verifyResetContext.getEmail(), verifyResetContext.getNumber());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "verify-code-reset")
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(Json.pretty(verifyResetContext))
+                )
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.cookie().doesNotExist("token_reset"));
+    }
+
+    @Test
+    public void testResetPassword() throws Exception {
+        ResetPasswordContext resetPasswordContext = new ResetPasswordContext();
+        resetPasswordContext.setPassword("123456");
+        resetPasswordContext.setPasswordVerify("123456");
+
+        Cookie cookie = new Cookie("token_reset", "jwt");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        userService.resetPassword(resetPasswordContext.getPassword(), "jwt");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "reset-password")
+                        .accept("application/json")
+                        .cookie(cookie)
+                        .contentType("application/json")
+                        .content(Json.pretty(resetPasswordContext))
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testResetPasswordWithoutTokenJWT() throws Exception {
+        ResetPasswordContext resetPasswordContext = new ResetPasswordContext();
+        resetPasswordContext.setPassword("123456");
+        resetPasswordContext.setPasswordVerify("123456");
+        String responseExpected = "Não encontrado Token valido";
+        Gson gson = new Gson();
+        userService.resetPassword(resetPasswordContext.getPassword(), "jwt");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_USER_RESET + "reset-password")
+                        .accept("application/json")
+                        .contentType("application/json")
+                        .content(Json.pretty(resetPasswordContext))
+                )
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andReturn();
+
+        StandardError response = gson.fromJson(result.getResponse().getContentAsString(), StandardError.class);
+        assertEquals(responseExpected, response.getMessage());
     }
 }

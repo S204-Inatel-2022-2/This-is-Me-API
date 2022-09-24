@@ -24,7 +24,22 @@ public class ServicesExceptionsHandler {
         LOGGER.error("m=unregisteredUserException, statusCode={}, msg={}",
                 HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         StandardError error = new StandardError();
-        error.setTimestamp(Instant.now());
+        error.setTimestamp(Instant.now().toString());
+        error.setStatus(HttpStatus.UNAUTHORIZED.value());
+        error.setError(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler({TokenExpiredException.class, TokenInvalidException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<StandardError> tokenHandler(RuntimeException e, HttpServletRequest request) {
+
+        LOGGER.error("m=tokenHandler, statusCode={}, msg={}",
+                HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now().toString());
         error.setStatus(HttpStatus.UNAUTHORIZED.value());
         error.setError(HttpStatus.UNAUTHORIZED.getReasonPhrase());
         error.setMessage(e.getMessage());

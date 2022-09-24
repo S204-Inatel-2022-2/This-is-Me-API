@@ -1,6 +1,6 @@
 package br.inatel.thisismeapi.services.impl;
 
-import br.inatel.thisismeapi.consts.PasswordConst;
+import br.inatel.thisismeapi.classestotest.PasswordConst;
 import br.inatel.thisismeapi.controllers.exceptions.ConstraintViolationException;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;

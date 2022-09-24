@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.consts;
+package br.inatel.thisismeapi.classestotest;
 
 public class PasswordConst {
 

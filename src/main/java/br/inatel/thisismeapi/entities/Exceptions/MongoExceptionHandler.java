@@ -23,7 +23,7 @@ public class MongoExceptionHandler {
     public ResponseEntity<StandardError> mongoWrite(MongoWriteException e, HttpServletRequest request) {
         LOGGER.info("m=mongoWrite, statusCode={}, msg={}", HttpStatus.BAD_REQUEST.value(), e.getMessage());
         StandardError error = new StandardError();
-        error.setTimestamp(Instant.now());
+        error.setTimestamp(Instant.now().toString());
         error.setStatus(HttpStatus.CONFLICT.value());
         error.setError(HttpStatus.CONFLICT.getReasonPhrase());
         error.setMessage(this.getMsgByMongoErrorMessage(e.getMessage()));

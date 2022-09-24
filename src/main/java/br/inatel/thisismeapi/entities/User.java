@@ -35,6 +35,8 @@ public class User {
 
     private List<Roles> roles;
 
+    private String tokenResetPassword;
+
     public User() {
     }
 
@@ -96,6 +98,14 @@ public class User {
 
     public void setRoles(List<Roles> roles) {
         this.roles = roles;
+    }
+
+    public String getTokenResetPassword() {
+        return tokenResetPassword;
+    }
+
+    public void setTokenResetPassword(String tokenResetPassword) {
+        this.tokenResetPassword = tokenResetPassword;
     }
 
     @Override

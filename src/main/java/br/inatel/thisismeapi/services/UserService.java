@@ -8,4 +8,6 @@ public interface UserService {
     User createNewAccount(User user, String characterName);
 
     Character findCharacterByEmail(String email);
+
+    void resetPassword(String password, String jwt);
 }
