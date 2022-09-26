@@ -69,7 +69,7 @@ public class UserServiceTests {
         // when
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(characterRepository.save(any(Character.class))).thenReturn(character);
-        User actual = userService.createNewAccount(user, cName);
+        User actual = userService.createNewAccount(user, character);
 
         // then
         verify(userRepository, times(1)).save(user);
@@ -77,6 +77,7 @@ public class UserServiceTests {
         assertEquals(user.getPassword(), actual.getPassword());
         assertTrue(passwordEncoder().matches(PasswordConst.PASSWORD_MIN_LENGHT_5, actual.getPassword()));
         assertEquals(cName, actual.getCharacter().getCharacterName());
+        assertEquals("indefinido", actual.getCharacter().getSex());
         assertEquals(actual, user);
     }
 
@@ -86,9 +87,10 @@ public class UserServiceTests {
         String email = "test@email.com";
         String password = PasswordConst.PASSWORD_WITH_MORE_MAX_LENGHT_31;
         User user = new User(email, "0123456789012345678901234567890");
+        Character character = new Character("Character Name");
 
         ConstraintViolationException thrown = assertThrows(ConstraintViolationException.class, () -> {
-            userService.createNewAccount(user, "Character Name");
+            userService.createNewAccount(user, character);
         });
 
         assertEquals("Senha deve conter no minimo 5 e no maximo 30 digitos!", thrown.getMessage());
@@ -101,10 +103,11 @@ public class UserServiceTests {
         String email = "test@email.com";
         String password = PasswordConst.PASSWORD_WITH_LESS_MIN_LENGHT_4;
         User user = new User(email, password);
+        Character character = new Character("Character Name");
 
         // when
         ConstraintViolationException thrown = assertThrows(ConstraintViolationException.class, () -> {
-            userService.createNewAccount(user, "Character Name");
+            userService.createNewAccount(user, character);
         });
 
         // then

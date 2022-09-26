@@ -46,7 +46,11 @@ public class UserController {
 
         user.verifyPassword(createUserContext.getVerifyPassword());
 
-        userService.createNewAccount(user, createUserContext.getCharacterName());
+        Character character = new Character(createUserContext.getCharacterName());
+        if(createUserContext.getSex() != null)
+            character.setSex(createUserContext.getSex());
+
+        userService.createNewAccount(user, character);
         LOGGER.info("m=createNewAccount, status=CREATED");
     }
 

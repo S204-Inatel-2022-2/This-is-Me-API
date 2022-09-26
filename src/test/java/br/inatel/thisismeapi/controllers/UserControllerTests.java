@@ -82,9 +82,10 @@ public class UserControllerTests {
         createUserContext.setUserDtoInput(userDtoInput);
         createUserContext.setVerifyPassword(verifyPassword);
         createUserContext.setCharacterName("Character Name");
+
         User user = new User(userDtoInput.getEmail(), userDtoInput.getPassword());
 
-        when(userService.createNewAccount(any(User.class), any(String.class))).thenReturn(user);
+        when(userService.createNewAccount(any(User.class), any(Character.class))).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
                         .accept("application/json")
@@ -204,7 +205,7 @@ public class UserControllerTests {
         createUserContext.setVerifyPassword(verifyPassword);
         createUserContext.setCharacterName("Character Name");
 
-        when(userService.createNewAccount(any(User.class), any(String.class)))
+        when(userService.createNewAccount(any(User.class), any(Character.class)))
                 .thenThrow(ConstraintViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)
@@ -223,8 +224,9 @@ public class UserControllerTests {
         createUserContext.setUserDtoInput(userDtoInput);
         createUserContext.setVerifyPassword(verifyPassword);
         createUserContext.setCharacterName("Character Name");
+        createUserContext.setSex("masculino");
 
-        when(userService.createNewAccount(any(User.class), any(String.class)))
+        when(userService.createNewAccount(any(User.class), any(Character.class)))
                 .thenThrow(ConstraintViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_REGISTER)

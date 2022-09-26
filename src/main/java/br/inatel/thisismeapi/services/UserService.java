@@ -5,7 +5,7 @@ import br.inatel.thisismeapi.entities.User;
 
 public interface UserService {
 
-    User createNewAccount(User user, String characterName);
+    User createNewAccount(User user, Character character);
 
     Character findCharacterByEmail(String email);
 
