@@ -11,6 +11,8 @@ public class Character {
     @Id
     private String id;
 
+    private String sex;
+
     private String characterName;
 
     private Long xp;
@@ -18,6 +20,7 @@ public class Character {
     private Long level;
 
     public Character() {
+        this.sex = "indefinido";
         this.xp = 0L;
         this.level = 0L;
     }
@@ -26,6 +29,7 @@ public class Character {
         this.characterName = characterName;
         this.xp = 0L;
         this.level = 0L;
+        this.sex = "indefinido";
     }
 
     public String getId() {
@@ -56,6 +60,13 @@ public class Character {
         this.level++;
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public String toStringJson() {
         Gson gson = new GsonBuilder().serializeNulls().create();

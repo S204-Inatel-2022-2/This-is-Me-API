@@ -10,6 +10,8 @@ public class CreateUserContext implements Serializable {
     private String verifyPassword;
     private String characterName;
 
+    private String sex;
+
     public UserDtoInput getUserDtoInput() {
         return userDtoInput;
     }
@@ -32,6 +34,14 @@ public class CreateUserContext implements Serializable {
 
     public void setCharacterName(String characterName) {
         this.characterName = characterName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String toStringJson() {

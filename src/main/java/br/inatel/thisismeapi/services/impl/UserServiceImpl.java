@@ -49,9 +49,11 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createNewAccount(User user, String characterName) {
+    public User createNewAccount(User user, Character character) {
 
-        LOGGER.info("m=createNewAccount, type=User , email={}, characterName={}", user.getEmail(), characterName);
+        LOGGER.info("m=createNewAccount, type=User , email={}, characterName={}",
+                user.getEmail(), character.getCharacterName());
+
         if (!(user.getPassword().length() >= 5 && user.getPassword().length() <= 30))
             throw new ConstraintViolationException("Senha deve conter no minimo 5 e no maximo 30 digitos!");
 
@@ -61,9 +63,8 @@ public class UserServiceImpl implements UserService {
         roles.add(new Roles(RoleName.ROLE_USER));
         user.setRoles(roles);
 
-        Character character = characterRepository.save(new Character(characterName));
+        characterRepository.save(character);
         user.setCharacter(character);
-
         return userRepository.save(user);
     }
 
