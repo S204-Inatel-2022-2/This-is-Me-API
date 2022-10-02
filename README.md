@@ -33,6 +33,7 @@ As seguintes tecnologias foram utilizadas na construção do projeto:
 
 ## :iphone: Links Apps
 - [Flutter](https://github.com/S204-Inatel-2022-2/This-is-Me-App)
+- [Heroku Server](https://timeapibyredfoxghs.herokuapp.com/swagger-ui/index.html)
 
 ## :card_index_dividers: Documentações
 - [Confluence](https://redandmoon.atlassian.net/wiki/spaces/NW/pages/1736713/This+is+Me+App)

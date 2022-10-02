@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,18 +43,19 @@ public class JWTUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         LOGGER.info("m=attemptAuthentication, status=trying authenticate");
+        UserDtoInput authRequest = null;
         try {
-            UserDtoInput authRequest = new ObjectMapper()
+            authRequest = new ObjectMapper()
                     .readValue(request.getInputStream(), UserDtoInput.class);
-
-            Authentication auth = new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
-                    authRequest.getPassword());
-            LOGGER.info("m=attemptAuthentication, email={}", authRequest.getEmail());
-            return authManager.authenticate(auth);
-        } catch (Exception exp) {
-            LOGGER.error("m=attemptAuthentication, status=fail auth, error={}", exp.getMessage());
-            throw new RuntimeException(exp);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
+                authRequest.getPassword());
+        LOGGER.info("m=attemptAuthentication, email={}", authRequest.getEmail());
+
+        return authManager.authenticate(auth);
     }
 
     @Override
@@ -86,5 +89,17 @@ public class JWTUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
 
         LOGGER.info("m=successfulAuthentication, status=TokenJWTCreated");
         super.successfulAuthentication(request, response, chain, authResult);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+
+        LOGGER.info("m=unsuccessfulAuthentication, msg={}", failed.getMessage());
+        response.reset();
+        response.resetBuffer();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        response.getWriter().write(failed.getLocalizedMessage());
+        response.getWriter().flush();
     }
 }
