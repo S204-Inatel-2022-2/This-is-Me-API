@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.controllers.wrapper.ResetPasswordContext;
 import br.inatel.thisismeapi.controllers.wrapper.VerifyResetContext;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
+import br.inatel.thisismeapi.entities.dtos.CharacterBasicInfosDTO;
 import br.inatel.thisismeapi.services.UserService;
 import br.inatel.thisismeapi.services.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.services.impl.MailServiceImpl;
@@ -55,12 +56,12 @@ public class UserController {
     }
 
     @GetMapping("/get-character")
-    public ResponseEntity<Character> getCharacter(Authentication authentication) {
+    public ResponseEntity<CharacterBasicInfosDTO> getCharacter(Authentication authentication) {
 
         LOGGER.info("m=getCharacter, email={}", authentication.getName());
         Character character = userService.findCharacterByEmail(authentication.getName());
-
-        return ResponseEntity.ok().body(character);
+        CharacterBasicInfosDTO characterBasicInfosDTO = new CharacterBasicInfosDTO(character);
+        return ResponseEntity.ok().body(characterBasicInfosDTO);
     }
 
     @PostMapping("/reset/forgot-password")
