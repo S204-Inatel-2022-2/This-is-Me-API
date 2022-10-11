@@ -1,18 +1,14 @@
 package br.inatel.thisismeapi.entities;
 
 import br.inatel.thisismeapi.Models.Day;
-import br.inatel.thisismeapi.Models.QuestStatus;
+import br.inatel.thisismeapi.enums.QuestStatus;
 import br.inatel.thisismeapi.Models.Week;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.List;
 
 @Document
 public class Quest implements Serializable {
@@ -28,7 +24,7 @@ public class Quest implements Serializable {
 
     private String desc;
 
-    private boolean isRepeatAllDay;
+    private boolean isRepeatEveryDay;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate startDate;
@@ -97,12 +93,12 @@ public class Quest implements Serializable {
         this.desc = desc;
     }
 
-    public boolean isRepeatAllDay() {
-        return isRepeatAllDay;
+    public boolean isRepeatEveryDay() {
+        return isRepeatEveryDay;
     }
 
-    public void setRepeatAllDay(boolean repeatAllDay) {
-        isRepeatAllDay = repeatAllDay;
+    public void setRepeatEveryDay(boolean repeatEveryDay) {
+        isRepeatEveryDay = repeatEveryDay;
     }
 
     public LocalDate getStartDate() {

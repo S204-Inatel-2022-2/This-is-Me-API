@@ -1,13 +1,12 @@
 package br.inatel.thisismeapi.entities.dtos;
 
 import br.inatel.thisismeapi.Models.Day;
-import br.inatel.thisismeapi.Models.QuestStatus;
+import br.inatel.thisismeapi.enums.QuestStatus;
 import br.inatel.thisismeapi.Models.Week;
-import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -143,13 +142,14 @@ public class QuestInputDTO implements Serializable {
         this.week = week;
     }
 
+    @Schema(hidden = true)
     public Quest getQuest() {
         Quest quest = new Quest();
         quest.setStatus(this.status);
         quest.setHexColor(this.hexColor);
         quest.setName(this.name);
         quest.setDesc(this.desc);
-        quest.setRepeatAllDay(this.isRepeatAllDay);
+        quest.setRepeatEveryDay(this.isRepeatAllDay);
         quest.setStartDate(this.startDate);
         quest.setEndDate(this.endDate);
         quest.setSkill(this.skill);

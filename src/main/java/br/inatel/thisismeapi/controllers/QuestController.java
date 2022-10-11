@@ -49,6 +49,5 @@ public class QuestController {
     public Quest createNewQuest(@RequestBody QuestInputDTO questInputDTO, Authentication authentication){
         LOGGER.info("m=getQuestOfTheDay, email={}", authentication.getName());
         return questService.createNewQuest(questInputDTO.getQuest(), authentication.getName());
-
     }
 }

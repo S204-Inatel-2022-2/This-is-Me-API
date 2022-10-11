@@ -69,8 +69,10 @@ public class QuestServiceImpl implements QuestService {
         if(today.isBefore(quest.getStartDate()) || today.isAfter(quest.getEndDate()))
             return false;
 
-        Day day = quest.getWeek().getDayOfDayOfWeek();
+//        Day day = quest.getWeek().getDayOfDayOfWeek();
 
-        return day.isActive();
+//        return day.isActive();
+        return true;
     }
+
 }

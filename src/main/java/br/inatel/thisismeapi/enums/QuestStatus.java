@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.Models;
+package br.inatel.thisismeapi.enums;
 
 public enum QuestStatus {
     IN_PROGRESS,

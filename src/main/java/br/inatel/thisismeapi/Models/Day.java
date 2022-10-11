@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -19,6 +20,7 @@ public class Day implements Serializable {
     @Schema(example = "false")
     private boolean active = false;
 
+    private DayOfWeek dayOfWeek;
 
     @Schema(example = "00:00")
     private String startTime;
@@ -51,6 +53,14 @@ public class Day implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     @Schema(hidden = true)
