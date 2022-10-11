@@ -22,9 +22,6 @@ public class Quest implements Serializable {
 
     private QuestStatus status;
 
-    @DBRef
-    private Character character;
-
     private String hexColor;
 
     private String name;
@@ -68,13 +65,13 @@ public class Quest implements Serializable {
         this.status = status;
     }
 
-    public Character getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(Character character) {
-        this.character = character;
-    }
+//    public Character getCharacter() {
+//        return character;
+//    }
+//
+//    public void setCharacter(Character character) {
+//        this.character = character;
+//    }
 
     public String getHexColor() {
         return hexColor;

@@ -5,20 +5,27 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class Day implements Serializable {
 
+    @Schema(example = "false")
     private boolean active = false;
 
-    @JsonDeserialize(using = LocalTimeDeserializer.class)
-    @JsonSerialize(using = LocalTimeSerializer.class)
-    private LocalTime startTime;
-    @JsonDeserialize(using = LocalTimeDeserializer.class)
-    @JsonSerialize(using = LocalTimeSerializer.class)
-    private LocalTime endTime;
+
+    @Schema(example = "00:00")
+    private String startTime;
+
+    @Schema(example = "00:00")
+    private String endTime;
+
 
     public boolean isActive() {
         return active;
@@ -28,25 +35,32 @@ public class Day implements Serializable {
         this.active = active;
     }
 
-    public LocalTime getStartTime() {
-        if (active)
-            return startTime;
-
-        return null;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public String getEndTime() {
+        return endTime;
+    }
+
+
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public LocalTime getEndTime() {
-        if (active)
-            return endTime;
 
-        return null;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+    @Schema(hidden = true)
+    public Long getIntervalInMin(){
+
+        if(startTime != null && endTime != null && active)
+            return Duration.between(
+                LocalTime.parse(this.startTime),
+                LocalTime.parse(this.endTime)).toMinutes();
+
+        return null;
     }
 }

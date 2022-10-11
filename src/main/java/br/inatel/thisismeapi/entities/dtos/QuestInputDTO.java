@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 public class QuestInputDTO implements Serializable {
 
-    private String id;
 
     private QuestStatus status;
 
@@ -41,8 +40,7 @@ public class QuestInputDTO implements Serializable {
 
     private Week week;
 
-    public QuestInputDTO(String id, QuestStatus status, String hexColor, String name, String desc, boolean isRepeatAllDay, LocalDate startDate, LocalDate endDate, String skill, boolean repeatIntervalTime, Day timeDefault, Week week) {
-        this.id = id;
+    public QuestInputDTO(QuestStatus status, String hexColor, String name, String desc, boolean isRepeatAllDay, LocalDate startDate, LocalDate endDate, String skill, boolean repeatIntervalTime, Day timeDefault, Week week) {
         this.status = status;
         this.hexColor = hexColor;
         this.name = name;
@@ -56,13 +54,6 @@ public class QuestInputDTO implements Serializable {
         this.week = week;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public QuestStatus getStatus() {
         return status;
@@ -152,9 +143,8 @@ public class QuestInputDTO implements Serializable {
         this.week = week;
     }
 
-    public Quest getQuest(Character character) {
+    public Quest getQuest() {
         Quest quest = new Quest();
-        quest.setId(this.id);
         quest.setStatus(this.status);
         quest.setHexColor(this.hexColor);
         quest.setName(this.name);
@@ -166,7 +156,6 @@ public class QuestInputDTO implements Serializable {
         quest.setRepeatIntervalTime(this.repeatIntervalTime);
         quest.setTimeDefault(this.timeDefault);
         quest.setWeek(this.week);
-        quest.setCharacter(character);
         return quest;
     }
 }

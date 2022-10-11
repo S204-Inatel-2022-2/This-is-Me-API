@@ -1,6 +1,10 @@
 package br.inatel.thisismeapi.Models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 public class Week implements Serializable {
 
@@ -66,5 +70,26 @@ public class Week implements Serializable {
 
     public void setSaturday(Day saturday) {
         this.saturday = saturday;
+    }
+
+    @Schema(hidden = true)
+    public Day getDayOfDayOfWeek(){
+
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY)
+            return this.sunday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY)
+            return this.monday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.TUESDAY)
+            return this.tuesday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.WEDNESDAY)
+            return this.wednesday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.THURSDAY)
+            return this.thursday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.FRIDAY)
+            return this.friday;
+        if(LocalDate.now().getDayOfWeek() == DayOfWeek.SATURDAY)
+            return this.saturday;
+
+        return null;
     }
 }

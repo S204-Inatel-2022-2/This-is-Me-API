@@ -1,8 +1,14 @@
 package br.inatel.thisismeapi.services;
 
+import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+
+import java.util.List;
 
 public interface QuestService {
 
-    Quest CreateNewQuest(Quest quest);
+    Quest createNewQuest(Quest quest, String email);
+
+    List<Quest> getAllQuest(String email);
+    List<Quest> getQuestToday(String email);
 }
