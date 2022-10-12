@@ -23,7 +23,6 @@ public class Character {
 
     private Long level;
 
-    @DBRef
     private List<Quest> quests;
 
     public Character() {

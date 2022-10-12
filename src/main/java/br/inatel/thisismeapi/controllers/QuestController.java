@@ -2,7 +2,6 @@ package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
-import br.inatel.thisismeapi.entities.dtos.QuestInputDTO;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
 import org.slf4j.Logger;
@@ -46,8 +45,8 @@ public class QuestController {
     }
 
     @PostMapping
-    public Quest createNewQuest(@RequestBody QuestInputDTO questInputDTO, Authentication authentication){
+    public Quest createNewQuest(@RequestBody Quest quest, Authentication authentication){
         LOGGER.info("m=getQuestOfTheDay, email={}", authentication.getName());
-        return questService.createNewQuest(questInputDTO.getQuest(), authentication.getName());
+        return questService.createNewQuest(quest, authentication.getName());
     }
 }

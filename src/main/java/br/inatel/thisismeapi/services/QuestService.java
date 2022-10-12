@@ -11,4 +11,8 @@ public interface QuestService {
 
     List<Quest> getAllQuest(String email);
     List<Quest> getQuestToday(String email);
+
+//    List<Object> getWeek(){
+//
+//    }
 }

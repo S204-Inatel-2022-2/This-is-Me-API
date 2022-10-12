@@ -5,7 +5,7 @@ import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
-import br.inatel.thisismeapi.repositories.QuestRepository;
+//import br.inatel.thisismeapi.repositories.QuestRepository;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.QuestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ import java.util.Optional;
 @Service
 public class QuestServiceImpl implements QuestService {
 
-    @Autowired
-    private QuestRepository questRepository;
+//    @Autowired
+//    private QuestRepository questRepository;
 
     @Autowired
     private UserServiceImpl userService;
@@ -34,12 +34,10 @@ public class QuestServiceImpl implements QuestService {
     public Quest createNewQuest(Quest quest, String email) {
         Character character = userService.findCharacterByEmail(email);
 
-        Quest questSaved = questRepository.save(quest);
-
         List<Quest> quests = character.getQuests();
-        quests.add(questSaved);
+        quests.add(quest);
         characterRepository.save(character);
-        return questSaved;
+        return quest;
     }
 
     @Override
@@ -60,6 +58,8 @@ public class QuestServiceImpl implements QuestService {
             if(this.verifyTodayQuest(quest))
                 todayList.add(quest);
         });
+
+
 
         return todayList;
     }

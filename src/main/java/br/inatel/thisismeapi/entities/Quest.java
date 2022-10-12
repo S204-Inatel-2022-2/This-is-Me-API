@@ -4,17 +4,20 @@ import br.inatel.thisismeapi.Models.Day;
 import br.inatel.thisismeapi.enums.QuestStatus;
 import br.inatel.thisismeapi.Models.Week;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
-@Document
+
 public class Quest implements Serializable {
 
-    @Id
-    private String id;
+    @Schema(hidden = true)
+    @Indexed(name = "quest_id", unique = true)
+    private String questId = UUID.randomUUID().toString();
 
     private QuestStatus status;
 
@@ -26,6 +29,8 @@ public class Quest implements Serializable {
 
     private boolean isRepeatEveryDay;
 
+
+
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate startDate;
 
@@ -35,22 +40,26 @@ public class Quest implements Serializable {
     // TODO criar entidade skill
     private String skill;
 
-    private boolean repeatIntervalTime;
-
-    private Day timeDefault;
-
-    private Week week;
+    private List<Day> week;
 
     public Quest() {
-        this.status = QuestStatus.IN_PROGRESS;
     }
 
-    public String getId() {
-        return id;
+    public Quest(String questId, QuestStatus status, String hexColor, String name, String desc, boolean isRepeatEveryDay, LocalDate startDate, LocalDate endDate, String skill, List<Day> week) {
+        this.questId = questId;
+        this.status = status;
+        this.hexColor = hexColor;
+        this.name = name;
+        this.desc = desc;
+        this.isRepeatEveryDay = isRepeatEveryDay;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.skill = skill;
+        this.week = week;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getQuestId() {
+        return questId;
     }
 
     public QuestStatus getStatus() {
@@ -60,14 +69,6 @@ public class Quest implements Serializable {
     public void setStatus(QuestStatus status) {
         this.status = status;
     }
-
-//    public Character getCharacter() {
-//        return character;
-//    }
-//
-//    public void setCharacter(Character character) {
-//        this.character = character;
-//    }
 
     public String getHexColor() {
         return hexColor;
@@ -125,27 +126,15 @@ public class Quest implements Serializable {
         this.skill = skill;
     }
 
-    public boolean isRepeatIntervalTime() {
-        return repeatIntervalTime;
-    }
-
-    public void setRepeatIntervalTime(boolean repeatIntervalTime) {
-        this.repeatIntervalTime = repeatIntervalTime;
-    }
-
-    public Day getTimeDefault() {
-        return timeDefault;
-    }
-
-    public void setTimeDefault(Day timeDefault) {
-        this.timeDefault = timeDefault;
-    }
-
-    public Week getWeek() {
+    public List<Day> getWeek() {
         return week;
     }
 
-    public void setWeek(Week week) {
+    public void setWeek(List<Day> week) {
         this.week = week;
+    }
+
+    public void addDayToWeek(Day day) {
+        this.week.add(day);
     }
 }
