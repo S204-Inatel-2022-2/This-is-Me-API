@@ -47,18 +47,6 @@ public class Quest implements Serializable {
     public Quest() {
     }
 
-    public Quest(QuestStatus status, String hexColor, String name, String desc, boolean isRepeatEveryDay, LocalDate startDate, LocalDate endDate, String skill, List<Day> week) {
-        this.status = status;
-        this.hexColor = hexColor;
-        this.name = name;
-        this.desc = desc;
-        this.isRepeatEveryDay = isRepeatEveryDay;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.skill = skill;
-        this.week = week;
-    }
-
     public String getQuestId() {
         return questId;
     }

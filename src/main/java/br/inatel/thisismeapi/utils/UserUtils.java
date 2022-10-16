@@ -18,7 +18,7 @@ public final class UserUtils {
         if (email.isBlank())
             return "Email não pode ser deixado em branco!";
         if (email.length() > 255)
-            return "Email não pode ser ter mais de 255 digitos!";
+            return "Email não pode ter mais de 255 digitos!";
         if (!email.matches(".+[@].+[\\\\.].+"))
             return "Email inválido!";
 

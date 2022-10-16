@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -316,7 +317,7 @@ public class UserControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        assertEquals(character.toStringJson(), result.getResponse().getContentAsString());
+        assertTrue(result.getResponse().getContentAsString().contains(character.getCharacterName()));
     }
 
     @Test

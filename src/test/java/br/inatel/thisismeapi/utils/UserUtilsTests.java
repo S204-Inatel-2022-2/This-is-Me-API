@@ -32,4 +32,34 @@ public class UserUtilsTests {
 
         assertEquals("As Senhas não coincidem!", exception.getMessage());
     }
+
+    @Test
+    public void testVerifyEmailCantBeNull(){
+        assertEquals("Email não pode ser nulo!", UserUtils.verifyEmail(null));
+    }
+
+    @Test
+    public void testVerifyEmailCantBeBlank(){
+        assertEquals("Email não pode ser deixado em branco!", UserUtils.verifyEmail(""));
+    }
+
+    @Test
+    public void testVerifyEmailSizeExceedingLimit(){
+        String email = "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij" +
+                "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij" +
+                "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij" +
+                "@email.com";
+        assertEquals("Email não pode ter mais de 255 digitos!", UserUtils.verifyEmail(email));
+    }
+
+    @Test
+    public void testVerifyEmailFormatInvalid(){
+        assertEquals("Email inválido!", UserUtils.verifyEmail("email"));
+    }
+
+    @Test
+    public void testVerifyEmailWithValidEmail(){
+        assertNull(UserUtils.verifyEmail("email@test.com"));
+    }
+
 }
