@@ -1,7 +1,7 @@
 package br.inatel.thisismeapi.services.impl;
 
-import br.inatel.thisismeapi.Models.Card;
-import br.inatel.thisismeapi.Models.Day;
+import br.inatel.thisismeapi.models.Card;
+import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.repositories.CharacterRepository;

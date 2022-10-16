@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.Models;
+package br.inatel.thisismeapi.models;
 
 public class Card {
     private String questId;

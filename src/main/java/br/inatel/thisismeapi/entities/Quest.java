@@ -1,6 +1,6 @@
 package br.inatel.thisismeapi.entities;
 
-import br.inatel.thisismeapi.Models.Day;
+import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.enums.QuestStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;

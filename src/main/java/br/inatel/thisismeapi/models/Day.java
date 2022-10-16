@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.Models;
+package br.inatel.thisismeapi.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
