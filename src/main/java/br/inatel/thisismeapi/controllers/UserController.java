@@ -48,7 +48,7 @@ public class UserController {
         user.verifyPassword(createUserContext.getVerifyPassword());
 
         Character character = new Character(createUserContext.getCharacterName());
-        if(createUserContext.getSex() != null)
+        if (createUserContext.getSex() != null)
             character.setSex(createUserContext.getSex());
 
         userService.createNewAccount(user, character);

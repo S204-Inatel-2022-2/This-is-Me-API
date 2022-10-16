@@ -1,14 +1,6 @@
 package br.inatel.thisismeapi.Models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.query.Param;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
@@ -16,9 +8,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 
 public class Day implements Serializable {
-
-    @Schema(example = "false")
-    private boolean active = false;
 
     private DayOfWeek dayOfWeek;
 
@@ -28,14 +17,6 @@ public class Day implements Serializable {
     @Schema(example = "00:00")
     private String endTime;
 
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 
     public String getStartTime() {
         return startTime;
@@ -64,13 +45,35 @@ public class Day implements Serializable {
     }
 
     @Schema(hidden = true)
-    public Long getIntervalInMin(){
+    public Long getIntervalInMin() {
 
-        if(startTime != null && endTime != null && active)
+        if (startTime != null && endTime != null)
             return Duration.between(
-                LocalTime.parse(this.startTime),
-                LocalTime.parse(this.endTime)).toMinutes();
+                    LocalTime.parse(this.startTime),
+                    LocalTime.parse(this.endTime)).toMinutes();
 
         return null;
+    }
+
+    @Schema(hidden = true)
+    public Long calculateXp() {
+
+        long interval = this.getIntervalInMin();
+        return Math.round(interval / 5.0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Day day = (Day) o;
+
+        return dayOfWeek == day.dayOfWeek;
+    }
+
+    @Override
+    public int hashCode() {
+        return dayOfWeek.hashCode();
     }
 }

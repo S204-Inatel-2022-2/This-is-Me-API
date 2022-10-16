@@ -1,9 +1,8 @@
 package br.inatel.thisismeapi.controllers;
 
-import br.inatel.thisismeapi.entities.Character;
+import br.inatel.thisismeapi.Models.Card;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
-import br.inatel.thisismeapi.services.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,34 +17,39 @@ import java.util.List;
 public class QuestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QuestController.class);
-    @Autowired
-    private UserServiceImpl userService;
 
     @Autowired
     private QuestServiceImpl questService;
 
-    @GetMapping("/today")
-    public List<Quest> getQuestOfTheDay(Authentication authentication){
 
-        LOGGER.info("m=getQuestOfTheDay, email={}", authentication.getName());
+    @GetMapping("/today-cards")
+    public List<Card> getDayCards(Authentication authentication) {
 
-        // TODO criar e chamar QuestService para pegar as tarefas do dia
+        LOGGER.info("m=getDayCards, email={}", authentication.getName());
+        List<Quest> quests = questService.getQuestToday(authentication.getName());
 
-        return questService.getQuestToday(authentication.getName());
+        return questService.getCardsTodayByQuestList(quests);
+    }
+
+    @GetMapping("/week-cards")
+    public List<Card> getWeekCards(Authentication authentication) {
+
+        LOGGER.info("m=getWeekCards, email={}", authentication.getName());
+        List<Quest> quests = questService.getQuestWeek(authentication.getName());
+
+        return questService.getCardsWeekByQuestList(quests);
     }
 
     @GetMapping("/all")
-    public List<Quest> getAllQuest(Authentication authentication){
+    public List<Quest> getAllQuest(Authentication authentication) {
 
         LOGGER.info("m=getQuestOfTheDay, email={}", authentication.getName());
-
-        // TODO criar e chamar QuestService para pegar as tarefas do dia
 
         return questService.getAllQuest(authentication.getName());
     }
 
     @PostMapping
-    public Quest createNewQuest(@RequestBody Quest quest, Authentication authentication){
+    public Quest createNewQuest(@RequestBody Quest quest, Authentication authentication) {
         LOGGER.info("m=getQuestOfTheDay, email={}", authentication.getName());
         return questService.createNewQuest(quest, authentication.getName());
     }
