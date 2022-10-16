@@ -55,15 +55,6 @@ public class UserController {
         LOGGER.info("m=createNewAccount, status=CREATED");
     }
 
-    @GetMapping("/get-character")
-    public ResponseEntity<CharacterBasicInfosDTO> getCharacter(Authentication authentication) {
-
-        LOGGER.info("m=getCharacter, email={}", authentication.getName());
-        Character character = userService.findCharacterByEmail(authentication.getName());
-        CharacterBasicInfosDTO characterBasicInfosDTO = new CharacterBasicInfosDTO(character);
-        return ResponseEntity.ok().body(characterBasicInfosDTO);
-    }
-
     @PostMapping("/reset/forgot-password")
     public ResponseEntity<String> forgotPasswordSendEmail(@RequestParam("email") String email) {
 

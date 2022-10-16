@@ -292,35 +292,6 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testGetCharacterSuccess() throws Exception {
-
-        Character character = new Character();
-        String email = "test@test.com";
-        character.setCharacterName("Character Name");
-
-        List<Roles> rolesList = new ArrayList<>();
-        rolesList.add(new Roles(RoleName.ROLE_ADMIN));
-        rolesList.add(new Roles(RoleName.ROLE_USER));
-        Authentication auth =
-                new UsernamePasswordAuthenticationToken("admin@admin.com", null, rolesList);
-
-        when(userService.findCharacterByEmail(any(String.class))).thenReturn(character);
-
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/get-character")
-                        .principal(auth)
-                        .accept("application/json")
-                        .sessionAttr(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, auth)
-                        .contentType("application/json")
-                        .content("")
-                )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        assertTrue(result.getResponse().getContentAsString().contains(character.getCharacterName()));
-    }
-
-    @Test
     public void testForgotPasswordSendEmailSuccess() throws Exception {
         String email = "test@test.com";
         String responseExpected = "Código enviado para seu email: " + email;

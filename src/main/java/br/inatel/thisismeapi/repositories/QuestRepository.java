@@ -11,11 +11,6 @@ import java.util.List;
 public interface QuestRepository extends MongoRepository<Quest, String> {
 
 
-//    @Aggregation(pipeline = {
-//            "{'$match': {$and: [{'email': ?0}, {'startDate': {$lte: ?1}}, {'endDate': {$gte: ?1}}]}}"
-//    })
-//    List<Quest> findAllQuestsOfTheDay(String email, LocalDate day);
-
     @Aggregation(pipeline = {
             "{'$match': {$and: [" +
                     "{'email': ?0}, " +

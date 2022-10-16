@@ -8,6 +8,7 @@ public class CharacterBasicInfosDTO implements Serializable {
 
     private String id;
     private String characterName;
+    private Long clothes;
     private String sex;
     private Long xp;
     private Long level;
@@ -15,6 +16,7 @@ public class CharacterBasicInfosDTO implements Serializable {
     public CharacterBasicInfosDTO(Character character) {
         this.id = character.getId();
         this.characterName = character.getCharacterName();
+        this.clothes = character.getClothes();
         this.sex = character.getSex();
         this.xp = character.getXp();
         this.level = character.getLevel();
@@ -26,6 +28,14 @@ public class CharacterBasicInfosDTO implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Long getClothes() {
+        return clothes;
+    }
+
+    public void setClothes(Long clothes) {
+        this.clothes = clothes;
     }
 
     public String getCharacterName() {
