@@ -73,7 +73,8 @@ jacocoTestReport{
 			fileTree(dir: it, exclude: [
 					"br/inatel/thisismeapi/TimeApplication.class",
 					"br/inatel/thisismeapi/config/ValidationConfig.class",
-					"br/inatel/thisismeapi/security/**"
+					"br/inatel/thisismeapi/security/**",
+					"br/inatel/thisismeapi/models/Card.class"
 			])
 		}))
 	}
@@ -87,7 +88,8 @@ jacocoTestCoverageVerification {
 			fileTree(dir: it, exclude: [
 					"br/inatel/thisismeapi/TimeApplication.class",
 					"br/inatel/thisismeapi/config/ValidationConfig.class",
-					"br/inatel/thisismeapi/security/**"
+					"br/inatel/thisismeapi/security/**",
+					"br/inatel/thisismeapi/models/Card.class"
 			])
 		}))
 	}
@@ -95,7 +97,7 @@ jacocoTestCoverageVerification {
 		rule {
 			enabled = true
 			limit {
-				minimum = 0.7
+				minimum = 0.6
 			}
 		}
 	}

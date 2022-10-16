@@ -44,7 +44,8 @@ public class AdminServiceImpl implements AdminService {
         roles.add(new Roles(RoleName.ROLE_ADMIN));
         roles.add(new Roles(RoleName.ROLE_USER));
         user.setRoles(roles);
-
+        Character characterTest = new Character(characterName);
+        characterTest.setQuests(new ArrayList<>());
         Character character = characterRepository.save(new Character(characterName));
         user.setCharacter(character);
 
