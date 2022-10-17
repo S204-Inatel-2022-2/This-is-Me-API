@@ -17,6 +17,8 @@ public class Character {
 
     private String sex;
 
+    private Long clothes;
+
     private String characterName;
 
     private Long xp;
@@ -51,6 +53,14 @@ public class Character {
 
     public void setCharacterName(String characterName) {
         this.characterName = characterName;
+    }
+
+    public Long getClothes() {
+        return clothes;
+    }
+
+    public void setClothes(Long clothes) {
+        this.clothes = clothes;
     }
 
     public Long getXp() {

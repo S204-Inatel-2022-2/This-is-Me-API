@@ -85,7 +85,7 @@ public class JWTUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
 
         response.addCookie(cookie);
 
-        response.sendRedirect("/user/get-character");
+        response.sendRedirect("/character/get-character");
 
         LOGGER.info("m=successfulAuthentication, status=TokenJWTCreated");
         super.successfulAuthentication(request, response, chain, authResult);
