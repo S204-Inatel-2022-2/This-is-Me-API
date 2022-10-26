@@ -40,6 +40,15 @@ public class QuestController {
         return questService.getCardsWeekByQuestList(quests);
     }
 
+    @GetMapping("/next-week-cards")
+    public List<Card> getNextWeekCards(Authentication authentication) {
+
+        LOGGER.info("m=getNextWeekCards, email={}", authentication.getName());
+        List<Quest> quests = questService.getQuestNextWeek(authentication.getName());
+
+        return questService.getCardsWeekByQuestList(quests);
+    }
+
     @GetMapping("/all")
     public List<Quest> getAllQuest(Authentication authentication) {
 

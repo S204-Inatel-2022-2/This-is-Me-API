@@ -59,7 +59,13 @@ public class QuestServiceImpl implements QuestService {
     @Override
     public List<Quest> getQuestWeek(String email) {
 
-        return questRepository.findAllQuestsWeek(email, LocalDate.now());
+        return questRepository.findAllQuestsWeek(email, WeekUtils.getActualSundayByDate(LocalDate.now()));
+    }
+
+    @Override
+    public List<Quest> getQuestNextWeek(String email) {
+
+        return questRepository.findAllQuestsWeek(email, WeekUtils.getNextSundayByDate(LocalDate.now()));
     }
 
     public List<Card> getCardsTodayByQuestList(List<Quest> quests) {
@@ -98,22 +104,23 @@ public class QuestServiceImpl implements QuestService {
                     return day1.getDayOfWeek().compareTo(day2.getDayOfWeek());
                 }
             });
+
             // Se não é a ultima semana adiciona tudo
             if (!WeekUtils.verifyIsLastWeek(quest.getEndDate())) {
                 quest.getWeek().forEach(day -> {
-                    cards.add(createInstanceOfCard(quest, day));
+                    cards.add(createInstanceOfCardByQuestAndDay(quest, day));
                 });
 
             } else { // Se é ultima semana adiciona apenas até o dia da semana do endDate
                 for (int i = 0; i < week.size(); i++) {
                     Day day = week.get(i);
                     if (day.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                        cards.add(createInstanceOfCard(quest, day));
+                        cards.add(createInstanceOfCardByQuestAndDay(quest, day));
                     } else {
                         if (day.getDayOfWeek().getValue() > DayOfWeek.from(quest.getEndDate()).getValue()) {
                             break;
                         }
-                        cards.add(createInstanceOfCard(quest, day));
+                        cards.add(createInstanceOfCardByQuestAndDay(quest, day));
                     }
                 }
             }
@@ -122,7 +129,7 @@ public class QuestServiceImpl implements QuestService {
         return cards;
     }
 
-    private Card createInstanceOfCard(Quest quest, Day day) {
+    private Card createInstanceOfCardByQuestAndDay(Quest quest, Day day) {
         Card card = new Card();
         card.setQuestId(quest.getQuestId());
         card.setName(quest.getName());
@@ -134,4 +141,17 @@ public class QuestServiceImpl implements QuestService {
         return card;
     }
 
+    private void sortWeekByDayOfWeek(List<Day> week) {
+        Collections.sort(week, new Comparator<Day>() {
+            @Override
+            public int compare(Day day1, Day day2) {
+                if (day1.getDayOfWeek() == DayOfWeek.SUNDAY)
+                    return -1;
+                if (day2.getDayOfWeek() == DayOfWeek.SUNDAY)
+                    return 1;
+
+                return day1.getDayOfWeek().compareTo(day2.getDayOfWeek());
+            }
+        });
+    }
 }

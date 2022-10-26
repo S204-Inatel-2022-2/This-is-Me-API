@@ -31,4 +31,5 @@ public interface QuestRepository extends MongoRepository<Quest, String> {
     })
     List<Quest> findAllQuestsWeek(String email, LocalDate day);
 
+
 }
