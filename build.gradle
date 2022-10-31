@@ -43,6 +43,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
 	testImplementation 'org.springframework.security:spring-security-test:5.7.3'
+	// https://mvnrepository.com/artifact/org.mockito/mockito-inline
+	testImplementation 'org.mockito:mockito-inline:4.8.1'
+
 
 }
 
@@ -71,10 +74,16 @@ jacocoTestReport{
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
-					"br/inatel/thisismeapi/TimeApplication.class",
-					"br/inatel/thisismeapi/config/ValidationConfig.class",
-					"br/inatel/thisismeapi/security/**",
-					"br/inatel/thisismeapi/models/Card.class"
+					"**/thisismeapi/TimeApplication**",
+					"**/thisismeapi/entities/**",
+					"**/thisismeapi/config/**",
+					"**/thisismeapi/controllers/dtos/**",
+					"**/thisismeapi/controllers/GlobalControllerExceptions**",
+					"**/thisismeapi/services/impl/AdminServiceImpl**",
+					"**/thisismeapi/security/**",
+					"**/thisismeapi/exceptions/**",
+					"**/thisismeapi/models/**",
+					"**/thisismeapi/repositories/**"
 			])
 		}))
 	}
@@ -97,7 +106,7 @@ jacocoTestCoverageVerification {
 		rule {
 			enabled = true
 			limit {
-				minimum = 0.6
+				minimum = 0.7
 			}
 		}
 	}

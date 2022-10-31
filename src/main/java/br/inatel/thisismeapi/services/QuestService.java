@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.services;
 
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.models.Card;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface QuestService {
     List<Quest> getQuestWeek(String email);
 
     List<Quest> getQuestNextWeek(String email);
+    List<Card> getCardsTodayByQuestList(List<Quest> quests);
 }

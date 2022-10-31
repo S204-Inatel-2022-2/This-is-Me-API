@@ -1,7 +1,7 @@
 package br.inatel.thisismeapi.controllers;
 
-import br.inatel.thisismeapi.models.Card;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.models.Card;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

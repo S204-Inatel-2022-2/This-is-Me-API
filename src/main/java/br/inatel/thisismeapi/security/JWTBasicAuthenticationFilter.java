@@ -1,5 +1,6 @@
 package br.inatel.thisismeapi.security;
 
+import br.inatel.thisismeapi.config.PrivateKeys;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -30,8 +31,8 @@ public class JWTBasicAuthenticationFilter extends BasicAuthenticationFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTBasicAuthenticationFilter.class);
 
-    @Value("${private.key}")
-    private String PRIVATE_KEY;
+    @Value("${private.key.default}")
+    private String PRIVATE_KEY_DEFAULT;
 
     public JWTBasicAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -52,7 +53,7 @@ public class JWTBasicAuthenticationFilter extends BasicAuthenticationFilter {
 
         try {
             jwt = token.getValue();
-            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(PRIVATE_KEY))
+            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(this.PRIVATE_KEY_DEFAULT))
                     .build()
                     .verify(jwt);
             LOGGER.info("m=doFilterInternal, status=validated token");

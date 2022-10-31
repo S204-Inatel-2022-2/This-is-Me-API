@@ -14,18 +14,17 @@ public interface QuestRepository extends MongoRepository<Quest, String> {
     @Aggregation(pipeline = {
             "{'$match': {$and: [" +
                     "{'email': ?0}, " +
-                    "{'startDate': " +
-                    "{$lte: ?1}}, " +
+                    "{'startDate': {$lte: ?1}}, " +
                     "{'endDate': {$gte: ?1}}, " +
-                    "{'week': {$elemMatch: {'dayOfWeek': ?2}}}]}}"
+                    "{'week': {$elemMatch: {'dayOfWeek': ?2}}}" +
+                    "]}}"
     })
     List<Quest> findAllQuestsOfTheDay(String email, LocalDate day, DayOfWeek dayOfWeek);
 
     @Aggregation(pipeline = {
             "{'$match': {$and: [" +
                     "{'email': ?0}, " +
-                    "{'startDate': " +
-                    "{$lte: ?1}}, " +
+                    "{'startDate': {$lte: ?1}}, " +
                     "{'endDate': {$gte: ?1}}" +
                     "]}}"
     })

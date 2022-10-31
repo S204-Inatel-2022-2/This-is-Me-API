@@ -17,7 +17,6 @@ public class Day implements Serializable {
     @Schema(example = "00:00")
     private String endTime;
 
-
     public String getStartTime() {
         return startTime;
     }

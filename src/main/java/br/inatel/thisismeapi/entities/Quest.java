@@ -1,7 +1,7 @@
 package br.inatel.thisismeapi.entities;
 
-import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.models.Day;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
@@ -31,7 +31,7 @@ public class Quest implements Serializable {
 
     private String desc;
 
-    private boolean isRepeatEveryDay;
+    private boolean isInfinity;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate startDate;
@@ -43,6 +43,8 @@ public class Quest implements Serializable {
     private String skill;
 
     private List<Day> week;
+
+    private List<SubQuest> subQuests;
 
     public Quest() {
     }
@@ -91,12 +93,12 @@ public class Quest implements Serializable {
         this.desc = desc;
     }
 
-    public boolean isRepeatEveryDay() {
-        return isRepeatEveryDay;
+    public boolean isInfinity() {
+        return isInfinity;
     }
 
-    public void setRepeatEveryDay(boolean repeatEveryDay) {
-        isRepeatEveryDay = repeatEveryDay;
+    public void setInfinity(boolean infinity) {
+        isInfinity = infinity;
     }
 
     public LocalDate getStartDate() {
@@ -133,6 +135,14 @@ public class Quest implements Serializable {
 
     public void addDayToWeek(Day day) {
         this.week.add(day);
+    }
+
+    public List<SubQuest> getSubQuests() {
+        return subQuests;
+    }
+
+    public void addSubQuests(SubQuest subQuest) {
+        this.subQuests.add(subQuest);
     }
 
     public Day getDayByDayOfWeek(DayOfWeek dayOfWeek) {

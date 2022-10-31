@@ -1,16 +1,18 @@
 package br.inatel.thisismeapi.services.impl;
 
-import br.inatel.thisismeapi.models.Card;
-import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.models.Card;
+import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
 import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.QuestService;
 import br.inatel.thisismeapi.utils.WeekUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,24 +30,24 @@ public class QuestServiceImpl implements QuestService {
     private UserServiceImpl userService;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
 
     @Override
     public Quest createNewQuest(Quest quest, String email) {
 
-        Character character = userService.findCharacterByEmail(email);
+        Character character = characterService.findCharacterByEmail(email);
         quest.setEmail(email);
-        Quest saved = questRepository.save(quest);
 
+        Quest saved = questRepository.save(quest);
         character.getQuests().add(saved);
-        characterRepository.save(character);
+        characterService.updateCharacter(character);
         return saved;
     }
 
     @Override
     public List<Quest> getAllQuest(String email) {
-        Character character = userService.findCharacterByEmail(email);
+        Character character = characterService.findCharacterByEmail(email);
 
         return character.getQuests();
     }
@@ -53,21 +55,22 @@ public class QuestServiceImpl implements QuestService {
     @Override
     public List<Quest> getQuestToday(String email) {
 
-        return questRepository.findAllQuestsOfTheDay(email, LocalDate.now(), DayOfWeek.from(LocalDate.now()));
+        return questRepository.findAllQuestsOfTheDay(email, LocalDate.now(Clock.systemDefaultZone()), DayOfWeek.from(LocalDate.now(Clock.systemDefaultZone())));
     }
 
     @Override
     public List<Quest> getQuestWeek(String email) {
 
-        return questRepository.findAllQuestsWeek(email, WeekUtils.getActualSundayByDate(LocalDate.now()));
+        return questRepository.findAllQuestsWeek(email, WeekUtils.getActualSundayByDate(LocalDate.now(Clock.systemDefaultZone())));
     }
 
     @Override
     public List<Quest> getQuestNextWeek(String email) {
 
-        return questRepository.findAllQuestsWeek(email, WeekUtils.getNextSundayByDate(LocalDate.now()));
+        return questRepository.findAllQuestsWeek(email, WeekUtils.getNextSundayByDate(LocalDate.now(Clock.systemDefaultZone())));
     }
 
+    @Override
     public List<Card> getCardsTodayByQuestList(List<Quest> quests) {
         List<Card> cards = new ArrayList<>();
 
@@ -76,7 +79,7 @@ public class QuestServiceImpl implements QuestService {
             card.setQuestId(quest.getQuestId());
             card.setName(quest.getName());
             card.setSkill(quest.getSkill());
-            Day day = quest.getDayByDayOfWeek(DayOfWeek.from(LocalDate.now()));
+            Day day = quest.getDayByDayOfWeek(DayOfWeek.from(LocalDate.now(Clock.systemDefaultZone())));
             card.setStartTime(day.getStartTime());
             card.setEndTime(day.getEndTime());
             card.setDuration(day.getIntervalInMin());
