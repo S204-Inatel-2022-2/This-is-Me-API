@@ -1,137 +1,77 @@
 package br.inatel.thisismeapi.services.impl;
 
-import br.inatel.thisismeapi.models.Card;
-import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
-import br.inatel.thisismeapi.repositories.CharacterRepository;
+import br.inatel.thisismeapi.entities.SubQuest;
+import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.QuestService;
-import br.inatel.thisismeapi.utils.WeekUtils;
+import br.inatel.thisismeapi.services.SubQuestsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class QuestServiceImpl implements QuestService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuestServiceImpl.class);
+
     @Autowired
     private QuestRepository questRepository;
 
     @Autowired
-    private UserServiceImpl userService;
+    private CharacterService characterService;
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private SubQuestsService subQuestsService;
 
 
     @Override
+    @Transactional
     public Quest createNewQuest(Quest quest, String email) {
 
-        Character character = userService.findCharacterByEmail(email);
+        LOGGER.info("m=createNewQuest, email={}, questName={}", email, quest.getName());
+        this.validateQuest(quest);
+
+        Character character = characterService.findCharacterByEmail(email);
         quest.setEmail(email);
-        Quest saved = questRepository.save(quest);
+        quest.setStatus(QuestStatus.IN_PROGRESS);
+        Quest savedQuest = questRepository.save(quest);
 
-        character.getQuests().add(saved);
-        characterRepository.save(character);
-        return saved;
-    }
+        List<SubQuest> subQuestList = subQuestsService.createSubQuestByQuest(savedQuest, email);
 
-    @Override
-    public List<Quest> getAllQuest(String email) {
-        Character character = userService.findCharacterByEmail(email);
+        quest.setFinalized(0L);
+        quest.setTotal((long) subQuestList.size());
 
-        return character.getQuests();
+        savedQuest = questRepository.save(quest);
+        character.getQuests().add(savedQuest);
+        characterService.updateCharacter(character);
+        return savedQuest;
     }
 
     @Override
     public List<Quest> getQuestToday(String email) {
 
-        return questRepository.findAllQuestsOfTheDay(email, LocalDate.now(), DayOfWeek.from(LocalDate.now()));
+        LOGGER.info("m=getQuestToday, email={}", email);
+        return questRepository.findAllQuestsByDate(email, LocalDate.now());
     }
 
-    @Override
-    public List<Quest> getQuestWeek(String email) {
+    private Boolean validateQuest(Quest quest) {
 
-        return questRepository.findAllQuestsWeek(email, LocalDate.now());
+        LOGGER.info("m=validateQuest");
+        if (quest.getStartDate().isBefore(LocalDate.now()))
+            throw new QuestValidationsException("Data de inicio precisa ser maior ou igual a data do dia atual!");
+
+        if (quest.getStartDate().isAfter(quest.getEndDate()))
+            throw new QuestValidationsException("Data de inicio precisa ser maior que a data final!");
+
+        return true;
     }
-
-    public List<Card> getCardsTodayByQuestList(List<Quest> quests) {
-        List<Card> cards = new ArrayList<>();
-
-        quests.forEach(quest -> {
-            Card card = new Card();
-            card.setQuestId(quest.getQuestId());
-            card.setName(quest.getName());
-            card.setSkill(quest.getSkill());
-            Day day = quest.getDayByDayOfWeek(DayOfWeek.from(LocalDate.now()));
-            card.setStartTime(day.getStartTime());
-            card.setEndTime(day.getEndTime());
-            card.setDuration(day.getIntervalInMin());
-            card.setXp(day.calculateXp());
-            cards.add(card);
-        });
-
-        return cards;
-    }
-
-    public List<Card> getCardsWeekByQuestList(List<Quest> quests) {
-        List<Card> cards = new ArrayList<>();
-
-        quests.forEach(quest -> {
-            List<Day> week = quest.getWeek();
-
-            Collections.sort(week, new Comparator<Day>() {
-                @Override
-                public int compare(Day day1, Day day2) {
-                    if (day1.getDayOfWeek() == DayOfWeek.SUNDAY)
-                        return -1;
-                    if (day2.getDayOfWeek() == DayOfWeek.SUNDAY)
-                        return 1;
-
-                    return day1.getDayOfWeek().compareTo(day2.getDayOfWeek());
-                }
-            });
-            // Se não é a ultima semana adiciona tudo
-            if (!WeekUtils.verifyIsLastWeek(quest.getEndDate())) {
-                quest.getWeek().forEach(day -> {
-                    cards.add(createInstanceOfCard(quest, day));
-                });
-
-            } else { // Se é ultima semana adiciona apenas até o dia da semana do endDate
-                for (int i = 0; i < week.size(); i++) {
-                    Day day = week.get(i);
-                    if (day.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                        cards.add(createInstanceOfCard(quest, day));
-                    } else {
-                        if (day.getDayOfWeek().getValue() > DayOfWeek.from(quest.getEndDate()).getValue()) {
-                            break;
-                        }
-                        cards.add(createInstanceOfCard(quest, day));
-                    }
-                }
-            }
-        });
-
-        return cards;
-    }
-
-    private Card createInstanceOfCard(Quest quest, Day day) {
-        Card card = new Card();
-        card.setQuestId(quest.getQuestId());
-        card.setName(quest.getName());
-        card.setSkill(quest.getSkill());
-        card.setStartTime(day.getStartTime());
-        card.setEndTime(day.getEndTime());
-        card.setDuration(day.getIntervalInMin());
-        card.setXp(day.calculateXp());
-        return card;
-    }
-
 }

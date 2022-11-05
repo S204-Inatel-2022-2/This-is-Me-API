@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.entities;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,9 +16,10 @@ public class Character {
     @Id
     private String id;
 
-    private String sex;
+    @Indexed(name = "unique_email_character", unique = true)
+    private String email;
 
-    private Long clothes;
+    private Long numberClothes;
 
     private String characterName;
 
@@ -29,22 +31,35 @@ public class Character {
     private List<Quest> quests;
 
     public Character() {
-        this.sex = "indefinido";
+        this.xp = 0L;
+        this.level = 0L;
+        this.numberClothes = 0L;
+        quests = new ArrayList<>();
+    }
+
+    public Character(String email, String characterName) {
+        this.email = email;
+        this.characterName = characterName;
+        this.numberClothes = 0L;
         this.xp = 0L;
         this.level = 0L;
         quests = new ArrayList<>();
     }
 
-    public Character(String characterName) {
-        this.characterName = characterName;
-        this.xp = 0L;
-        this.level = 0L;
-        this.sex = "indefinido";
-        quests = new ArrayList<>();
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCharacterName() {
@@ -55,12 +70,12 @@ public class Character {
         this.characterName = characterName;
     }
 
-    public Long getClothes() {
-        return clothes;
+    public Long getNumberClothes() {
+        return numberClothes;
     }
 
-    public void setClothes(Long clothes) {
-        this.clothes = clothes;
+    public void setNumberClothes(Long numberClothes) {
+        this.numberClothes = numberClothes;
     }
 
     public Long getXp() {
@@ -77,14 +92,6 @@ public class Character {
 
     public void upLevel() {
         this.level++;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
     }
 
     public List<Quest> getQuests() {

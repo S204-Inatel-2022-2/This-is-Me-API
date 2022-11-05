@@ -1,7 +1,6 @@
 package br.inatel.thisismeapi.controllers;
 
-import br.inatel.thisismeapi.controllers.wrapper.CreateUserContext;
-import br.inatel.thisismeapi.entities.User;
+import br.inatel.thisismeapi.controllers.dtos.requests.UserCreatingAccountRequestDTO;
 import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +15,20 @@ public class AdminController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
-    AdminServiceImpl adminService;
+    private AdminServiceImpl adminService;
 
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void createNewAccountAdmin(@RequestBody CreateUserContext createUserContext) {
+    public void createNewAccountAdmin(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO) {
 
-        LOGGER.info("m=createNewAccountAdmin, email={}", createUserContext.getUserDtoInput().getEmail());
-        User user = new User(
-                createUserContext.getUserDtoInput().getEmail(), createUserContext.getUserDtoInput().getPassword());
+        LOGGER.info("m=createNewAccountAdmin, email={}", userCreatingAccountRequestDTO.getEmail());
 
-        user.verifyPassword(createUserContext.getVerifyPassword());
-
-        adminService.createNewAccount(user, createUserContext.getCharacterName());
+        this.adminService.saveNewAccount(
+                userCreatingAccountRequestDTO.getEmail(),
+                userCreatingAccountRequestDTO.getPassword(),
+                userCreatingAccountRequestDTO.getVerifyPassword(),
+                userCreatingAccountRequestDTO.getCharacterName()
+        );
         LOGGER.info("m=createNewAccountAdmin, status=CREATED");
     }
 
