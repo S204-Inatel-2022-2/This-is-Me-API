@@ -37,7 +37,6 @@ class QuestServiceImplTest {
     @MockBean
     private SubQuestsService subQuestsService;
 
-
     @Test
     void testCreateNewQuestSuccess() {
 

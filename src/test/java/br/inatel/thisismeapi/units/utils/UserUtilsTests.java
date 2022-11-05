@@ -15,7 +15,7 @@ class UserUtilsTests {
 
 
     @Test
-    void testVerifyPasswordSuccess(){
+    void testVerifyPasswordSuccess() {
 
         String password = "123456";
         String passwordVerify = "123456";
@@ -26,12 +26,12 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyPasswordThrowExceptionWhenPasswordIsNull(){
+    void testVerifyPasswordThrowExceptionWhenPasswordIsNull() {
 
         String password = null;
         String passwordVerify = "123456";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyPassword(password, passwordVerify);
         });
 
@@ -39,12 +39,12 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyPasswordThrowExceptionWhenVerifyPasswordIsNull(){
+    void testVerifyPasswordThrowExceptionWhenVerifyPasswordIsNull() {
 
         String password = "123456";
         String passwordVerify = null;
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyPassword(password, passwordVerify);
         });
 
@@ -52,12 +52,12 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyPasswordThrowExceptionWhenPasswordIsBlank(){
+    void testVerifyPasswordThrowExceptionWhenPasswordIsBlank() {
 
         String password = "";
         String passwordVerify = "123456";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyPassword(password, passwordVerify);
         });
 
@@ -65,12 +65,12 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyPasswordThrowExceptionWhenVerifyPasswordIsBlank(){
+    void testVerifyPasswordThrowExceptionWhenVerifyPasswordIsBlank() {
 
         String password = "123456";
         String passwordVerify = "";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyPassword(password, passwordVerify);
         });
 
@@ -78,12 +78,12 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyPasswordThrowExceptionWhenPasswordsIsNotEquals(){
+    void testVerifyPasswordThrowExceptionWhenPasswordsIsNotEquals() {
 
         String password = "123456";
         String passwordVerify = "654321";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyPassword(password, passwordVerify);
         });
 
@@ -91,7 +91,7 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyDecryptedPasswordLengthSuccess(){
+    void testVerifyDecryptedPasswordLengthSuccess() {
 
         String password = "123456";
 
@@ -101,11 +101,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyDecryptedPasswordLengthThrowExceptionWhenPasswordIsLenghtIsLessThanFive(){
+    void testVerifyDecryptedPasswordLengthThrowExceptionWhenPasswordIsLenghtIsLessThanFive() {
 
         String password = PasswordConstToTest.PASSWORD_WITH_LESS_MIN_LENGHT_4;
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyDecryptedPasswordLength(password);
         });
 
@@ -113,11 +113,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyDecryptedPasswordLengthThrowExceptionWhenPasswordIsGreaterThanThirty(){
+    void testVerifyDecryptedPasswordLengthThrowExceptionWhenPasswordIsGreaterThanThirty() {
 
         String password = PasswordConstToTest.PASSWORD_WITH_MORE_MAX_LENGHT_31;
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyDecryptedPasswordLength(password);
         });
 
@@ -125,7 +125,7 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyEmailSucess(){
+    void testVerifyEmailSucess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
 
@@ -135,11 +135,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyEmailThrowExceptionWhenEmailIsNull(){
+    void testVerifyEmailThrowExceptionWhenEmailIsNull() {
 
         String email = null;
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyEmail(email);
         });
 
@@ -147,11 +147,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyEmailThrowExceptionWhenEmailIsBlank(){
+    void testVerifyEmailThrowExceptionWhenEmailIsBlank() {
 
         String email = "";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyEmail(email);
         });
 
@@ -159,11 +159,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyEmailThrowExceptionWhenEmailLengthIsGreaterThanOneHundredAndTwenty(){
+    void testVerifyEmailThrowExceptionWhenEmailLengthIsGreaterThanOneHundredAndTwenty() {
 
         String email = EmailConstToTest.EMAIL_WITH_MORE_MAX_LENGHT;
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyEmail(email);
         });
 
@@ -171,11 +171,11 @@ class UserUtilsTests {
     }
 
     @Test
-    void testVerifyEmailThrowExceptionWhenEmailFormatInvalid(){
+    void testVerifyEmailThrowExceptionWhenEmailFormatInvalid() {
 
         String email = "email";
 
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, ()->{
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             UserUtils.verifyEmail(email);
         });
 

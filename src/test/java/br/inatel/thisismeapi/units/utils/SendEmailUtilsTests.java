@@ -5,14 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest(classes = SendEmailUtils.class)
 class SendEmailUtilsTests {
 
     @Test
-    public void testGetMessageResetToken(){
+    public void testGetMessageResetToken() {
         Long number = 123456L;
         String expected = "Solicitação de troca de senha \n\n" +
                 "Token de Verificação: " + number + "" +

@@ -7,7 +7,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest(classes = JwtUtils.class)
@@ -15,7 +16,7 @@ class JwtUtilsTests {
 
 
     @Test
-    void testEncodeAndDecodedSuccess(){
+    void testEncodeAndDecodedSuccess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Integer number = 10;
@@ -30,7 +31,7 @@ class JwtUtilsTests {
     }
 
     @Test
-    void testDecodedThrowExceptionWhenKeyIsWrong(){
+    void testDecodedThrowExceptionWhenKeyIsWrong() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Integer number = 10;
@@ -45,7 +46,7 @@ class JwtUtilsTests {
     }
 
     @Test
-    void testDecodedThrowExceptionWhenKeyIsNull(){
+    void testDecodedThrowExceptionWhenKeyIsNull() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Integer number = 10;
@@ -59,7 +60,7 @@ class JwtUtilsTests {
     }
 
     @Test
-    void testDecodedThrowExceptionWhenTokenIsNull(){
+    void testDecodedThrowExceptionWhenTokenIsNull() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Integer number = 10;

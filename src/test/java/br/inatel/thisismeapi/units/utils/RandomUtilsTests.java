@@ -13,7 +13,7 @@ class RandomUtilsTests {
 
 
     @Test
-    void testRandomGenerateSuccess(){
+    void testRandomGenerateSuccess() {
 
         Long number = RandomUtils.randomGenerate(0L, 10L);
 
@@ -23,7 +23,7 @@ class RandomUtilsTests {
     }
 
     @Test
-    void testRandomGenerateThrowExceptionWhenStartInIsNull(){
+    void testRandomGenerateThrowExceptionWhenStartInIsNull() {
 
         Long number = RandomUtils.randomGenerate(0L, 10L);
 
@@ -35,7 +35,7 @@ class RandomUtilsTests {
     }
 
     @Test
-    void testRandomGenerateThrowExceptionWhenEndInIsNull(){
+    void testRandomGenerateThrowExceptionWhenEndInIsNull() {
 
         Long number = RandomUtils.randomGenerate(0L, 10L);
 

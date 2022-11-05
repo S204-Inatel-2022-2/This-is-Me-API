@@ -1,7 +1,6 @@
 package br.inatel.thisismeapi.units.utils;
 
 import br.inatel.thisismeapi.utils.TimeUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TimeUtilsTests {
 
     @Test
-    void testGetTimeInTextFormatWithTimeInMinGreaterThanOneHour(){
+    void testGetTimeInTextFormatWithTimeInMinGreaterThanOneHour() {
 
         Long timeInMin = 90L;
         String expected = "1h30m";
@@ -21,7 +20,7 @@ public class TimeUtilsTests {
     }
 
     @Test
-    void testGetTimeInTextFormatWithTimeInMinLessThanOneHour(){
+    void testGetTimeInTextFormatWithTimeInMinLessThanOneHour() {
 
         Long timeInMin = 35L;
         String expected = "35min";

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -49,6 +50,7 @@ public class Quest implements Serializable {
     private Long finalized;
 
     public Quest() {
+        this.week = new ArrayList<>();
     }
 
     public String getQuestId() {

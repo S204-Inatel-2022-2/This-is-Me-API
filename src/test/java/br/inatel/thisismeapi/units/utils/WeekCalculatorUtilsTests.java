@@ -1,8 +1,6 @@
 package br.inatel.thisismeapi.units.utils;
 
 import br.inatel.thisismeapi.utils.WeekCalculatorUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -19,11 +17,11 @@ class WeekCalculatorUtilsTests {
 
 
     @Test
-    void testVerifyDateBelongsToCurrentWeekMustBeTrue(){
+    void testVerifyDateBelongsToCurrentWeekMustBeTrue() {
 
         LocalDate today = LocalDate.of(2022, 11, 3);
         Integer numberDayOfWeekFromToday = DayOfWeek.from(today).getValue();
-        LocalDate endDate = LocalDate.of(2022,11,5);
+        LocalDate endDate = LocalDate.of(2022, 11, 5);
 
         try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
@@ -35,11 +33,11 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testVerifyDateBelongsToCurrentWeekMustBeFalse(){
+    void testVerifyDateBelongsToCurrentWeekMustBeFalse() {
 
         LocalDate today = LocalDate.of(2022, 11, 3);
         Integer numberDayOfWeekFromToday = DayOfWeek.from(today).getValue();
-        LocalDate endDate = LocalDate.of(2022,11,6);
+        LocalDate endDate = LocalDate.of(2022, 11, 6);
 
         try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
@@ -52,7 +50,7 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testGetSundayFromWeekDate(){
+    void testGetSundayFromWeekDate() {
 
         LocalDate date = LocalDate.of(2022, 11, 3);
         LocalDate expected = LocalDate.of(2022, 10, 30);
@@ -63,7 +61,7 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testGetSundayFromWeekDateWithDateInSunday(){
+    void testGetSundayFromWeekDateWithDateInSunday() {
 
         LocalDate date = LocalDate.of(2022, 11, 6);
         LocalDate expected = LocalDate.of(2022, 11, 6);
@@ -74,7 +72,7 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testGetNextSundayByDate(){
+    void testGetNextSundayByDate() {
 
         LocalDate date = LocalDate.of(2022, 11, 3);
         LocalDate expected = LocalDate.of(2022, 11, 6);
@@ -85,7 +83,7 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testGetNextSundayByDateWithDateInSunday(){
+    void testGetNextSundayByDateWithDateInSunday() {
 
         LocalDate date = LocalDate.of(2022, 10, 30);
         LocalDate expected = LocalDate.of(2022, 11, 6);
@@ -96,7 +94,7 @@ class WeekCalculatorUtilsTests {
     }
 
     @Test
-    void testGetNextSundayByDateWithDateInSaturday(){
+    void testGetNextSundayByDateWithDateInSaturday() {
 
         LocalDate date = LocalDate.of(2022, 11, 5);
         LocalDate expected = LocalDate.of(2022, 11, 6);

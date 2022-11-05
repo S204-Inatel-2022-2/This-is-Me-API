@@ -34,10 +34,11 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         LOGGER.info("m=createSubQuestByQuest, email={}, questName={}", email, quest.getName());
         List<SubQuest> subQuestList = new ArrayList<>();
 
-        Collections.sort(quest.getWeek());
 
         if (quest.getWeek().isEmpty())
             throw new ErrorOnCreateException("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!");
+
+        Collections.sort(quest.getWeek());
 
         for (Day day : quest.getWeek()) {
 
