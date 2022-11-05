@@ -2,8 +2,6 @@ package br.inatel.thisismeapi.utils;
 
 import br.inatel.thisismeapi.exceptions.ConstraintViolationException;
 
-import javax.sound.midi.Track;
-
 public final class UserUtils {
 
     public static boolean verifyPassword(String password, String verifyPassword) {

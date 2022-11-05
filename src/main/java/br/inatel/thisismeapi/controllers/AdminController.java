@@ -2,9 +2,6 @@ package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.controllers.dtos.requests.UserCreatingAccountRequestDTO;
 import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.models.annotations.OpenAPI30;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

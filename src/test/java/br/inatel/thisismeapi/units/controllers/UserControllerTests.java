@@ -110,7 +110,7 @@ class UserControllerTests {
         UserResetPasswordRequestDTO requestDTO = this.getUserResetPasswordRequestDTO();
         MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, ()->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userController.resetPassword(requestDTO, httpServletRequest);
         });
 

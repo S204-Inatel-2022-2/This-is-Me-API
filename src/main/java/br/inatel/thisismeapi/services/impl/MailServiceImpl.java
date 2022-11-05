@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +25,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendEmailWithMessage(String email, String subject, String message) {
 
-        LOGGER.info("m=sendEmailWithMessage, email={}, message={}", email, message);
+        LOGGER.info("m=sendEmailWithMessage, email={}, text={}", email, message);
 
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject(subject);

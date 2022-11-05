@@ -45,5 +45,4 @@ public class CharacterController {
 
         return ResponseEntity.ok().body(new CharacterInfoResponseDTO(character));
     }
-
 }

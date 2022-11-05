@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.units.classestotest;
+package br.inatel.thisismeapi.units.classesToTest;
 
 public class EmailConstToTest {
 

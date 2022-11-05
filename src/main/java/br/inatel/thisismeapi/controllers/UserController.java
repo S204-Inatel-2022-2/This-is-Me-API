@@ -26,7 +26,6 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void createNewAccount(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO) {
@@ -74,7 +73,7 @@ public class UserController {
         String tokenReset;
         try {
             tokenReset = WebUtils.getCookie(request, "token_reset").getValue();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new TokenInvalidException("Token não encontrado, solicite um novo código para troca de senha!");
         }
 
@@ -84,11 +83,9 @@ public class UserController {
                 tokenReset);
     }
 
-
     @GetMapping("/helloUser")
     public String helloUser() {
         LOGGER.info("m=helloUser");
         return "Hello User";
     }
-
 }

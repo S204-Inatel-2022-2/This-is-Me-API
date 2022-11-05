@@ -2,34 +2,23 @@ package br.inatel.thisismeapi.units.services.impl;
 
 
 import br.inatel.thisismeapi.entities.Character;
-import br.inatel.thisismeapi.entities.User;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
-import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
-import br.inatel.thisismeapi.repositories.UserRepository;
-import br.inatel.thisismeapi.services.CharacterService;
-import br.inatel.thisismeapi.services.MailService;
 import br.inatel.thisismeapi.services.impl.CharacterServiceImpl;
-import br.inatel.thisismeapi.services.impl.UserServiceImpl;
-import br.inatel.thisismeapi.units.classestotest.EmailConstToTest;
-import br.inatel.thisismeapi.units.classestotest.PasswordConstToTest;
-import br.inatel.thisismeapi.utils.JwtUtils;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {CharacterServiceImpl.class})
 @ActiveProfiles("test")
@@ -63,7 +52,7 @@ class CharacterServiceTest {
         String expectedMessage = "Personagem com email [" + email + "] não encontrado!";
 
         when(characterRepository.findCharacterByEmail(email)).thenReturn(Optional.empty());
-        UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, ()->{
+        UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, () -> {
             this.characterService.findCharacterByEmail(email);
         });
 
@@ -93,7 +82,7 @@ class CharacterServiceTest {
         String expectedMessage = "Já Existe uma conta cadastrada com esse e-mail!";
 
         when(characterRepository.save(character)).thenThrow(DuplicateKeyException.class);
-        UniqueViolationConstraintException exception = assertThrows(UniqueViolationConstraintException.class, ()->{
+        UniqueViolationConstraintException exception = assertThrows(UniqueViolationConstraintException.class, () -> {
             this.characterService.saveNewCharacter(character);
         });
 
@@ -120,9 +109,9 @@ class CharacterServiceTest {
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Character character = new Character();
         character.setEmail(email);
-        String expectedMessage = "Necessário que o usuário tenha um personagem para utilizá-lo!";
+        String expectedMessage = "Usuário não tem um personagem criado!";
 
-        UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, ()->{
+        UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, () -> {
             this.characterService.updateCharacter(character);
         });
 
@@ -135,7 +124,7 @@ class CharacterServiceTest {
         String email = EmailConstToTest.EMAIL_DEFAULT;
         Character character = new Character();
         character.setEmail(email);
-        character.setClothes(1L);
+        character.setNumberClothes(1L);
 
         when(characterRepository.findCharacterByEmail(email)).thenReturn(Optional.of(character));
         when(characterRepository.save(character)).thenReturn(character);
@@ -143,6 +132,6 @@ class CharacterServiceTest {
 
         assertEquals(character, actualChar);
         assertEquals(character.getEmail(), actualChar.getEmail());
-        assertEquals(10L, actualChar.getClothes());
+        assertEquals(10L, actualChar.getNumberClothes());
     }
 }

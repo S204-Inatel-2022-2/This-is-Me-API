@@ -1,114 +1,111 @@
-//package br.inatel.thisismeapi.units.services.impl;
-//
-//import br.inatel.thisismeapi.entities.Character;
-//import br.inatel.thisismeapi.entities.Quest;
-//import br.inatel.thisismeapi.repositories.CharacterRepository;
-//import br.inatel.thisismeapi.repositories.QuestRepository;
-//import br.inatel.thisismeapi.services.CharacterService;
-//import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
-//import br.inatel.thisismeapi.services.impl.UserServiceImpl;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-//import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-//import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.test.context.ContextConfiguration;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertTrue;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//@SpringBootTest(classes = {QuestServiceImpl.class})
-//class QuestServiceImplTest {
-//
-//    @Autowired
-//    private QuestServiceImpl questService;
-//
-//    @MockBean
-//    private UserServiceImpl userService;
-//
-//    @MockBean
-//    private QuestRepository questRepository;
-//
-//    @MockBean
-//    private CharacterService characterService;
-//
-//    @Test
-//    void testCreateNewAccountSuccess() {
-//
-//        // given
-//        String email = "test@email.com";
-//        String cName = "Character Name";
-//        Character character = new Character();
-//        Quest quest = new Quest();
-//        quest.setEmail(email);
-//        List<Quest> expected = new ArrayList<>();
-//        expected.add(quest);
-//        character.setCharacterName(cName);
-//
-//        // when
-//        when(userService.findCharacterByEmail(email)).thenReturn(character);
-//        when(questRepository.save(quest)).thenReturn(quest);
-//        when(characterRepository.save(character)).thenReturn(any());
-//        Quest actual = questService.createNewQuest(quest, email);
-//
-//        // then
-//        assertEquals(quest.getEmail(), actual.getEmail());
-//    }
-//
-//    @Test
-//    void testGetQuestTodaySuccess() {
-//
-//        // given
-//        String email = "test@email.com";
-//        List<Quest> expected = new ArrayList<>();
-//        Quest quest1 = new Quest();
-//        quest1.setEmail(email);
-//        Quest quest2 = new Quest();
-//        quest2.setEmail(email);
-//        expected.add(quest1);
-//        expected.add(quest2);
-//
-//        // when
-//
-//        when(questRepository.findAllQuestsOfTheDay(any(), any(), any())).thenReturn(expected);
-//
-//        List<Quest> actual = questService.getQuestToday(email);
-//
-//        // then
-//        assertEquals(2, actual.size());
-//        assertEquals(email, actual.get(0).getEmail());
-//    }
-//
-//    @Test
-//    void testGetQuestWeekSuccess() {
-//
-//        // given
-//        String email = "test@email.com";
-//        List<Quest> expected = new ArrayList<>();
-//        Quest quest1 = new Quest();
-//        quest1.setEmail(email);
-//        Quest quest2 = new Quest();
-//        quest2.setEmail(email);
-//        expected.add(quest1);
-//        expected.add(quest2);
-//
-//        // when
-//        when(questRepository.findAllQuestsWeek(any(), any())).thenReturn(expected);
-//
-//        List<Quest> actual = questService.getQuestWeek(email);
-//
-//        // then
-//        assertEquals(2, actual.size());
-//        assertEquals(email, actual.get(0).getEmail());
-//    }
-//}
+package br.inatel.thisismeapi.units.services.impl;
+
+import br.inatel.thisismeapi.entities.Character;
+import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.exceptions.QuestValidationsException;
+import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.services.CharacterService;
+import br.inatel.thisismeapi.services.SubQuestsService;
+import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@SpringBootTest(classes = {QuestServiceImpl.class})
+class QuestServiceImplTest {
+
+    @Autowired
+    private QuestServiceImpl questService;
+
+    @MockBean
+    private QuestRepository questRepository;
+
+    @MockBean
+    private CharacterService characterService;
+
+    @MockBean
+    private SubQuestsService subQuestsService;
+
+
+    @Test
+    void testCreateNewQuestSuccess() {
+
+        // given
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+        Quest quest = new Quest();
+        quest.setName("Quest");
+        quest.setStartDate(LocalDate.now());
+        quest.setEndDate(LocalDate.now().plusDays(1));
+
+        Character character = new Character();
+        character.setEmail(email);
+
+        // when
+        when(characterService.findCharacterByEmail(email)).thenReturn(character);
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(subQuestsService.createSubQuestByQuest(quest, email)).thenReturn(new ArrayList<>());
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(characterService.updateCharacter(character)).thenReturn(character);
+
+        Quest result = questService.createNewQuest(quest, email);
+
+        // then
+        assertEquals(email, result.getEmail());
+        assertEquals("Quest", result.getName());
+        assertEquals(0, result.getTotal());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenStartDateLessThanEndDate() {
+
+        Quest quest = new Quest();
+        quest.setStartDate(LocalDate.now());
+        quest.setEndDate(LocalDate.now().minusDays(1));
+
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Data de inicio precisa ser maior que a data final!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenStartDateLessThanCurrentDate() {
+
+        Quest quest = new Quest();
+        quest.setStartDate(LocalDate.now().minusDays(10));
+
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Data de inicio precisa ser maior ou igual a data do dia atual!", exception.getMessage());
+    }
+
+    @Test
+    void testGetQuestTodaySuccess() {
+
+        List<Quest> questListExpected = new ArrayList<>();
+        questListExpected.add(new Quest());
+        questListExpected.add(new Quest());
+
+        when(questRepository.findAllQuestsByDate(any(), any())).thenReturn(questListExpected);
+
+        List<Quest> questListActual = questService.getQuestToday(EmailConstToTest.EMAIL_DEFAULT);
+
+        assertEquals(questListExpected, questListActual);
+    }
+}

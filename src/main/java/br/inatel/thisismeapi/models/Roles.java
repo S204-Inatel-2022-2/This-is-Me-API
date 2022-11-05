@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.entities;
+package br.inatel.thisismeapi.models;
 
 import br.inatel.thisismeapi.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,6 +1,5 @@
 package br.inatel.thisismeapi.security;
 
-import br.inatel.thisismeapi.config.PrivateKeys;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -37,7 +36,6 @@ public class JWTBasicAuthenticationFilter extends BasicAuthenticationFilter {
     public JWTBasicAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

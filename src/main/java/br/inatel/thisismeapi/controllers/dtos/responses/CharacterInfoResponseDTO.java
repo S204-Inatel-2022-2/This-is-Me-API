@@ -15,7 +15,7 @@ public class CharacterInfoResponseDTO implements Serializable {
     public CharacterInfoResponseDTO(Character character) {
         this.id = character.getId();
         this.characterName = character.getCharacterName();
-        this.clothes = character.getClothes();
+        this.clothes = character.getNumberClothes();
         this.xp = character.getXp();
         this.level = character.getLevel();
     }

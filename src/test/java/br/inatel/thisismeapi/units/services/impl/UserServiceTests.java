@@ -1,11 +1,8 @@
 package br.inatel.thisismeapi.units.services.impl;
 
 
-import br.inatel.thisismeapi.config.PrivateKeys;
 import br.inatel.thisismeapi.entities.Character;
-import br.inatel.thisismeapi.entities.Roles;
 import br.inatel.thisismeapi.entities.User;
-import br.inatel.thisismeapi.enums.RoleName;
 import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
@@ -14,13 +11,10 @@ import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.MailService;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
-import br.inatel.thisismeapi.units.classestotest.EmailConstToTest;
-import br.inatel.thisismeapi.units.classestotest.JwtUtilToTest;
-import br.inatel.thisismeapi.units.classestotest.PasswordConstToTest;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
+import br.inatel.thisismeapi.units.classesToTest.PasswordConstToTest;
 import br.inatel.thisismeapi.utils.JwtUtils;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +23,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -175,7 +167,7 @@ class UserServiceTests {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, () -> {
-           userService.findUserByEmail(email);
+            userService.findUserByEmail(email);
         });
 
 
@@ -185,7 +177,7 @@ class UserServiceTests {
 
     // TODO: Descobrir como mockar uma chamada para um metodo interno
     @Test
-    void testSendEmailToResetPasswordSuccess(){
+    void testSendEmailToResetPasswordSuccess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         User user = new User();
@@ -201,7 +193,7 @@ class UserServiceTests {
     }
 
     @Test
-    void testGetResetTokenWithEmailAndNumberSuccess(){
+    void testGetResetTokenWithEmailAndNumberSuccess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
 
@@ -218,7 +210,7 @@ class UserServiceTests {
     }
 
     @Test
-    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenTokenResetIsNull(){
+    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenTokenResetIsNull() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         String expectedMessage = "Não foi gerado o código de verificação, por favor solicite outro código e tente novamente!";
@@ -227,7 +219,7 @@ class UserServiceTests {
         user.setTokenResetPassword(null);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () ->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userService.getResetTokenWithEmailAndNumber(email, 10);
         });
 
@@ -236,7 +228,7 @@ class UserServiceTests {
 
 
     @Test
-    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenNumberIsWrong(){
+    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenNumberIsWrong() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
 
@@ -247,7 +239,7 @@ class UserServiceTests {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () ->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userService.getResetTokenWithEmailAndNumber(email, 66);
         });
 
@@ -255,7 +247,7 @@ class UserServiceTests {
     }
 
     @Test
-    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenResetTokenJwtIsWrong(){
+    void testGetResetTokenWithEmailAndNumberThrowExceptionWhenResetTokenJwtIsWrong() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
 
@@ -266,7 +258,7 @@ class UserServiceTests {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () ->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userService.getResetTokenWithEmailAndNumber(email, 10);
         });
 
@@ -274,7 +266,7 @@ class UserServiceTests {
     }
 
     @Test
-    void testResetPasswordSuccess(){
+    void testResetPasswordSuccess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         String oldPassword = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
@@ -293,13 +285,13 @@ class UserServiceTests {
     }
 
     @Test
-    void testResetPasswordThrowExceptionWhenJwtTokenIsInvalid(){
+    void testResetPasswordThrowExceptionWhenJwtTokenIsInvalid() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         String resetToken = null;
         String newPassword = "NovaSenha";
         String token = JwtUtils.createJwtResetTokenWith(email, 10, RESET_TOKEN_EXPIRATION_TIME_IN_SECONDS, "wrong key");
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, ()->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userService.resetPassword(newPassword, newPassword, token);
         });
 
@@ -307,7 +299,7 @@ class UserServiceTests {
     }
 
     @Test
-    void testResetPasswordThrowExceptionWhenJwtTokenInUserIsNull(){
+    void testResetPasswordThrowExceptionWhenJwtTokenInUserIsNull() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
         String resetToken = null;
@@ -316,7 +308,7 @@ class UserServiceTests {
         user.setEmail(email);
         String token = JwtUtils.createJwtResetTokenWith(email, 10, RESET_TOKEN_EXPIRATION_TIME_IN_SECONDS, PRIVATE_KEY_DEFAULT);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        TokenInvalidException exception = assertThrows(TokenInvalidException.class, ()->{
+        TokenInvalidException exception = assertThrows(TokenInvalidException.class, () -> {
             userService.resetPassword(newPassword, newPassword, token);
         });
 

@@ -23,10 +23,11 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public Character findCharacterByEmail(String email) {
+
+        LOGGER.info("m=findCharacterByEmail, email={}", email);
         Optional<Character> characterOptional = characterRepository.findCharacterByEmail(email);
 
         if (characterOptional.isEmpty()) {
-            LOGGER.error("m=setClothes, email={}, msg=Personagem não encontrado", email);
             throw new UnregisteredUserException("Personagem com email [" + email + "] não encontrado!");
         }
 
@@ -35,26 +36,32 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public Character saveNewCharacter(Character character) {
+
+        LOGGER.info("m=saveNewCharacter, characternName={}", character.getCharacterName());
         try {
             return characterRepository.save(character);
-        }catch(DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
         }
     }
 
     @Override
     public Character updateCharacter(Character character) {
-        if (character.getId() == null)
-            throw new UnregisteredUserException("Necessário que o usuário tenha um personagem para utilizá-lo!");
+
+        LOGGER.info("m=updateCharacter, characternName={}", character.getCharacterName());
+        if (character.getId() == null) {
+            throw new UnregisteredUserException("Usuário não tem um personagem criado!");
+        }
         return characterRepository.save(character);
     }
 
     @Override
-    public Character setClothes(String email, Long number) {
+    public Character setClothes(String email, Long numberClothes) {
 
+        LOGGER.info("m=setClothes, email={}, numberClothes={}", email, numberClothes);
         Character character = this.findCharacterByEmail(email);
 
-        character.setClothes(number);
+        character.setNumberClothes(numberClothes);
         return characterRepository.save(character);
     }
 }

@@ -1,4 +1,4 @@
-package br.inatel.thisismeapi.units.classestotest;
+package br.inatel.thisismeapi.units.classesToTest;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -62,7 +62,6 @@ class AdminControllerTests {
         assertEquals(expected, actual);
     }
 
-
     private UserCreatingAccountRequestDTO getUserCreatingAccountRequestDTO() {
 
         UserCreatingAccountRequestDTO userCreatingAccountRequestDTO = new UserCreatingAccountRequestDTO();

@@ -1,5 +1,6 @@
 package br.inatel.thisismeapi.entities;
 
+import br.inatel.thisismeapi.models.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;

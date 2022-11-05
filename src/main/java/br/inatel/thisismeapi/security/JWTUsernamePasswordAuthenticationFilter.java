@@ -1,8 +1,7 @@
 package br.inatel.thisismeapi.security;
 
-import br.inatel.thisismeapi.config.PrivateKeys;
 import br.inatel.thisismeapi.controllers.dtos.requests.UserLoginRequestDTO;
-import br.inatel.thisismeapi.entities.Roles;
+import br.inatel.thisismeapi.models.Roles;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;

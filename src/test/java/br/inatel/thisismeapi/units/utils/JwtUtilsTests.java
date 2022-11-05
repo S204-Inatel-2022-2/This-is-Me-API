@@ -1,7 +1,6 @@
 package br.inatel.thisismeapi.units.utils;
 
-import br.inatel.thisismeapi.exceptions.ConstraintViolationException;
-import br.inatel.thisismeapi.units.classestotest.EmailConstToTest;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import br.inatel.thisismeapi.utils.JwtUtils;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;

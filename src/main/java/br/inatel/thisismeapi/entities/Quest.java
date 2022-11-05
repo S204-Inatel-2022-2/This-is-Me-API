@@ -6,23 +6,23 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-
+@Document
 public class Quest implements Serializable {
 
     @Id
     @Schema(hidden = true)
-    @Indexed(name = "quest_id", unique = true)
     private String questId;
 
+    @Schema(hidden = true)
     private String email;
 
+    @Schema(hidden = true)
     private QuestStatus status;
 
     private String hexColor;
@@ -30,8 +30,6 @@ public class Quest implements Serializable {
     private String name;
 
     private String desc;
-
-    private boolean isInfinity;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate startDate;
@@ -44,7 +42,11 @@ public class Quest implements Serializable {
 
     private List<Day> week;
 
-    private List<SubQuest> subQuests;
+    @Schema(hidden = true)
+    private Long total;
+
+    @Schema(hidden = true)
+    private Long finalized;
 
     public Quest() {
     }
@@ -93,14 +95,6 @@ public class Quest implements Serializable {
         this.desc = desc;
     }
 
-    public boolean isInfinity() {
-        return isInfinity;
-    }
-
-    public void setInfinity(boolean infinity) {
-        isInfinity = infinity;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -137,18 +131,20 @@ public class Quest implements Serializable {
         this.week.add(day);
     }
 
-    public List<SubQuest> getSubQuests() {
-        return subQuests;
+
+    public Long getTotal() {
+        return total;
     }
 
-    public void addSubQuests(SubQuest subQuest) {
-        this.subQuests.add(subQuest);
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
-    public Day getDayByDayOfWeek(DayOfWeek dayOfWeek) {
-        Optional<Day> dayOptional = this.week.stream().filter(day -> day.getDayOfWeek() == dayOfWeek).findFirst();
-        if (dayOptional.isEmpty())
-            return null;
-        return dayOptional.get();
+    public Long getFinalized() {
+        return finalized;
+    }
+
+    public void setFinalized(Long finalized) {
+        this.finalized = finalized;
     }
 }

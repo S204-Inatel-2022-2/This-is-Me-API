@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {CharacterController.class})
 class CharacterControllerTests {
@@ -46,7 +47,7 @@ class CharacterControllerTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(character.getCharacterName(), responseDTO.getCharacterName());
         assertEquals(character.getLevel(), responseDTO.getLevel());
-        assertEquals(character.getClothes(), responseDTO.getClothes());
+        assertEquals(character.getNumberClothes(), responseDTO.getClothes());
         assertEquals(character.getXp(), responseDTO.getXp());
         verify(characterService).findCharacterByEmail(character.getEmail());
     }
@@ -56,7 +57,7 @@ class CharacterControllerTests {
 
         Character character = this.getCharacter();
         Long newClothes = 66L;
-        character.setClothes(newClothes);
+        character.setNumberClothes(newClothes);
 
         when(authentication.getName()).thenReturn(character.getEmail());
         when(characterService.setClothes(character.getEmail(), newClothes)).thenReturn(character);
@@ -71,7 +72,7 @@ class CharacterControllerTests {
 
         Character character = new Character();
         character.setEmail(this.email);
-        character.setClothes(this.clotheNumber);
+        character.setNumberClothes(this.clotheNumber);
         character.setCharacterName(this.charName);
         return character;
     }

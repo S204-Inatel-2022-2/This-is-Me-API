@@ -1,9 +1,5 @@
 package br.inatel.thisismeapi.exceptions;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-
-import javax.xml.bind.annotation.XmlSchema;
 import java.io.Serializable;
 
 public class StandardError implements Serializable {

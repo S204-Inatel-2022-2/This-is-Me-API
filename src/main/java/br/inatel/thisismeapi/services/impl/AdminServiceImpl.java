@@ -1,14 +1,14 @@
 package br.inatel.thisismeapi.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
-import br.inatel.thisismeapi.entities.Roles;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
+import br.inatel.thisismeapi.models.Roles;
 import br.inatel.thisismeapi.repositories.UserRepository;
-import br.inatel.thisismeapi.services.AdminService;
 import br.inatel.thisismeapi.services.CharacterService;
+import br.inatel.thisismeapi.services.UserService;
 import br.inatel.thisismeapi.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +23,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -62,25 +63,25 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public User updateUser(User user) {
+
+        LOGGER.info("m=updateUser, type=Admin, email={}, characterName={}", user.getEmail(), user.getCharacter().getCharacterName());
         return userRepository.save(user);
     }
 
     @Override
     public User findUserByEmail(String email) {
+
+        LOGGER.info("m=findUserByEmail, type=Admin, email={}", email);
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            LOGGER.error("m=resetPassword, email={}, msg=Usuário não encontrado", email);
             throw new UnregisteredUserException("Usuário com email [" + email + "] não encontrado!");
         }
 
         return userOptional.get();
     }
 
-    @Override
-    public Character findCharacterByEmail(String email) {
-        return null;
-    }
+    // TODO: Implementar
 
     @Override
     public void sendEmailToResetPassword(String email) {
@@ -88,7 +89,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public String verifyNumberOfResetTokenPassword(String email, Integer number) {
+    public String getResetTokenWithEmailAndNumber(String email, Integer number) {
         return null;
     }
 

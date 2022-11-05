@@ -1,13 +1,13 @@
 package br.inatel.thisismeapi.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
-import br.inatel.thisismeapi.entities.Roles;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
 import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
+import br.inatel.thisismeapi.models.Roles;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.MailService;
@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
         return new BCryptPasswordEncoder();
     }
 
-
     @Override
     public User saveNewAccount(String email, String password, String verifyPassword, String characterName) {
 
@@ -75,10 +74,8 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.save(user);
         } catch (DuplicateKeyException e) {
-            LOGGER.error("m=saveNewAccount, email={}, message={}", email, "Já Existe uma conta cadastrada com esse e-mail!");
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
-        } catch (Exception e){
-            LOGGER.error("m=saveNewAccount, email={}, message={}, error={}", email, e.getMessage(), e);
+        } catch (Exception e) {
             throw new ErrorOnCreateException(e.getLocalizedMessage());
         }
     }
@@ -97,10 +94,9 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("m=findUserByEmail, type=User, email={}", email);
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if (userOptional.isEmpty()) {
-            LOGGER.error("m=resetPassword, email={}, msg=Usuário não encontrado", email);
+        if (userOptional.isEmpty())
             throw new UnregisteredUserException("Usuário com email [" + email + "] não encontrado!");
-        }
+
 
         return userOptional.get();
     }
@@ -108,6 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendEmailToResetPassword(String email) {
 
+        LOGGER.info("m=sendEmailToResetPassword, type=User, email={}", email);
         User user = this.findUserByEmail(email);
 
         Long number = RandomUtils.randomGenerate(100_000L, 999_999L);
@@ -126,6 +123,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getResetTokenWithEmailAndNumber(String email, Integer number) {
 
+        LOGGER.info("m=getResetTokenWithEmailAndNumber, type=User, email={}", email);
         User user = this.findUserByEmail(email);
 
         String resetToken = user.getTokenResetPassword();
@@ -135,23 +133,22 @@ public class UserServiceImpl implements UserService {
 
             tokenNumber = decodedJWT.getClaim("number").asInt();
 
-            LOGGER.info("m=verifyNumberPassword, status=validated token, number={}", tokenNumber);
-
         } catch (JWTVerificationException | NullPointerException e) {
-            LOGGER.info("m=verifyNumberPassword, errorMsg={}", e.getMessage());
             throw new TokenInvalidException("Não foi gerado o código de verificação, por favor solicite outro código e tente novamente!");
         }
 
         if (!number.equals(tokenNumber)) {
-            LOGGER.info("m=verifyNumberPassword,code={}, codeToken={}, msg=Código incorreto", number, tokenNumber);
             throw new TokenInvalidException("Código de verificação incorreto!");
         }
+
+        LOGGER.info("m=getResetTokenWithEmailAndNumber, status=validated token");
         return resetToken;
     }
 
     @Override
     public void resetPassword(String password, String passwordVerify, String resetToken) {
 
+        LOGGER.info("m=resetPassword");
         UserUtils.verifyPassword(password, passwordVerify);
         UserUtils.verifyDecryptedPasswordLength(password);
         String email;
@@ -173,7 +170,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder().encode(password));
         user.setTokenResetPassword(null);
         this.updateUser(user);
-        LOGGER.info("m=verifyNumberPassword, status=senha alterada com sucesso");
+        LOGGER.info("m=resetPassword, email={}, status=senha alterada com sucesso", email);
 
     }
 

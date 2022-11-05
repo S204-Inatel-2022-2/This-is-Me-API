@@ -1,8 +1,8 @@
 package br.inatel.thisismeapi.units.utils;
 
 import br.inatel.thisismeapi.exceptions.ConstraintViolationException;
-import br.inatel.thisismeapi.units.classestotest.EmailConstToTest;
-import br.inatel.thisismeapi.units.classestotest.PasswordConstToTest;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
+import br.inatel.thisismeapi.units.classesToTest.PasswordConstToTest;
 import br.inatel.thisismeapi.utils.UserUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -4,7 +4,7 @@ public class SendEmailUtils {
 
     public final static String SUBJECT_RESET_TOKEN = "[TiMe] Troca de Senha";
 
-    public static String getMessageResetToken(Long number){
+    public static String getMessageResetToken(Long number) {
         return "Solicitação de troca de senha \n\n" +
                 "Token de Verificação: " + number + "" +
                 "\n\nO token irá expirar em 24 horas.\n" +

@@ -1,10 +1,6 @@
 package br.inatel.thisismeapi.units.utils;
 
-import br.inatel.thisismeapi.units.classestotest.EmailConstToTest;
-import br.inatel.thisismeapi.utils.JwtUtils;
 import br.inatel.thisismeapi.utils.SendEmailUtils;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -77,12 +77,13 @@ jacocoTestReport{
 					"**/thisismeapi/TimeApplication**",
 					"**/thisismeapi/entities/**",
 					"**/thisismeapi/config/**",
+					"**/thisismeapi/models/Roles**",
+					"**/thisismeapi/enums/**",
 					"**/thisismeapi/controllers/dtos/**",
 					"**/thisismeapi/controllers/GlobalControllerExceptions**",
-					"**/thisismeapi/services/impl/AdminServiceImpl**",
 					"**/thisismeapi/security/**",
+					"**/thisismeapi/services/impl/AdminServiceImpl**",
 					"**/thisismeapi/exceptions/**",
-					"**/thisismeapi/models/**",
 					"**/thisismeapi/repositories/**"
 			])
 		}))
@@ -95,10 +96,17 @@ jacocoTestCoverageVerification {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
-					"br/inatel/thisismeapi/TimeApplication.class",
-					"br/inatel/thisismeapi/config/ValidationConfig.class",
-					"br/inatel/thisismeapi/security/**",
-					"br/inatel/thisismeapi/models/Card.class"
+					"**/thisismeapi/TimeApplication**",
+					"**/thisismeapi/entities/**",
+					"**/thisismeapi/config/**",
+					"**/thisismeapi/models/Roles**",
+					"**/thisismeapi/enums/**",
+					"**/thisismeapi/controllers/dtos/**",
+					"**/thisismeapi/controllers/GlobalControllerExceptions**",
+					"**/thisismeapi/security/**",
+					"**/thisismeapi/services/impl/AdminServiceImpl**",
+					"**/thisismeapi/exceptions/**",
+					"**/thisismeapi/repositories/**"
 			])
 		}))
 	}

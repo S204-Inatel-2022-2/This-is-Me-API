@@ -18,7 +18,7 @@ public class GlobalControllerExceptions {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptions.class);
 
-    @ExceptionHandler({ConstraintViolationException.class, ErrorOnCreateException.class})
+    @ExceptionHandler({ConstraintViolationException.class, ErrorOnCreateException.class, QuestValidationsException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardError> badRequestHandler(ConstraintViolationException e, HttpServletRequest request) {
 
