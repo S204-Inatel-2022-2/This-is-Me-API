@@ -37,9 +37,9 @@ Feature: Post API Forgot Password
 
 
     # Ocorreu quando faltou a senha do banco ou do email
-  Scenario: Post User Forgot Password (Internal Server Error)
-    Given path '/user/reset/forgot-password'
-    And param email = "testeOutros@test.com"
-    When method post
-    Then status 500
-    And print response
+#  Scenario: Post User Forgot Password (Internal Server Error)
+#    Given path '/user/reset/forgot-password'
+#    And param email = "testeOutros@test.com"
+#    When method post
+#    Then status 500
+#    And print response

@@ -6,14 +6,14 @@ Feature: Post API Reset Password
 
   Scenario: Post User Reset Password (Success)
     Given path '/user/reset/verify-code-reset'
-    And request {"email": "gakira1217@hempyl.com", "number": 1021366}
+    And request {"email": "gakira1217@hempyl.com", "number": 1067457}
     When method post
     Then status 200
     And def token = responseCookies['token_reset']['value']
 
     Given path '/user/reset/reset-password'
     And header Authorization = token
-    And request {"password": "987654", "passwordVerify": "987654"}
+    And request {"password": "654321", "passwordVerify": "654321"}
     When method post
     Then status 200
     And print response

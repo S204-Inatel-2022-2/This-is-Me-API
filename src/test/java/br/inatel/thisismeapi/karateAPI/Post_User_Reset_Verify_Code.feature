@@ -6,7 +6,7 @@ Feature: Post API Reset Verify Code
 
   Scenario: Post User Forgot Password Verify Code (Success)
     Given path '/user/reset/verify-code-reset'
-    And request {"email": "gakira1217@hempyl.com", "number": 1021366}
+    And request {"email": "gakira1217@hempyl.com", "number": 1067457}
     When method post
     Then status 200
     And print response

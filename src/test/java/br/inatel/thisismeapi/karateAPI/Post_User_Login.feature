@@ -11,12 +11,12 @@ Feature: Post API Login
     Then status 200
     And print response
 
-  Scenario: Post Login (Bad Request)
-    Given path '/user/login'
-#    And request {"email": "", "password": ""}
-    When method post
-    Then status 400
-    And print response
+#  Scenario: Post Login (Bad Request)
+#    Given path '/user/login'
+##    And request {"email": "", "password": ""}
+#    When method post
+#    Then status 400
+#    And print response
 
   Scenario: Post Login (Unauthorized)
     Given path '/user/login'
@@ -29,7 +29,7 @@ Feature: Post API Login
 
   Scenario: Post Login For Testing New Password (Success)
     Given path '/user/login'
-    And request {"email": "gakira1217@hempyl.com", "password": "987654"}
+    And request {"email": "gakira1217@hempyl.com", "password": "654321"}
     When method post
     Then status 200
     And print response
