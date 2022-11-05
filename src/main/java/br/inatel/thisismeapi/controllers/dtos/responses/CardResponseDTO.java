@@ -28,7 +28,9 @@ public class CardResponseDTO {
 
     private Long total;
 
-    private Long finalizeds;
+    private Long finalized;
+
+    private Boolean check;
 
     public CardResponseDTO(SubQuest subQuest) {
         this.questId = subQuest.getQuest().getQuestId();
@@ -41,7 +43,8 @@ public class CardResponseDTO {
         this.duration = TimeUtils.getTimeInTextFormat(subQuest.getDurationInMin());
         this.xp = subQuest.getXp();
         this.total = subQuest.getQuest().getTotal();
-        this.finalizeds = subQuest.getQuest().getFinalized();
+        this.finalized = subQuest.getQuest().getFinalized();
+        this.check = subQuest.getCheck();
     }
 
     public String getQuestId() {
@@ -124,11 +127,19 @@ public class CardResponseDTO {
         this.total = total;
     }
 
-    public Long getFinalizeds() {
-        return finalizeds;
+    public Long getFinalized() {
+        return finalized;
     }
 
-    public void setFinalizeds(Long finalizeds) {
-        this.finalizeds = finalizeds;
+    public void setFinalized(Long finalized) {
+        this.finalized = finalized;
+    }
+
+    public Boolean getCheck() {
+        return check;
+    }
+
+    public void setCheck(Boolean check) {
+        this.check = check;
     }
 }
