@@ -46,6 +46,12 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mockito/mockito-inline
 	testImplementation 'org.mockito:mockito-inline:4.8.1'
 
+	// https://mvnrepository.com/artifact/com.intuit.karate/karate-core
+	implementation 'com.intuit.karate:karate-core:1.3.0.RC2'
+	// https://mvnrepository.com/artifact/com.intuit.karate/karate-apache
+	testImplementation 'com.intuit.karate:karate-apache:0.9.6'
+	// https://mvnrepository.com/artifact/com.intuit.karate/karate-junit4
+	testImplementation 'com.intuit.karate:karate-junit4:1.3.0.RC2'
 
 }
 
