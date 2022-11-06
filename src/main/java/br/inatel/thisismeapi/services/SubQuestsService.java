@@ -10,4 +10,6 @@ public interface SubQuestsService {
     List<SubQuest> createSubQuestByQuest(Quest quest, String email);
 
     List<SubQuest> findAllSubQuestsToday(String email);
+
+    List<SubQuest> findAllSubQuestsWeekly(String email);
 }

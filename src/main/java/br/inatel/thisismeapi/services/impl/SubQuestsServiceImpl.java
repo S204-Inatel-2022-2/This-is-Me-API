@@ -7,6 +7,7 @@ import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
 import br.inatel.thisismeapi.services.SubQuestsService;
+import br.inatel.thisismeapi.utils.WeekCalculatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,16 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         LOGGER.info("m=findAllSubQuestsToday, email={}", email);
         LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
+        return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
+    }
+
+    @Override
+    public List<SubQuest> findAllSubQuestsWeekly(String email) {
+
+        LocalDate sunday = WeekCalculatorUtils.getSundayFromWeekDate(LocalDate.now());
+        LocalDateTime start = LocalDateTime.of(sunday, LocalTime.MIN);
+        LocalDateTime end = LocalDateTime.of(sunday.plusDays(6), LocalTime.MAX);
 
         return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
     }
