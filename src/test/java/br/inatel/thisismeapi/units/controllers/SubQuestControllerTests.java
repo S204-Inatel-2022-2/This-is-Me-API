@@ -59,6 +59,29 @@ class SubQuestControllerTests {
         assertEquals(expectedList.size(), actualList.size());
     }
 
+    @Test
+    void testGetAllSubQuestCurrentWeekAsCardsSuccess() {
+
+        SubQuest subQuest = getInstanceOfSubQuest();
+        CardResponseDTO card = new CardResponseDTO(subQuest);
+
+        List<CardResponseDTO> expectedList = new ArrayList<>();
+        List<SubQuest> subQuestList = new ArrayList<>();
+        expectedList.add(card);
+        expectedList.add(card);
+        subQuestList.add(subQuest);
+        subQuestList.add(subQuest);
+
+
+        when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
+        Mockito.when(subQuestsService.findAllSubQuestsWeekly(anyString())).thenReturn(subQuestList);
+
+        List<CardResponseDTO> actualList = subQuestController.getAllSubQuestCurrentWeekAsCards(authentication);
+
+        assertEquals(expectedList.get(0).getName(), actualList.get(0).getName());
+        assertEquals(expectedList.size(), actualList.size());
+    }
+
     private SubQuest getInstanceOfSubQuest() {
 
         SubQuest subQuest = new SubQuest();

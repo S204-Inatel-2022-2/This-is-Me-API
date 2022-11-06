@@ -148,4 +148,22 @@ public class SubQuestsServiceTest {
         Collections.shuffle(week);
         return week;
     }
+
+    @Test
+    void testFindAllSubQuestsWeeklySuccess() {
+
+        LocalDate today = LocalDate.of(2022, 11, 6);
+
+        try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
+
+            localDateMockedStatic.when(LocalDate::now).thenReturn(today);
+            List<SubQuest> subQuestsList = new ArrayList<>();
+            subQuestsList.add(new SubQuest());
+            subQuestsList.add(new SubQuest());
+            Mockito.when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
+            List<SubQuest> result = this.subQuestsService.findAllSubQuestsWeekly(EmailConstToTest.EMAIL_DEFAULT);
+
+            assertEquals(2, result.size());
+        }
+    }
 }
