@@ -18,6 +18,8 @@ public class CardResponseDTO {
 
     private String skill;
 
+    private String date;
+
     private String startTime;
 
     private String endTime;
@@ -38,6 +40,7 @@ public class CardResponseDTO {
         this.name = subQuest.getQuest().getName();
         this.color = subQuest.getQuest().getHexColor();
         this.skill = subQuest.getQuest().getSkill();
+        this.date = subQuest.getStart().toLocalDate().toString();
         this.startTime = FMT.format(subQuest.getStart());
         this.endTime = FMT.format(subQuest.getEnd());
         this.duration = TimeUtils.getTimeInTextFormat(subQuest.getDurationInMin());
@@ -85,6 +88,14 @@ public class CardResponseDTO {
 
     public void setSkill(String skill) {
         this.skill = skill;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getStartTime() {
