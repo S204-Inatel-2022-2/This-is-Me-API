@@ -36,7 +36,6 @@ public class JWTUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
         super();
         this.authManager = authManager;
         this.setFilterProcessesUrl("/user/login");
-
     }
 
     @Override
@@ -50,7 +49,7 @@ public class JWTUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
             throw new RuntimeException(e);
         }
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
+        Authentication auth = new UsernamePasswordAuthenticationToken(authRequest.getEmail().toLowerCase(),
                 authRequest.getPassword());
         LOGGER.info("m=attemptAuthentication, email={}", authRequest.getEmail());
 

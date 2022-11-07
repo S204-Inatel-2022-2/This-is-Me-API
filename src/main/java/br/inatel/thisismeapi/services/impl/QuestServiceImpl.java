@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
 import br.inatel.thisismeapi.services.CharacterService;
@@ -66,11 +67,25 @@ public class QuestServiceImpl implements QuestService {
     private Boolean validateQuest(Quest quest) {
 
         LOGGER.info("m=validateQuest");
+
+
+        if (quest.getName().isBlank())
+            throw new QuestValidationsException("Nome da quest não pode ser deixado em branco!");
+
+        if (quest.getStartDate() == null || quest.getEndDate() == null)
+            throw new QuestValidationsException("Período não pode ser nulo!");
+
+        if (quest.getHexColor().isBlank())
+            throw new QuestValidationsException("Cor não pode ser nula!");
+
         if (quest.getStartDate().isBefore(LocalDate.now()))
             throw new QuestValidationsException("Data de inicio precisa ser maior ou igual a data do dia atual!");
 
         if (quest.getStartDate().isAfter(quest.getEndDate()))
             throw new QuestValidationsException("Data de inicio precisa ser maior que a data final!");
+
+        if (quest.getWeek().isEmpty())
+            throw new QuestValidationsException("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!");
 
         return true;
     }

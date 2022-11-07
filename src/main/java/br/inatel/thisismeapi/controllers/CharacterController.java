@@ -39,7 +39,7 @@ public class CharacterController {
     public ResponseEntity<CharacterInfoResponseDTO> setClothes(Long number, Authentication authentication) {
 
         String email = authentication.getName();
-        LOGGER.info("m=setClothes, email={}, clotheNumber={}", email, number);
+        LOGGER.info("m=setClothes, email={}, clothesNumber={}", email, number);
 
         Character character = characterService.setClothes(email, number);
 

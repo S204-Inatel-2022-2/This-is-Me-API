@@ -3,7 +3,7 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
@@ -60,8 +60,11 @@ public class UserServiceImpl implements UserService {
 
         LOGGER.info("m=saveNewAccount, type=User, email={}, characterName={}", email, characterName);
         UserUtils.verifyEmail(email);
+        email = email.toLowerCase();
         UserUtils.verifyPassword(password, verifyPassword);
         UserUtils.verifyDecryptedPasswordLength(password);
+
+        this.validadeCharacterName(characterName);
 
         User user = new User();
         user.setEmail(email);
@@ -77,7 +80,7 @@ public class UserServiceImpl implements UserService {
         } catch (DuplicateKeyException e) {
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
         } catch (Exception e) {
-            throw new ErrorOnCreateException(e.getLocalizedMessage());
+            throw new OnCreateDataException(e.getLocalizedMessage());
         }
     }
 
@@ -85,8 +88,9 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user) {
 
         LOGGER.info("m=updateUser, type=User, email={}", user.getEmail());
+        if (user.getId() == null)
+            throw new UnregisteredUserException("Usuário não registrado!");
         return this.userRepository.save(user);
-
     }
 
     @Override
@@ -179,5 +183,13 @@ public class UserServiceImpl implements UserService {
         List<Roles> roles = new ArrayList<>();
         roles.add(new Roles(RoleName.ROLE_USER));
         return roles;
+    }
+
+    private void validadeCharacterName(String characterName){
+
+        if (characterName.isBlank())
+            throw new IllegalArgumentException("Nome do personagem não pode ser deixado em branco!");
+        if (characterName.length() > 15)
+            throw new IllegalArgumentException("Nome do personagem pode ter no máximo 15 caracteres!");
     }
 }

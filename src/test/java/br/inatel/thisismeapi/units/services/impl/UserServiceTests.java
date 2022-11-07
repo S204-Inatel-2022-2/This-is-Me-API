@@ -3,7 +3,7 @@ package br.inatel.thisismeapi.units.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
@@ -15,8 +15,9 @@ import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import br.inatel.thisismeapi.units.classesToTest.PasswordConstToTest;
 import br.inatel.thisismeapi.utils.JwtUtils;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -81,6 +82,42 @@ class UserServiceTests {
     }
 
     @Test
+    void testSaveNewAccountThrowExceptionWhenCharacterNameIsBlank() {
+
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+        String password = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
+        String verifyPassword = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
+        String charName = "";
+
+        User user = new User();
+        user.setEmail(email);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.saveNewAccount(email, password, verifyPassword, charName);
+        });
+
+        assertEquals("Nome do personagem não pode ser deixado em branco!", exception.getMessage());
+    }
+
+    @Test
+    void testSaveNewAccountThrowExceptionWhenCharacterNameIsGreaterThanFifteenCharacters() {
+
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+        String password = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
+        String verifyPassword = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
+        String charName = "name with more 15 caracteres";
+
+        User user = new User();
+        user.setEmail(email);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.saveNewAccount(email, password, verifyPassword, charName);
+        });
+
+        assertEquals("Nome do personagem pode ter no máximo 15 caracteres!", exception.getMessage());
+    }
+
+    @Test
     void testSaveNewAccountThrowExceptionWhenTryCreateAnotherAccountWithAlreadyRegisteredEmail() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
@@ -109,7 +146,7 @@ class UserServiceTests {
 
         when(userRepository.save(any())).thenThrow(new IllegalArgumentException("test"));
 
-        ErrorOnCreateException exception = assertThrows(ErrorOnCreateException.class, () -> {
+        OnCreateDataException exception = assertThrows(OnCreateDataException.class, () -> {
             userService.saveNewAccount(email, password, verifyPassword, charName);
         });
 
@@ -121,14 +158,31 @@ class UserServiceTests {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
 
-        User user = new User();
-        user.setEmail(email);
+        User user = Mockito.mock(User.class);
 
+        when(user.getId()).thenReturn("id");
         when(userRepository.save(any(User.class))).thenReturn(user);
         User actual = userService.updateUser(user);
 
         assertEquals(user, actual);
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserThrowExceptionWhenIdUserIsNull() {
+
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+
+        User user = Mockito.mock(User.class);
+
+        when(user.getId()).thenReturn(null);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        UnregisteredUserException exception = assertThrows(UnregisteredUserException.class, () -> {
+            userService.updateUser(user);
+        });
+
+        assertEquals("Usuário não registrado!", exception.getMessage());;
     }
 
     @Test
@@ -183,12 +237,13 @@ class UserServiceTests {
     void testSendEmailToResetPasswordSuccess() {
 
         String email = EmailConstToTest.EMAIL_DEFAULT;
-        User user = new User();
+        User user = Mockito.spy(User.class);
         user.setEmail(email);
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         doNothing().when(mailService).sendEmailWithMessage(anyString(), anyString(), anyString());
         when(userRepository.save(user)).thenReturn(user);
+        when(user.getId()).thenReturn("id");
 
         userService.sendEmailToResetPassword(email);
 
@@ -274,7 +329,7 @@ class UserServiceTests {
         String email = EmailConstToTest.EMAIL_DEFAULT;
         String oldPassword = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
         String newPassword = "NovaSenha";
-        User user = new User();
+        User user = Mockito.spy(User.class);
         user.setEmail(email);
         user.setPassword(this.passwordEncoder().encode(oldPassword));
         String token = JwtUtils.createJwtResetTokenWith(email, 10, RESET_TOKEN_EXPIRATION_TIME_IN_SECONDS, this.PRIVATE_KEY_DEFAULT);
@@ -282,6 +337,7 @@ class UserServiceTests {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
+        when(user.getId()).thenReturn("id");
         userService.resetPassword(newPassword, newPassword, token);
 
         assertTrue(passwordEncoder().matches(newPassword, user.getPassword()));

@@ -4,7 +4,7 @@ import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
 import br.inatel.thisismeapi.enums.QuestStatus;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
 import br.inatel.thisismeapi.services.impl.SubQuestsServiceImpl;
@@ -68,7 +68,7 @@ public class SubQuestsServiceTest {
         quest.setStartDate(LocalDate.of(2022, 11, 6));
         quest.setEndDate(LocalDate.of(2022, 11, 12));
 
-        ErrorOnCreateException exception = assertThrows(ErrorOnCreateException.class, () -> {
+        OnCreateDataException exception = assertThrows(OnCreateDataException.class, () -> {
             this.subQuestsService.createSubQuestByQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
         });
 
@@ -92,7 +92,7 @@ public class SubQuestsServiceTest {
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
             Mockito.when(subQuestRepository.saveAll(any())).thenReturn(subQuestsList);
-            ErrorOnCreateException exception = assertThrows(ErrorOnCreateException.class, () -> {
+            OnCreateDataException exception = assertThrows(OnCreateDataException.class, () -> {
                 this.subQuestsService.createSubQuestByQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
             });
 

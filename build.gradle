@@ -36,6 +36,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.3'
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.3'
+	// https://mvnrepository.com/artifact/io.cucumber/cucumber-java
+	implementation 'io.cucumber:cucumber-java:7.9.0'
+	// https://mvnrepository.com/artifact/io.cucumber/cucumber-spring
+	implementation 'io.cucumber:cucumber-spring:7.9.0'
+	// https://mvnrepository.com/artifact/com.intuit.karate/karate-core
+	implementation 'com.intuit.karate:karate-core:1.3.0.RC2'
+	// https://mvnrepository.com/artifact/io.cucumber/cucumber-junit
+	testImplementation 'io.cucumber:cucumber-junit:7.9.0'
+	// https://mvnrepository.com/artifact/org.testcontainers/mongodb
+	testImplementation 'org.testcontainers:mongodb:1.17.5'
 
 
 	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc
@@ -46,8 +56,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mockito/mockito-inline
 	testImplementation 'org.mockito:mockito-inline:4.8.1'
 
-	// https://mvnrepository.com/artifact/com.intuit.karate/karate-core
-	implementation 'com.intuit.karate:karate-core:1.3.0.RC2'
 	// https://mvnrepository.com/artifact/com.intuit.karate/karate-apache
 	testImplementation 'com.intuit.karate:karate-apache:0.9.6'
 	// https://mvnrepository.com/artifact/com.intuit.karate/karate-junit4
