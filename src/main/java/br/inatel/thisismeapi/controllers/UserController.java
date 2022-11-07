@@ -28,16 +28,22 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void createNewAccount(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO) {
+    public void createNewAccount(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO, HttpServletResponse response) {
 
         LOGGER.info("m=createNewAccount, email={}", userCreatingAccountRequestDTO.getEmail());
 
-        this.userService.saveNewAccount(
+        String jwt = this.userService.saveNewAccount(
                 userCreatingAccountRequestDTO.getEmail(),
                 userCreatingAccountRequestDTO.getPassword(),
                 userCreatingAccountRequestDTO.getVerifyPassword(),
                 userCreatingAccountRequestDTO.getCharacterName()
         );
+
+        Cookie cookie = new Cookie("token", jwt);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(cookie);
         LOGGER.info("m=createNewAccount, status=CREATED");
     }
 
