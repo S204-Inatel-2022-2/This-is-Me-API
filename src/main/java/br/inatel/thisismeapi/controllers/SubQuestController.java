@@ -39,4 +39,13 @@ public class SubQuestController {
 
         return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
     }
+
+    @GetMapping("/next-week-cards")
+    public List<CardResponseDTO> getAllSubQuestNextWeekAsCards(Authentication authentication) {
+
+        LOGGER.info("m=getAllSubQuestNextWeekAsCards, email={}", authentication.getName());
+        List<SubQuest> subQuestList = subQuestsService.findAllSubQuestsFromNextWeek(authentication.getName());
+
+        return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
+    }
 }
