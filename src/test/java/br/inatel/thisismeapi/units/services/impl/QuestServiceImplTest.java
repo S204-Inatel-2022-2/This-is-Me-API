@@ -120,7 +120,7 @@ class QuestServiceImplTest {
             questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
         });
 
-        assertEquals("Periodo não pode ser nulo!", exception.getMessage());
+        assertEquals("Período não pode ser nulo!", exception.getMessage());
     }
 
     @Test
@@ -135,7 +135,7 @@ class QuestServiceImplTest {
             questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
         });
 
-        assertEquals("Periodo não pode ser nulo!", exception.getMessage());
+        assertEquals("Período não pode ser nulo!", exception.getMessage());
     }
 
     @Test

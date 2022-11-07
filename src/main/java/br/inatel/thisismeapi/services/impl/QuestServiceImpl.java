@@ -73,7 +73,7 @@ public class QuestServiceImpl implements QuestService {
             throw new QuestValidationsException("Nome da quest não pode ser deixado em branco!");
 
         if (quest.getStartDate() == null || quest.getEndDate() == null)
-            throw new QuestValidationsException("Periodo não pode ser nulo!");
+            throw new QuestValidationsException("Período não pode ser nulo!");
 
         if (quest.getHexColor().isBlank())
             throw new QuestValidationsException("Cor não pode ser nula!");
