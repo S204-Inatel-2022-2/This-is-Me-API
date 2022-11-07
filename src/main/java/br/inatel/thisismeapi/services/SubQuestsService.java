@@ -14,4 +14,6 @@ public interface SubQuestsService {
     List<SubQuest> findAllSubQuestsWeekly(String email);
 
     List<SubQuest> findAllSubQuestsFromNextWeek(String email);
+
+    List<SubQuest> findAllSubQuestsLate(String email);
 }

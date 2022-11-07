@@ -48,4 +48,13 @@ public class SubQuestController {
 
         return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
     }
+
+    @GetMapping("/late-cards")
+    public List<CardResponseDTO> getAllSubQuestLateAsCards(Authentication authentication) {
+
+        LOGGER.info("m=getAllSubQuestLateAsCards, email={}", authentication.getName());
+        List<SubQuest> subQuestList = subQuestsService.findAllSubQuestsLate(authentication.getName());
+
+        return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
+    }
 }

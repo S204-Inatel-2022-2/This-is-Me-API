@@ -25,5 +25,5 @@ public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
                     "'check': false" +
                     "}}"
     })
-    List<SubQuest> findAllSubQuestNotCheckDone(String email, LocalDateTime start);
+    List<SubQuest> findAllSubQuestNotCheckUntilDate(String email, LocalDateTime start);
 }

@@ -14,6 +14,7 @@ import br.inatel.thisismeapi.services.impl.UserServiceImpl;
 import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import br.inatel.thisismeapi.units.classesToTest.PasswordConstToTest;
 import br.inatel.thisismeapi.utils.JwtUtils;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,7 @@ class UserServiceTests {
     }
 
     // TODO tentar novamente Mockar o UserUtils
-    // TODO: Ajustar Teste
-
-    @Ignore
+    @Test
     void testSaveNewAccountSuccess() {
 
         // given
@@ -66,16 +65,17 @@ class UserServiceTests {
         String verifyPassword = PasswordConstToTest.PASSWORD_MIN_LENGHT_5;
         String charName = "Test Name";
 
-        User expectedUser = new User();
-        expectedUser.setEmail(email);
+        User user = new User();
+        user.setEmail(email);
 
         // when
         when(characterService.saveNewCharacter(any(Character.class))).thenReturn(new Character());
-        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
-//        User actual = userService.saveNewAccount(email, password, verifyPassword, charName);
-
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        String actual = userService.saveNewAccount(email, password, verifyPassword, charName);
+        DecodedJWT decodedJWT = JwtUtils.decodedJWT(actual, this.PRIVATE_KEY_DEFAULT);
+        String emailActual = decodedJWT.getClaim("email").asString();
         // then
-//        assertEquals(expectedUser, actual);
+        assertEquals(user.getEmail(), emailActual);
         verify(characterService).saveNewCharacter(any(Character.class));
         verify(userRepository).save(any(User.class));
     }
