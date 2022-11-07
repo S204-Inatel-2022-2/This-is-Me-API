@@ -3,7 +3,7 @@ package br.inatel.thisismeapi.units.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
@@ -15,7 +15,6 @@ import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import br.inatel.thisismeapi.units.classesToTest.PasswordConstToTest;
 import br.inatel.thisismeapi.utils.JwtUtils;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +108,7 @@ class UserServiceTests {
 
         when(userRepository.save(any())).thenThrow(new IllegalArgumentException("test"));
 
-        ErrorOnCreateException exception = assertThrows(ErrorOnCreateException.class, () -> {
+        OnCreateDataException exception = assertThrows(OnCreateDataException.class, () -> {
             userService.saveNewAccount(email, password, verifyPassword, charName);
         });
 

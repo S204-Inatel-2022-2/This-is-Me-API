@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
+import br.inatel.thisismeapi.enums.Clothes;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
 import br.inatel.thisismeapi.repositories.CharacterRepository;
@@ -59,9 +60,11 @@ public class CharacterServiceImpl implements CharacterService {
     public Character setClothes(String email, Long numberClothes) {
 
         LOGGER.info("m=setClothes, email={}, numberClothes={}", email, numberClothes);
+
+        Clothes clothes = Clothes.findById(numberClothes);
         Character character = this.findCharacterByEmail(email);
 
-        character.setNumberClothes(numberClothes);
+        character.setNumberClothes(clothes.getNumber());
         return characterRepository.save(character);
     }
 }

@@ -3,7 +3,7 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
-import br.inatel.thisismeapi.exceptions.ErrorOnCreateException;
+import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         } catch (DuplicateKeyException e) {
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
         } catch (Exception e) {
-            throw new ErrorOnCreateException(e.getLocalizedMessage());
+            throw new OnCreateDataException(e.getLocalizedMessage());
         }
     }
 

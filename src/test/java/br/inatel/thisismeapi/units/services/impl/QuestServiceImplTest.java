@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.units.services.impl;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
+import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.QuestRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.SubQuestsService;
@@ -42,8 +43,7 @@ class QuestServiceImplTest {
 
         // given
         String email = EmailConstToTest.EMAIL_DEFAULT;
-        Quest quest = new Quest();
-        quest.setName("Quest");
+        Quest quest = this.getInstanceOfQuest();
         quest.setStartDate(LocalDate.now());
         quest.setEndDate(LocalDate.now().plusDays(1));
 
@@ -61,7 +61,7 @@ class QuestServiceImplTest {
 
         // then
         assertEquals(email, result.getEmail());
-        assertEquals("Quest", result.getName());
+        assertEquals("quest", result.getName());
         assertEquals(0, result.getTotal());
     }
 
@@ -69,6 +69,8 @@ class QuestServiceImplTest {
     void testCreateNewQuestThrowExceptionWhenStartDateLessThanEndDate() {
 
         Quest quest = new Quest();
+        quest.setName("quest");
+        quest.setHexColor("color");
         quest.setStartDate(LocalDate.now());
         quest.setEndDate(LocalDate.now().minusDays(1));
 
@@ -83,15 +85,83 @@ class QuestServiceImplTest {
     @Test
     void testCreateNewQuestThrowExceptionWhenStartDateLessThanCurrentDate() {
 
-        Quest quest = new Quest();
-        quest.setStartDate(LocalDate.now().minusDays(10));
-
+        Quest quest = this.getInstanceOfQuest();
+        quest.setStartDate(LocalDate.now().minusDays(100));
 
         QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
             questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
         });
 
         assertEquals("Data de inicio precisa ser maior ou igual a data do dia atual!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenNameIsBlank() {
+
+        Quest quest = new Quest();
+        quest.setName("");
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Nome da quest não pode ser deixado em branco!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenStartDateIsNull() {
+
+        Quest quest = new Quest();
+        quest.setName("quest");
+        quest.setEndDate(LocalDate.now().plusDays(1));
+        quest.setHexColor("color");
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Periodo não pode ser nulo!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenEndDateIsNull() {
+
+        Quest quest = new Quest();
+        quest.setName("quest");
+        quest.setStartDate(LocalDate.now());
+        quest.setHexColor("color");
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Periodo não pode ser nulo!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenHexColorIsBlank() {
+
+        Quest quest = this.getInstanceOfQuest();
+        quest.setHexColor("");
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Cor não pode ser nula!", exception.getMessage());
+    }
+
+    @Test
+    void testCreateNewQuestThrowExceptionWhenWeekIsEmpty() {
+
+        Quest quest = this.getInstanceOfQuest();
+        quest.setWeek(new ArrayList<>());
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!", exception.getMessage());
     }
 
     @Test
@@ -106,5 +176,20 @@ class QuestServiceImplTest {
         List<Quest> questListActual = questService.getQuestToday(EmailConstToTest.EMAIL_DEFAULT);
 
         assertEquals(questListExpected, questListActual);
+    }
+
+    private Quest getInstanceOfQuest(){
+
+        Quest quest = new Quest();
+
+        quest.setName("quest");
+        quest.setStartDate(LocalDate.now());
+        quest.setEndDate(LocalDate.now().plusDays(1));
+        quest.setHexColor("color");
+        List<Day> week = new ArrayList<>();
+        week.add(new Day());
+        quest.setWeek(week);
+
+        return quest;
     }
 }

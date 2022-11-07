@@ -18,7 +18,11 @@ public class GlobalControllerExceptions {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptions.class);
 
-    @ExceptionHandler({ConstraintViolationException.class, ErrorOnCreateException.class, QuestValidationsException.class})
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            OnCreateDataException.class,
+            QuestValidationsException.class,
+            IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardError> badRequestHandler(ConstraintViolationException e, HttpServletRequest request) {
 
@@ -59,10 +63,10 @@ public class GlobalControllerExceptions {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    @ExceptionHandler(ValidationsParametersException.class)
+    @ExceptionHandler({ValidationsParametersException.class, SendEmailException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<StandardError> internalServerErrorHandler(Exception e, HttpServletRequest request) {
-        LOGGER.info("m=mongoWrite, statusCode={}, msg={}", HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        LOGGER.info("m=internalServerErrorHandler, statusCode={}, msg={}", HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now().toString());
         error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -70,5 +74,18 @@ public class GlobalControllerExceptions {
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<StandardError> notFoundHandler(Exception e, HttpServletRequest request) {
+        LOGGER.info("m=notFoundHandler, statusCode={}, msg={}", HttpStatus.NOT_FOUND.value(), e.getMessage());
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now().toString());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

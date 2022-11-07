@@ -128,10 +128,10 @@ class CharacterServiceTest {
 
         when(characterRepository.findCharacterByEmail(email)).thenReturn(Optional.of(character));
         when(characterRepository.save(character)).thenReturn(character);
-        Character actualChar = this.characterService.setClothes(email, 10L);
+        Character actualChar = this.characterService.setClothes(email, character.getNumberClothes());
 
         assertEquals(character, actualChar);
         assertEquals(character.getEmail(), actualChar.getEmail());
-        assertEquals(10L, actualChar.getNumberClothes());
+        assertEquals(1L, actualChar.getNumberClothes());
     }
 }
