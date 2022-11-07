@@ -95,6 +95,16 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
     }
 
+    @Override
+    public List<SubQuest> findAllSubQuestsFromNextWeek(String email) {
+
+        LocalDate sunday = WeekCalculatorUtils.getSundayFromWeekDate(LocalDate.now());
+        LocalDateTime start = LocalDateTime.of(sunday.plusDays(7), LocalTime.MIN);
+        LocalDateTime end = LocalDateTime.of(sunday.plusDays( 13), LocalTime.MAX);
+
+        return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
+    }
+
     private Long calculateXp(Day day) {
 
         long interval = day.getIntervalInMin();
