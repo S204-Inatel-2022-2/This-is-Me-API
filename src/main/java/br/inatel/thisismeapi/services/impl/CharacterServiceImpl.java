@@ -38,7 +38,7 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public Character saveNewCharacter(Character character) {
 
-        LOGGER.info("m=saveNewCharacter, characternName={}", character.getCharacterName());
+        LOGGER.info("m=saveNewCharacter, characterName={}", character.getCharacterName());
         try {
             return characterRepository.save(character);
         } catch (DuplicateKeyException e) {
@@ -49,7 +49,7 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public Character updateCharacter(Character character) {
 
-        LOGGER.info("m=updateCharacter, characternName={}", character.getCharacterName());
+        LOGGER.info("m=updateCharacter, characterName={}", character.getCharacterName());
         if (character.getId() == null) {
             throw new UnregisteredUserException("Usuário não tem um personagem criado!");
         }
