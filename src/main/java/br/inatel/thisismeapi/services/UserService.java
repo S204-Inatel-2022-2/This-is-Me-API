@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public interface UserService {
 
-    User saveNewAccount(String email, String password, String verifyPassword, String characterName);
+    String saveNewAccount(String email, String password, String verifyPassword, String characterName);
 
     User updateUser(User user);
 

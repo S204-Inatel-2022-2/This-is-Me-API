@@ -9,10 +9,12 @@ import br.inatel.thisismeapi.models.Roles;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.UserService;
+import br.inatel.thisismeapi.utils.JwtUtils;
 import br.inatel.thisismeapi.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class AdminServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
+    @Value("${private.key.default}")
+    private String PRIVATE_KEY_DEFAULT;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -40,7 +45,7 @@ public class AdminServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User saveNewAccount(String email, String password, String verifyPassword, String characterName) {
+    public String saveNewAccount(String email, String password, String verifyPassword, String characterName) {
 
         LOGGER.info("m=saveNewAccount, type=Admin, email={}, characterName={}", email, characterName);
         UserUtils.verifyEmail(email);
@@ -55,7 +60,8 @@ public class AdminServiceImpl implements UserService {
         Character character = characterService.saveNewCharacter(new Character(email, characterName));
         user.setCharacter(character);
         try {
-            return userRepository.save(user);
+            userRepository.save(user);
+            return JwtUtils.createJwtTokenLoginWith(user, this.PRIVATE_KEY_DEFAULT);
         } catch (DuplicateKeyException e) {
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
         }

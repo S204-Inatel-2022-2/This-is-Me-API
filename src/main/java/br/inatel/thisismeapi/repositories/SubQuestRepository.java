@@ -17,4 +17,13 @@ public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
                     "}}"
     })
     List<SubQuest> findAllSubQuestsByRangeDate(String email, LocalDateTime start, LocalDateTime end);
+
+    @Aggregation(pipeline = {
+            "{'$match': {" +
+                    "'email': ?0, " +
+                    "'end': {$lte: ?1}, " +
+                    "'check': false" +
+                    "}}"
+    })
+    List<SubQuest> findAllSubQuestNotCheckDone(String email, LocalDateTime start);
 }

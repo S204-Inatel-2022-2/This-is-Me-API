@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveNewAccount(String email, String password, String verifyPassword, String characterName) {
+    public String saveNewAccount(String email, String password, String verifyPassword, String characterName) {
 
         LOGGER.info("m=saveNewAccount, type=User, email={}, characterName={}", email, characterName);
         UserUtils.verifyEmail(email);
@@ -72,7 +72,8 @@ public class UserServiceImpl implements UserService {
         user.setCharacter(character);
 
         try {
-            return userRepository.save(user);
+            userRepository.save(user);
+            return JwtUtils.createJwtTokenLoginWith(user, this.PRIVATE_KEY_DEFAULT);
         } catch (DuplicateKeyException e) {
             throw new UniqueViolationConstraintException("Já Existe uma conta cadastrada com esse e-mail!");
         } catch (Exception e) {
