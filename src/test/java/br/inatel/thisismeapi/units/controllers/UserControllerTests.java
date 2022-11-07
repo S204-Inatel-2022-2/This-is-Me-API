@@ -11,6 +11,7 @@ import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,6 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,21 +42,23 @@ class UserControllerTests {
     @MockBean
     private UserServiceImpl userService;
 
-    // TODO: Ajustar Teste
-
-    @Ignore
+    @Test
     void testCreateNewAccountUserSuccess() {
 
         UserCreatingAccountRequestDTO requestDTO = this.getUserCreatingAccountRequestDTO();
         User user = this.getUser();
 
-//        when(userService.saveNewAccount(
-//                requestDTO.getEmail(),
-//                requestDTO.getPassword(),
-//                requestDTO.getVerifyPassword(),
-//                requestDTO.getCharacterName()
-//        )).thenReturn(user);
-//        this.userController.createNewAccount(requestDTO);
+        MockHttpServletResponse httpServletResponse = new MockHttpServletResponse();
+
+        String jwt = "token";
+
+        when(userService.saveNewAccount(
+                requestDTO.getEmail(),
+                requestDTO.getPassword(),
+                requestDTO.getVerifyPassword(),
+                requestDTO.getCharacterName()
+        )).thenReturn(jwt);
+        this.userController.createNewAccount(requestDTO, httpServletResponse);
 
         verify(userService).saveNewAccount(
                 requestDTO.getEmail(),

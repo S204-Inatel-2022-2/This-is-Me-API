@@ -105,6 +105,15 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
     }
 
+    @Override
+    public List<SubQuest> findAllSubQuestsLate(String email) {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime date = LocalDateTime.of(yesterday, LocalTime.MAX);
+
+        return subQuestRepository.findAllSubQuestNotCheckUntilDate(email, date);
+    }
+
     private Long calculateXp(Day day) {
 
         long interval = day.getIntervalInMin();

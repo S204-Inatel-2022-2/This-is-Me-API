@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,20 +32,19 @@ class AdminControllerTests {
     @MockBean
     private AdminServiceImpl adminService;
 
-    // TODO: Ajustar Teste
-
-    @Ignore
+    @Test
     void testCreateNewAccountAdminSuccess() {
 
         UserCreatingAccountRequestDTO requestDTO = this.getUserCreatingAccountRequestDTO();
         User user = this.getUser();
+        String token = "token";
 
-//        when(adminService.saveNewAccount(
-//                requestDTO.getEmail(),
-//                requestDTO.getPassword(),
-//                requestDTO.getVerifyPassword(),
-//                requestDTO.getCharacterName()
-//        )).thenReturn(user);
+        when(adminService.saveNewAccount(
+                requestDTO.getEmail(),
+                requestDTO.getPassword(),
+                requestDTO.getVerifyPassword(),
+                requestDTO.getCharacterName()
+        )).thenReturn(token);
 
         this.adminController.createNewAccountAdmin(requestDTO);
 
