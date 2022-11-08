@@ -2,6 +2,7 @@ package br.inatel.thisismeapi.units.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.QuestRepository;
@@ -39,7 +40,7 @@ class QuestServiceImplTest {
     private SubQuestsServiceImpl subQuestsService;
 
     @Test
-    void testCreateNewQuestSuccess() {
+    void testCreateNewQuestSuccess() throws OnCreateSubQuestException {
 
         // given
         String email = EmailConstToTest.EMAIL_DEFAULT;
@@ -165,6 +166,26 @@ class QuestServiceImplTest {
     }
 
     @Test
+    void testCreateNewQuestThrowExceptionWhenCatchExceptionOnCreateSubQuest() throws OnCreateSubQuestException {
+
+        Quest quest = this.getInstanceOfQuest();
+        List<Day> week = new ArrayList<>();
+        week.add(new Day());
+        quest.setWeek(week);
+
+        when(characterService.findCharacterByEmail(EmailConstToTest.EMAIL_DEFAULT)).thenReturn(new Character());
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(subQuestsService.createSubQuestByQuest(quest, EmailConstToTest.EMAIL_DEFAULT)).thenThrow(new OnCreateSubQuestException("Erro ao criar subquest"));
+
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Erro ao criar subquest", exception.getMessage());
+    }
+
+    @Test
     void testGetQuestTodaySuccess() {
 
         List<Quest> questListExpected = new ArrayList<>();
@@ -187,6 +208,7 @@ class QuestServiceImplTest {
 
         verify(questRepository).deleteAllQuestsByEmail(EmailConstToTest.EMAIL_DEFAULT);
     }
+
     private Quest getInstanceOfQuest(){
 
         Quest quest = new Quest();

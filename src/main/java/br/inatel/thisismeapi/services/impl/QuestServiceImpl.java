@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
 import br.inatel.thisismeapi.services.CharacterService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,13 +46,18 @@ public class QuestServiceImpl implements QuestService {
         quest.setEmail(email);
         quest.setStatus(QuestStatus.IN_PROGRESS);
         Quest savedQuest = questRepository.save(quest);
+        List<SubQuest> subQuests = new ArrayList<>();
+        try {
+            subQuests = subQuestsService.createSubQuestByQuest(savedQuest, email);
+        } catch (OnCreateSubQuestException e) {
+            questRepository.delete(savedQuest);
+            throw new QuestValidationsException(e.getMessage());
+        }
 
-        List<SubQuest> subQuestList = subQuestsService.createSubQuestByQuest(savedQuest, email);
+        savedQuest.setFinalized(0L);
+        savedQuest.setTotal((long) subQuests.size());
 
-        quest.setFinalized(0L);
-        quest.setTotal((long) subQuestList.size());
-
-        savedQuest = questRepository.save(quest);
+        savedQuest = questRepository.save(savedQuest);
         character.getQuests().add(savedQuest);
         characterService.updateCharacter(character);
         return savedQuest;

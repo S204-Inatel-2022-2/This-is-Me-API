@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
 import br.inatel.thisismeapi.exceptions.OnCreateDataException;
+import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
 import br.inatel.thisismeapi.services.SubQuestsService;
@@ -30,14 +31,14 @@ public class SubQuestsServiceImpl implements SubQuestsService {
     private SubQuestRepository subQuestRepository;
 
     @Transactional
-    public List<SubQuest> createSubQuestByQuest(Quest quest, String email) {
+    public List<SubQuest> createSubQuestByQuest(Quest quest, String email) throws OnCreateSubQuestException {
 
         LOGGER.info("m=createSubQuestByQuest, email={}, questName={}", email, quest.getName());
         List<SubQuest> subQuestList = new ArrayList<>();
 
 
         if (quest.getWeek().isEmpty())
-            throw new OnCreateDataException("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!");
+            throw new OnCreateSubQuestException("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!");
 
         Collections.sort(quest.getWeek());
 
@@ -70,7 +71,7 @@ public class SubQuestsServiceImpl implements SubQuestsService {
 
         }
         if (subQuestList.isEmpty())
-            throw new OnCreateDataException("Nenhuma tarefa criada com o periodo e os dias da semana selecionados!");
+            throw new OnCreateSubQuestException("Nenhuma tarefa criada com o periodo e os dias da semana selecionados!");
 
         return subQuestRepository.saveAll(subQuestList);
     }
