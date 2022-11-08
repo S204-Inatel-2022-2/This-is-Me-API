@@ -114,6 +114,13 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         return subQuestRepository.findAllSubQuestNotCheckUntilDate(email, date);
     }
 
+
+    public void deleteAllSubQuestByEmail(String email) {
+
+        LOGGER.info("m=deleteAllSubQuestByEmail, email={}", email);
+        this.subQuestRepository.deleteAllByEmail(email);
+    }
+
     private Long calculateXp(Day day) {
 
         long interval = day.getIntervalInMin();

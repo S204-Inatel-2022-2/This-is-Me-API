@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -62,6 +64,12 @@ public class QuestServiceImpl implements QuestService {
 
         LOGGER.info("m=getQuestToday, email={}", email);
         return questRepository.findAllQuestsByDate(email, LocalDate.now());
+    }
+
+    public void deleteAllQuestByEmail(String email) {
+
+        LOGGER.info("m=deleteAllQuestByEmail, email={}", email);
+        questRepository.deleteAllByEmail(email);
     }
 
     private Boolean validateQuest(Quest quest) {

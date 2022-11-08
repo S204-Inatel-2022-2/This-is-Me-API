@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,6 +33,12 @@ public class AdminController {
         LOGGER.info("m=createNewAccountAdmin, status=CREATED");
     }
 
+    @DeleteMapping("/delete-user-by-email")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteUserByEmail(String email){
+        LOGGER.info("m=deleteUserByEmail, email={}", email);
+        this.adminService.deleteUserByEmail(email);
+    }
 
     @GetMapping("/helloAdmin")
     public String helloAdmin() {

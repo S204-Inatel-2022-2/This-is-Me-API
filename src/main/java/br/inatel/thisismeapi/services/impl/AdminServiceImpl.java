@@ -8,6 +8,8 @@ import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException
 import br.inatel.thisismeapi.models.Roles;
 import br.inatel.thisismeapi.repositories.UserRepository;
 import br.inatel.thisismeapi.services.CharacterService;
+import br.inatel.thisismeapi.services.QuestService;
+import br.inatel.thisismeapi.services.SubQuestsService;
 import br.inatel.thisismeapi.services.UserService;
 import br.inatel.thisismeapi.utils.JwtUtils;
 import br.inatel.thisismeapi.utils.UserUtils;
@@ -36,7 +38,13 @@ public class AdminServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private CharacterService characterService;
+    private CharacterServiceImpl characterService;
+
+    @Autowired
+    private QuestServiceImpl questService;
+
+    @Autowired
+    private SubQuestsServiceImpl subQuestsService;
 
     @Override
     public BCryptPasswordEncoder passwordEncoder() {
@@ -72,6 +80,16 @@ public class AdminServiceImpl implements UserService {
 
         LOGGER.info("m=updateUser, type=Admin, email={}, characterName={}", user.getEmail(), user.getCharacter().getCharacterName());
         return userRepository.save(user);
+    }
+
+
+    public void deleteUserByEmail(String email) {
+
+        LOGGER.info("m=deleteUserByEmail, type=Admin, email={}", email);
+        subQuestsService.deleteAllSubQuestByEmail(email);
+        questService.deleteAllQuestByEmail(email);
+        characterService.deleteByEmail(email);
+        userRepository.deleteUserByEmail(email);
     }
 
     @Override

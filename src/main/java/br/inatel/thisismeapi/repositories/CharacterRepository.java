@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface CharacterRepository extends MongoRepository<Character, String> {
 
     Optional<Character> findCharacterByEmail(String email);
+
+    void deleteByEmail(String email);
 }
