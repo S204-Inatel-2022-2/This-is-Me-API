@@ -202,4 +202,12 @@ public class SubQuestsServiceTest {
             assertEquals(2, result.size());
         }
     }
+
+    @Test
+    void testDeleteAllSubQuestByEmailSuccess() {
+
+        Mockito.doNothing().when(subQuestRepository).deleteAllByEmail(any());
+        this.subQuestsService.deleteAllSubQuestByEmail(EmailConstToTest.EMAIL_DEFAULT);
+        Mockito.verify(subQuestRepository, Mockito.times(1)).deleteAllByEmail(any());
+    }
 }

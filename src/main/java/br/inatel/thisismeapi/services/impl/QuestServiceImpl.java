@@ -4,7 +4,6 @@ import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.QuestStatus;
-import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
 import br.inatel.thisismeapi.services.CharacterService;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -66,10 +63,10 @@ public class QuestServiceImpl implements QuestService {
         return questRepository.findAllQuestsByDate(email, LocalDate.now());
     }
 
-    public void deleteAllQuestByEmail(String email) {
+    public void deleteAllQuestsByEmail(String email) {
 
         LOGGER.info("m=deleteAllQuestByEmail, email={}", email);
-        questRepository.deleteAllByEmail(email);
+        questRepository.deleteAllQuestsByEmail(email);
     }
 
     private Boolean validateQuest(Quest quest) {

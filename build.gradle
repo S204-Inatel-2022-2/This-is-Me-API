@@ -95,6 +95,7 @@ jacocoTestReport{
 					"**/thisismeapi/enums/**",
 					"**/thisismeapi/controllers/dtos/**",
 					"**/thisismeapi/controllers/GlobalControllerExceptions**",
+					"**/thisismeapi/controllers/AdminController**",
 					"**/thisismeapi/security/**",
 					"**/thisismeapi/services/impl/AdminServiceImpl**",
 					"**/thisismeapi/exceptions/**",
@@ -117,6 +118,7 @@ jacocoTestCoverageVerification {
 					"**/thisismeapi/enums/**",
 					"**/thisismeapi/controllers/dtos/**",
 					"**/thisismeapi/controllers/GlobalControllerExceptions**",
+					"**/thisismeapi/controllers/AdminController**",
 					"**/thisismeapi/security/**",
 					"**/thisismeapi/services/impl/AdminServiceImpl**",
 					"**/thisismeapi/exceptions/**",
@@ -128,7 +130,7 @@ jacocoTestCoverageVerification {
 		rule {
 			enabled = true
 			limit {
-				minimum = 0.7
+				minimum = 0.8
 			}
 		}
 	}

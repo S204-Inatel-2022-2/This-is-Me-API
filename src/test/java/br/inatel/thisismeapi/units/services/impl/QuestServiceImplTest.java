@@ -5,9 +5,9 @@ import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.QuestRepository;
-import br.inatel.thisismeapi.services.CharacterService;
-import br.inatel.thisismeapi.services.SubQuestsService;
+import br.inatel.thisismeapi.services.impl.CharacterServiceImpl;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
+import br.inatel.thisismeapi.services.impl.SubQuestsServiceImpl;
 import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {QuestServiceImpl.class})
 class QuestServiceImplTest {
@@ -33,10 +33,10 @@ class QuestServiceImplTest {
     private QuestRepository questRepository;
 
     @MockBean
-    private CharacterService characterService;
+    private CharacterServiceImpl characterService;
 
     @MockBean
-    private SubQuestsService subQuestsService;
+    private SubQuestsServiceImpl subQuestsService;
 
     @Test
     void testCreateNewQuestSuccess() {
@@ -178,6 +178,15 @@ class QuestServiceImplTest {
         assertEquals(questListExpected, questListActual);
     }
 
+    @Test
+    void testDeleteAllQuestsSuccess() {
+
+        doNothing().when(questRepository).deleteAllQuestsByEmail(EmailConstToTest.EMAIL_DEFAULT);
+
+        questService.deleteAllQuestsByEmail(EmailConstToTest.EMAIL_DEFAULT);
+
+        verify(questRepository).deleteAllQuestsByEmail(EmailConstToTest.EMAIL_DEFAULT);
+    }
     private Quest getInstanceOfQuest(){
 
         Quest quest = new Quest();
