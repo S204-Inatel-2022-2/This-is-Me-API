@@ -67,4 +67,12 @@ public class CharacterServiceImpl implements CharacterService {
         character.setNumberClothes(clothes.getNumber());
         return characterRepository.save(character);
     }
+
+    public void deleteById(String id) {
+        characterRepository.deleteById(id);
+    }
+
+    public void deleteByEmail(String id) {
+        characterRepository.deleteByEmail(id);
+    }
 }

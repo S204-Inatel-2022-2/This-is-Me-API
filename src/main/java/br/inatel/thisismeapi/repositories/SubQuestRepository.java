@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.entities.SubQuest;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
                     "}}"
     })
     List<SubQuest> findAllSubQuestNotCheckUntilDate(String email, LocalDateTime start);
+
+    void deleteAllByEmail(String email);
 }
