@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {CharacterServiceImpl.class})
 @ActiveProfiles("test")
@@ -133,5 +133,25 @@ class CharacterServiceTest {
         assertEquals(character, actualChar);
         assertEquals(character.getEmail(), actualChar.getEmail());
         assertEquals(1L, actualChar.getNumberClothes());
+    }
+
+    @Test
+    void testDeleteCharacterByIdSuccess() {
+
+        doNothing().when(characterRepository).deleteById(any());
+
+        characterService.deleteCharacterById("123456");
+
+        verify(characterRepository).deleteById(any());
+    }
+
+    @Test
+    void testDeleteCharacterByEmailSuccess() {
+
+        doNothing().when(characterRepository).deleteCharacterByEmail(any());
+
+        characterService.deleteCharacterByEmail(EmailConstToTest.EMAIL_DEFAULT);
+
+        verify(characterRepository).deleteCharacterByEmail(any());
     }
 }

@@ -18,5 +18,5 @@ public interface QuestRepository extends MongoRepository<Quest, String> {
     })
     List<Quest> findAllQuestsByDate(String email, LocalDate day);
 
-    void deleteAllByEmail(String email);
+    void deleteAllQuestsByEmail(String email);
 }

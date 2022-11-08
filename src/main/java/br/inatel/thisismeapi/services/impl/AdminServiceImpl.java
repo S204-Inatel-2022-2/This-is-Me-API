@@ -7,9 +7,6 @@ import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
 import br.inatel.thisismeapi.models.Roles;
 import br.inatel.thisismeapi.repositories.UserRepository;
-import br.inatel.thisismeapi.services.CharacterService;
-import br.inatel.thisismeapi.services.QuestService;
-import br.inatel.thisismeapi.services.SubQuestsService;
 import br.inatel.thisismeapi.services.UserService;
 import br.inatel.thisismeapi.utils.JwtUtils;
 import br.inatel.thisismeapi.utils.UserUtils;
@@ -87,8 +84,8 @@ public class AdminServiceImpl implements UserService {
 
         LOGGER.info("m=deleteUserByEmail, type=Admin, email={}", email);
         subQuestsService.deleteAllSubQuestByEmail(email);
-        questService.deleteAllQuestByEmail(email);
-        characterService.deleteByEmail(email);
+        questService.deleteAllQuestsByEmail(email);
+        characterService.deleteCharacterByEmail(email);
         userRepository.deleteUserByEmail(email);
     }
 

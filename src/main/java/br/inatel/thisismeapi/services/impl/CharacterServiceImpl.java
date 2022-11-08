@@ -68,11 +68,11 @@ public class CharacterServiceImpl implements CharacterService {
         return characterRepository.save(character);
     }
 
-    public void deleteById(String id) {
+    public void deleteCharacterById(String id) {
         characterRepository.deleteById(id);
     }
 
-    public void deleteByEmail(String id) {
-        characterRepository.deleteByEmail(id);
+    public void deleteCharacterByEmail(String id) {
+        characterRepository.deleteCharacterByEmail(id);
     }
 }
