@@ -2,6 +2,7 @@ package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.exceptions.*;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
+import cucumber.api.java.gl.E;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class GlobalControllerExceptions {
             QuestValidationsException.class,
             IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<StandardError> badRequestHandler(ConstraintViolationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> badRequestHandler(Exception e, HttpServletRequest request) {
 
         LOGGER.info("m=badRequestHandler, statusCode={}, msg={}", HttpStatus.BAD_REQUEST.value(), e.getMessage());
         StandardError error = new StandardError();
