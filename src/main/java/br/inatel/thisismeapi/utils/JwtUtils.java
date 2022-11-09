@@ -6,10 +6,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import javax.servlet.http.Cookie;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
 public final class JwtUtils {
 

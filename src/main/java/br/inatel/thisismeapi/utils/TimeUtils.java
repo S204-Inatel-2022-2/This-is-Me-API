@@ -14,7 +14,6 @@ public class TimeUtils {
         if (hour == 0)
             return min + "min";
 
-
         return hour + "h" + min + "m";
     }
 }

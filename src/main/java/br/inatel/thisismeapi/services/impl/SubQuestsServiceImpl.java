@@ -3,7 +3,6 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
-import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
@@ -101,7 +100,7 @@ public class SubQuestsServiceImpl implements SubQuestsService {
 
         LocalDate sunday = WeekCalculatorUtils.getSundayFromWeekDate(LocalDate.now());
         LocalDateTime start = LocalDateTime.of(sunday.plusDays(7), LocalTime.MIN);
-        LocalDateTime end = LocalDateTime.of(sunday.plusDays( 13), LocalTime.MAX);
+        LocalDateTime end = LocalDateTime.of(sunday.plusDays(13), LocalTime.MAX);
 
         return subQuestRepository.findAllSubQuestsByRangeDate(email, start, end);
     }
@@ -113,6 +112,13 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         LocalDateTime date = LocalDateTime.of(yesterday, LocalTime.MAX);
 
         return subQuestRepository.findAllSubQuestNotCheckUntilDate(email, date);
+    }
+
+    @Override
+    public void deleteSubQuestBySubQuestId(String subQuestId) {
+
+        LOGGER.info("m=deleteSubQuestBySubQuestId, subQuestId={}", subQuestId);
+        subQuestRepository.deleteById(subQuestId);
     }
 
 

@@ -2,7 +2,6 @@ package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.exceptions.*;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
-import cucumber.api.java.gl.E;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

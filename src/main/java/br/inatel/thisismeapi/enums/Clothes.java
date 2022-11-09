@@ -9,21 +9,21 @@ public enum Clothes {
 
     private final Long number;
 
-    Clothes (Long id) {
+    Clothes(Long id) {
         this.number = id;
     }
 
-    public Long getNumber(){
+    public Long getNumber() {
         return number;
     }
 
-    public static Clothes findById(Long number){
+    public static Clothes findById(Long number) {
 
         if (number == null)
             throw new IllegalArgumentException("numero da roupa não pode ser nulo");
 
-        for(Clothes clothes: Clothes.values()){
-            if (clothes.getNumber().equals(number)){
+        for (Clothes clothes : Clothes.values()) {
+            if (clothes.getNumber().equals(number)) {
                 return clothes;
             }
         }
