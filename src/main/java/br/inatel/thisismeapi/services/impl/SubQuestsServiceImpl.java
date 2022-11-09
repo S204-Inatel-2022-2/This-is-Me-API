@@ -115,7 +115,7 @@ public class SubQuestsServiceImpl implements SubQuestsService {
     }
 
     @Override
-    public void deleteSubQuestBySubQuestId(String subQuestId) {
+    public void deleteSubQuestById(String subQuestId) {
 
         LOGGER.info("m=deleteSubQuestBySubQuestId, subQuestId={}", subQuestId);
         subQuestRepository.deleteById(subQuestId);

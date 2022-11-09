@@ -18,5 +18,5 @@ public interface SubQuestsService {
 
     List<SubQuest> findAllSubQuestsLate(String email);
 
-    void deleteSubQuestBySubQuestId(String subQuestId);
+    void deleteSubQuestById(String subQuestId);
 }

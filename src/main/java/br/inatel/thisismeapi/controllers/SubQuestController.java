@@ -59,9 +59,9 @@ public class SubQuestController {
 
     @DeleteMapping("/delete")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteSubQuest(String subQuestId, Authentication authentication) {
+    public void deleteSubQuestById(String subQuestId, Authentication authentication) {
 
-        LOGGER.info("m=deleteSubQuest, email={}", authentication.getName());
-        subQuestsService.deleteSubQuestBySubQuestId(subQuestId);
+        LOGGER.info("m=deleteSubQuestById, email={}", authentication.getName());
+        subQuestsService.deleteSubQuestById(subQuestId);
     }
 }

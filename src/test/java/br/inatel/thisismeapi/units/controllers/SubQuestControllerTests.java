@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {SubQuestController.class})
 class SubQuestControllerTests {
@@ -51,7 +50,7 @@ class SubQuestControllerTests {
 
 
         when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
-        Mockito.when(subQuestsService.findAllSubQuestsToday(anyString())).thenReturn(subQuestList);
+        when(subQuestsService.findAllSubQuestsToday(anyString())).thenReturn(subQuestList);
 
         List<CardResponseDTO> actualList = subQuestController.getAllSubQuestCurrentDayAsCards(authentication);
 
@@ -74,7 +73,7 @@ class SubQuestControllerTests {
 
 
         when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
-        Mockito.when(subQuestsService.findAllSubQuestsWeekly(anyString())).thenReturn(subQuestList);
+        when(subQuestsService.findAllSubQuestsWeekly(anyString())).thenReturn(subQuestList);
 
         List<CardResponseDTO> actualList = subQuestController.getAllSubQuestCurrentWeekAsCards(authentication);
 
@@ -97,7 +96,7 @@ class SubQuestControllerTests {
 
 
         when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
-        Mockito.when(subQuestsService.findAllSubQuestsFromNextWeek(anyString())).thenReturn(subQuestList);
+        when(subQuestsService.findAllSubQuestsFromNextWeek(anyString())).thenReturn(subQuestList);
 
         List<CardResponseDTO> actualList = subQuestController.getAllSubQuestNextWeekAsCards(authentication);
 
@@ -120,12 +119,23 @@ class SubQuestControllerTests {
 
 
         when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
-        Mockito.when(subQuestsService.findAllSubQuestsLate(anyString())).thenReturn(subQuestList);
+        when(subQuestsService.findAllSubQuestsLate(anyString())).thenReturn(subQuestList);
 
         List<CardResponseDTO> actualList = subQuestController.getAllSubQuestLateAsCards(authentication);
 
         assertEquals(expectedList.get(0).getName(), actualList.get(0).getName());
         assertEquals(expectedList.size(), actualList.size());
+    }
+
+    @Test
+    void testDeleteSubQuestByIdSuccess() {
+
+        when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
+        doNothing().when(subQuestsService).deleteSubQuestById(anyString());
+
+        subQuestController.deleteSubQuestById("123456", authentication);
+
+        verify(subQuestsService).deleteSubQuestById(anyString());
     }
 
     private SubQuest getInstanceOfSubQuest() {
