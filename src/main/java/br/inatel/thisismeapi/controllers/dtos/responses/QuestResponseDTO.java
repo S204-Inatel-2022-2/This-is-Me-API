@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.entities.Quest;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 public class QuestResponseDTO implements Serializable {
 
@@ -106,14 +107,6 @@ public class QuestResponseDTO implements Serializable {
         this.xp = xp;
     }
 
-//    public List<String> getWeek() {
-//        return week;
-//    }
-//
-//    public void setWeek(List<String> week) {
-//        this.week = week;
-//    }
-
     public List<DayResponseDTO> getWeek() {
         return week;
     }
@@ -128,5 +121,18 @@ public class QuestResponseDTO implements Serializable {
 
     public void setPeriod(String period) {
         this.period = period;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestResponseDTO that = (QuestResponseDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(desc, that.desc) && Objects.equals(hexColor, that.hexColor) && Objects.equals(skill, that.skill) && Objects.equals(subQuests, that.subQuests) && Objects.equals(status, that.status) && Objects.equals(period, that.period) && Objects.equals(xp, that.xp) && Objects.equals(week, that.week);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, desc, hexColor, skill, subQuests, status, period, xp, week);
     }
 }

@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.utils.TimeUtils;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class CardResponseDTO implements Serializable {
 

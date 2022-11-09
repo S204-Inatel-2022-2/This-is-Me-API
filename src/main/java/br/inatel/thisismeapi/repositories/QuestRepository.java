@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestRepository extends MongoRepository<Quest, String> {
 
@@ -26,5 +27,5 @@ public interface QuestRepository extends MongoRepository<Quest, String> {
                     "'email': ?1, " +
                     "}}"
     })
-    Quest findQuestByIdAndEmail(String id, String email);
+    Optional<Quest> findQuestByIdAndEmail(String id, String email);
 }

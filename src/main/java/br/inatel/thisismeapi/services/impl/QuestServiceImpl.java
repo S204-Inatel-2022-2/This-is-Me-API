@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
@@ -54,7 +55,6 @@ public class QuestServiceImpl implements QuestService {
             throw new QuestValidationsException(e.getMessage());
         }
 
-        savedQuest.setFinalized(0L);
         savedQuest.setTotal((long) subQuests.size());
         savedQuest.setTotalXp(this.calcutateTotalXp(subQuests));
 
@@ -75,7 +75,9 @@ public class QuestServiceImpl implements QuestService {
     public Quest getQuestById(String id, String email) {
 
             LOGGER.info("m=getQuestById, email={}, id={}", email, id);
-            return questRepository.findQuestByIdAndEmail(id, email);
+
+            return questRepository.findQuestByIdAndEmail(id, email)
+                    .orElseThrow(() -> new NotFoundException("Quest não encontrada!"));
     }
 
     public void deleteAllQuestsByEmail(String email) {

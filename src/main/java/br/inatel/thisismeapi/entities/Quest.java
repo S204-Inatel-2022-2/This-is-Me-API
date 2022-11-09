@@ -58,6 +58,9 @@ public class Quest implements Serializable {
 
     public Quest() {
         this.week = new ArrayList<>();
+        this.total = 0L;
+        this.desc = "";
+        this.skill = "";
         this.xpGained = 0L;
     }
 

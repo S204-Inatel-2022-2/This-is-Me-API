@@ -4,6 +4,7 @@ import br.inatel.thisismeapi.controllers.dtos.responses.converter.DayOfWeekBrazi
 import br.inatel.thisismeapi.models.Day;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class DayResponseDTO implements Serializable {
 
@@ -20,5 +21,20 @@ public class DayResponseDTO implements Serializable {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DayResponseDTO that = (DayResponseDTO) o;
+
+        return Objects.equals(day, that.day);
+    }
+
+    @Override
+    public int hashCode() {
+        return day != null ? day.hashCode() : 0;
     }
 }
