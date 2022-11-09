@@ -56,6 +56,7 @@ public class QuestServiceImpl implements QuestService {
 
         savedQuest.setFinalized(0L);
         savedQuest.setTotal((long) subQuests.size());
+        savedQuest.setTotalXp(this.calcutateTotalXp(subQuests));
 
         savedQuest = questRepository.save(savedQuest);
         character.getQuests().add(savedQuest);
@@ -70,6 +71,13 @@ public class QuestServiceImpl implements QuestService {
         return questRepository.findAllQuestsByDate(email, LocalDate.now());
     }
 
+    @Override
+    public Quest getQuestById(String id, String email) {
+
+            LOGGER.info("m=getQuestById, email={}, id={}", email, id);
+            return questRepository.findQuestByIdAndEmail(id, email);
+    }
+
     public void deleteAllQuestsByEmail(String email) {
 
         LOGGER.info("m=deleteAllQuestByEmail, email={}", email);
@@ -79,7 +87,6 @@ public class QuestServiceImpl implements QuestService {
     private Boolean validateQuest(Quest quest) {
 
         LOGGER.info("m=validateQuest");
-
 
         if (quest.getName().isBlank())
             throw new QuestValidationsException("Nome da quest não pode ser deixado em branco!");
@@ -100,5 +107,15 @@ public class QuestServiceImpl implements QuestService {
             throw new QuestValidationsException("Não pode criar uma tarefa com a semana vazia, por favor, selecione pelo menos um dia da semana!");
 
         return true;
+    }
+
+    private Long calcutateTotalXp(List<SubQuest> subQuest) {
+
+            LOGGER.info("m=calcutateTotalXp");
+            Long totalXp = 0L;
+            for (SubQuest sub : subQuest) {
+                totalXp += sub.getXp();
+            }
+            return totalXp;
     }
 }

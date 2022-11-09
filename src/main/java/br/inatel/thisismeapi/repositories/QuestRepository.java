@@ -19,4 +19,12 @@ public interface QuestRepository extends MongoRepository<Quest, String> {
     List<Quest> findAllQuestsByDate(String email, LocalDate day);
 
     void deleteAllQuestsByEmail(String email);
+
+    @Aggregation(pipeline = {
+            "{'$match': {" +
+                    "'_id': ?0, " +
+                    "'email': ?1, " +
+                    "}}"
+    })
+    Quest findQuestByIdAndEmail(String id, String email);
 }

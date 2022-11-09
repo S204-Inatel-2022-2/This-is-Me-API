@@ -45,6 +45,12 @@ public class Quest implements Serializable {
     private List<Day> week;
 
     @Schema(hidden = true)
+    private Long xpGained;
+
+    @Schema(hidden = true)
+    private Long totalXp;
+
+    @Schema(hidden = true)
     private Long total;
 
     @Schema(hidden = true)
@@ -52,6 +58,7 @@ public class Quest implements Serializable {
 
     public Quest() {
         this.week = new ArrayList<>();
+        this.xpGained = 0L;
     }
 
     public String getQuestId() {
@@ -134,6 +141,21 @@ public class Quest implements Serializable {
         this.week.add(day);
     }
 
+    public Long getXpGained() {
+        return xpGained;
+    }
+
+    public void addXpGained(Long xpGained) {
+        this.xpGained += xpGained;
+    }
+
+    public Long getTotalXp() {
+        return totalXp;
+    }
+
+    public void setTotalXp(Long totalXp) {
+        this.totalXp = totalXp;
+    }
 
     public Long getTotal() {
         return total;

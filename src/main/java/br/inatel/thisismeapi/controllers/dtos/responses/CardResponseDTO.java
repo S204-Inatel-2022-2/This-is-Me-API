@@ -3,11 +3,13 @@ package br.inatel.thisismeapi.controllers.dtos.responses;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.utils.TimeUtils;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
-public class CardResponseDTO {
+public class CardResponseDTO implements Serializable {
 
     private static DateTimeFormatter FMT = DateTimeFormatter.ofPattern("HH:mm");
+
     private String questId;
 
     private String subQuestId;

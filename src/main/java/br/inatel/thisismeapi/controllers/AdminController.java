@@ -34,7 +34,7 @@ public class AdminController {
 
     @DeleteMapping("/delete-user-by-email")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteUserByEmail(String email) {
+    public void deleteUserByEmail(@RequestParam String email) {
         LOGGER.info("m=deleteUserByEmail, email={}", email);
         this.adminService.deleteUserByEmail(email);
     }
