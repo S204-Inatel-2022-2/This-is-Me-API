@@ -28,7 +28,7 @@ public class WeekCalculatorUtils {
 
         int intervalToSunday = DayOfWeek.SUNDAY.getValue() - date.getDayOfWeek().getValue();
 
-        if(intervalToSunday == 0)
+        if (intervalToSunday == 0)
             return date.plusDays(DayOfWeek.SUNDAY.getValue());
 
         return date.plusDays(intervalToSunday);

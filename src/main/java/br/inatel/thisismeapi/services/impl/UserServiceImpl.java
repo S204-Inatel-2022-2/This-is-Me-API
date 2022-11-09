@@ -185,7 +185,7 @@ public class UserServiceImpl implements UserService {
         return roles;
     }
 
-    private void validadeCharacterName(String characterName){
+    private void validadeCharacterName(String characterName) {
 
         if (characterName.isBlank())
             throw new IllegalArgumentException("Nome do personagem não pode ser deixado em branco!");

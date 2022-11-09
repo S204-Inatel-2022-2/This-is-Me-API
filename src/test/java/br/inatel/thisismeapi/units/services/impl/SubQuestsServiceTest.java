@@ -27,6 +27,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 
 @SpringBootTest(classes = {SubQuestsServiceImpl.class})
 public class SubQuestsServiceTest {
@@ -47,13 +50,13 @@ public class SubQuestsServiceTest {
         quest.setEndDate(LocalDate.of(2022, 11, 12));
         quest.setWeek(this.getOneOfEachDayOfTheWeekStartAtTenAndFinishingAtElevenOfMorning());
 
-        try (MockedStatic<LocalDateTime> localDateMockedStatic = Mockito.mockStatic(LocalDateTime.class)) {
+        try (MockedStatic<LocalDateTime> localDateMockedStatic = mockStatic(LocalDateTime.class)) {
             localDateMockedStatic.when(LocalDateTime::now).thenReturn(today);
             localDateMockedStatic.when(() -> LocalDateTime.of(any(LocalDate.class), any(LocalTime.class))).thenCallRealMethod();
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.saveAll(any())).thenReturn(subQuestsList);
+            when(subQuestRepository.saveAll(any())).thenReturn(subQuestsList);
             List<SubQuest> result = this.subQuestsService.createSubQuestByQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
 
             assertEquals(2, result.size());
@@ -88,13 +91,13 @@ public class SubQuestsServiceTest {
         quest.setEndDate(LocalDate.of(2022, 11, 12));
         quest.setWeek(this.getOneOfEachDayOfTheWeekStartAtTenAndFinishingAtElevenOfMorning());
 
-        try (MockedStatic<LocalDateTime> localDateMockedStatic = Mockito.mockStatic(LocalDateTime.class)) {
+        try (MockedStatic<LocalDateTime> localDateMockedStatic = mockStatic(LocalDateTime.class)) {
             localDateMockedStatic.when(LocalDateTime::now).thenReturn(today);
             localDateMockedStatic.when(() -> LocalDateTime.of(any(LocalDate.class), any(LocalTime.class))).thenCallRealMethod();
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.saveAll(any())).thenReturn(subQuestsList);
+            when(subQuestRepository.saveAll(any())).thenReturn(subQuestsList);
             OnCreateSubQuestException exception = assertThrows(OnCreateSubQuestException.class, () -> {
                 this.subQuestsService.createSubQuestByQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
             });
@@ -109,13 +112,13 @@ public class SubQuestsServiceTest {
         LocalDate today = LocalDate.of(2022, 11, 6);
 
 
-        try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
+        try (MockedStatic<LocalDate> localDateMockedStatic = mockStatic(LocalDate.class)) {
 
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
+            when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
             List<SubQuest> result = this.subQuestsService.findAllSubQuestsToday(EmailConstToTest.EMAIL_DEFAULT);
 
             assertEquals(2, result.size());
@@ -157,13 +160,13 @@ public class SubQuestsServiceTest {
 
         LocalDate today = LocalDate.of(2022, 11, 6);
 
-        try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
+        try (MockedStatic<LocalDate> localDateMockedStatic = mockStatic(LocalDate.class)) {
 
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
+            when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
             List<SubQuest> result = this.subQuestsService.findAllSubQuestsWeekly(EmailConstToTest.EMAIL_DEFAULT);
 
             assertEquals(2, result.size());
@@ -175,13 +178,13 @@ public class SubQuestsServiceTest {
 
         LocalDate today = LocalDate.of(2022, 11, 6);
 
-        try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
+        try (MockedStatic<LocalDate> localDateMockedStatic = mockStatic(LocalDate.class)) {
 
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
+            when(subQuestRepository.findAllSubQuestsByRangeDate(any(), any(), any())).thenReturn(subQuestsList);
             List<SubQuest> result = this.subQuestsService.findAllSubQuestsFromNextWeek(EmailConstToTest.EMAIL_DEFAULT);
 
             assertEquals(2, result.size());
@@ -193,13 +196,13 @@ public class SubQuestsServiceTest {
 
         LocalDate today = LocalDate.of(2022, 11, 6);
 
-        try (MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class)) {
+        try (MockedStatic<LocalDate> localDateMockedStatic = mockStatic(LocalDate.class)) {
 
             localDateMockedStatic.when(LocalDate::now).thenReturn(today);
             List<SubQuest> subQuestsList = new ArrayList<>();
             subQuestsList.add(new SubQuest());
             subQuestsList.add(new SubQuest());
-            Mockito.when(subQuestRepository.findAllSubQuestNotCheckUntilDate(any(), any())).thenReturn(subQuestsList);
+            when(subQuestRepository.findAllSubQuestNotCheckUntilDate(any(), any())).thenReturn(subQuestsList);
             List<SubQuest> result = this.subQuestsService.findAllSubQuestsLate(EmailConstToTest.EMAIL_DEFAULT);
 
             assertEquals(2, result.size());
@@ -209,8 +212,16 @@ public class SubQuestsServiceTest {
     @Test
     void testDeleteAllSubQuestByEmailSuccess() {
 
-        Mockito.doNothing().when(subQuestRepository).deleteAllByEmail(any());
+        doNothing().when(subQuestRepository).deleteAllByEmail(any());
         this.subQuestsService.deleteAllSubQuestByEmail(EmailConstToTest.EMAIL_DEFAULT);
-        Mockito.verify(subQuestRepository, Mockito.times(1)).deleteAllByEmail(any());
+        verify(subQuestRepository, times(1)).deleteAllByEmail(any());
+    }
+
+    @Test
+    void testDeleteSubQuestByIdSuccess() {
+
+        doNothing().when(subQuestRepository).deleteById(anyString());
+        this.subQuestsService.deleteSubQuestById("123456");
+        verify(subQuestRepository).deleteById(any());
     }
 }
