@@ -1,5 +1,6 @@
 package br.inatel.thisismeapi.controllers;
 
+import br.inatel.thisismeapi.controllers.dtos.responses.QuestResponseDTO;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
 import org.slf4j.Logger;
@@ -25,6 +26,13 @@ public class QuestController {
 
         LOGGER.info("m=createNewQuest, email={}", authentication.getName());
         return questService.createNewQuest(quest, authentication.getName());
+    }
+
+    @GetMapping
+    public QuestResponseDTO getQuestById(@RequestParam String id, Authentication authentication) {
+
+        LOGGER.info("m=getQuestById, email={}", authentication.getName());
+        return new QuestResponseDTO(questService.getQuestById(id, authentication.getName()));
     }
 
     @Deprecated

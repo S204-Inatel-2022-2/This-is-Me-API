@@ -36,7 +36,7 @@ public class SubQuestController {
         LOGGER.info("m=getAllSubQuestCurrentWeekAsCards, email={}", authentication.getName());
         List<SubQuest> subQuestList = subQuestsService.findAllSubQuestsWeekly(authentication.getName());
 
-        return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
+        return subQuestList.stream().map(CardResponseDTO::new).toList();
     }
 
     @GetMapping("/next-week-cards")
@@ -45,7 +45,7 @@ public class SubQuestController {
         LOGGER.info("m=getAllSubQuestNextWeekAsCards, email={}", authentication.getName());
         List<SubQuest> subQuestList = subQuestsService.findAllSubQuestsFromNextWeek(authentication.getName());
 
-        return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
+        return subQuestList.stream().map(CardResponseDTO::new).toList();
     }
 
     @GetMapping("/late-cards")
@@ -54,12 +54,12 @@ public class SubQuestController {
         LOGGER.info("m=getAllSubQuestLateAsCards, email={}", authentication.getName());
         List<SubQuest> subQuestList = subQuestsService.findAllSubQuestsLate(authentication.getName());
 
-        return subQuestList.stream().map(CardResponseDTO::new).collect(Collectors.toList());
+        return subQuestList.stream().map(CardResponseDTO::new).toList();
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteSubQuestById(String subQuestId, Authentication authentication) {
+    public void deleteSubQuestById(@RequestParam String subQuestId, Authentication authentication) {
 
         LOGGER.info("m=deleteSubQuestById, email={}", authentication.getName());
         subQuestsService.deleteSubQuestById(subQuestId);

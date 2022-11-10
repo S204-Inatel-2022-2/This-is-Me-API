@@ -2,6 +2,9 @@ package br.inatel.thisismeapi.units.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.SubQuest;
+import br.inatel.thisismeapi.enums.DayOfWeekCustom;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.models.Day;
@@ -18,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,14 +51,15 @@ class QuestServiceImplTest {
         Quest quest = this.getInstanceOfQuest();
         quest.setStartDate(LocalDate.now());
         quest.setEndDate(LocalDate.now().plusDays(1));
-
+        List<SubQuest> subQuestList = new ArrayList<>();
+        subQuestList.add(getInstanceOfSubQuest());
         Character character = new Character();
         character.setEmail(email);
 
         // when
         when(characterService.findCharacterByEmail(email)).thenReturn(character);
         when(questRepository.save(quest)).thenReturn(quest);
-        when(subQuestsService.createSubQuestByQuest(quest, email)).thenReturn(new ArrayList<>());
+        when(subQuestsService.createSubQuestByQuest(quest, email)).thenReturn(subQuestList);
         when(questRepository.save(quest)).thenReturn(quest);
         when(characterService.updateCharacter(character)).thenReturn(character);
 
@@ -63,7 +68,6 @@ class QuestServiceImplTest {
         // then
         assertEquals(email, result.getEmail());
         assertEquals("quest", result.getName());
-        assertEquals(0, result.getTotal());
     }
 
     @Test
@@ -209,6 +213,30 @@ class QuestServiceImplTest {
         verify(questRepository).deleteAllQuestsByEmail(EmailConstToTest.EMAIL_DEFAULT);
     }
 
+    @Test
+    void testGetQuestByIdSuccess() {
+
+        Quest quest = this.getInstanceOfQuest();
+        when(questRepository.findQuestByIdAndEmail(quest.getQuestId(), EmailConstToTest.EMAIL_DEFAULT)).thenReturn(Optional.of(quest));
+
+        Quest questActual = questService.getQuestById(quest.getQuestId(), EmailConstToTest.EMAIL_DEFAULT);
+
+        assertEquals(quest, questActual);
+    }
+
+    @Test
+    void testGetQuestByIdThrowExceptionWhenQuestNotFound() {
+
+
+        when(questRepository.findQuestByIdAndEmail("123456", EmailConstToTest.EMAIL_DEFAULT)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            questService.getQuestById("123456", EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Quest não encontrada!", exception.getMessage());
+    }
+
     private Quest getInstanceOfQuest(){
 
         Quest quest = new Quest();
@@ -222,5 +250,16 @@ class QuestServiceImplTest {
         quest.setWeek(week);
 
         return quest;
+    }
+
+    private SubQuest getInstanceOfSubQuest(){
+
+        SubQuest subQuest = new SubQuest();
+
+        subQuest.setDurationInMin(10L);
+        subQuest.setXp(10L);
+        subQuest.setDayOfWeekEnum(DayOfWeekCustom.FRIDAY);
+
+        return subQuest;
     }
 }
