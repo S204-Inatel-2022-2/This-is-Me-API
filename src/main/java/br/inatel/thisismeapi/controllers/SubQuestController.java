@@ -57,6 +57,13 @@ public class SubQuestController {
         return subQuestList.stream().map(CardResponseDTO::new).toList();
     }
 
+    @PostMapping("/done")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public SubQuest doneSubQuest(@RequestParam Long id, Authentication authentication) {
+        LOGGER.info("m=doneSubQuest, id={}, email={}", id, authentication.getName());
+        return subQuestsService.doneSubQuest(id, authentication.getName());
+    }
+
     @DeleteMapping("/delete")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteSubQuestById(@RequestParam String subQuestId, Authentication authentication) {

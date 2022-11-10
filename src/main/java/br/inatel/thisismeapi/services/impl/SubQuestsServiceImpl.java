@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
@@ -20,6 +21,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubQuestsServiceImpl implements SubQuestsService {
@@ -119,6 +121,19 @@ public class SubQuestsServiceImpl implements SubQuestsService {
 
         LOGGER.info("m=deleteSubQuestBySubQuestId, subQuestId={}", subQuestId);
         subQuestRepository.deleteById(subQuestId);
+    }
+
+    @Override
+    public SubQuest doneSubQuest(Long id, String email) {
+
+            LOGGER.info("m=doneSubQuest, id={}, email={}", id, email);
+            Optional<SubQuest> subQuest = subQuestRepository.findByIdAndEmail(id, email);
+
+            if(subQuest.isEmpty())
+                throw new NotFoundException("Sub Quest não encontrada!");
+
+            subQuest.get().setCheck(true);
+            return subQuestRepository.save(subQuest.get());
     }
 
 
