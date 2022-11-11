@@ -55,7 +55,7 @@ public class GlobalControllerExceptions {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    @ExceptionHandler(UniqueViolationConstraintException.class)
+    @ExceptionHandler({UniqueViolationConstraintException.class, SkillAlreadyExistsException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<StandardError> conflictHandler(Exception e, HttpServletRequest request) {
         LOGGER.info("m=conflictHandler, statusCode={}, msg={}", HttpStatus.CONFLICT.value(), e.getMessage());

@@ -2,6 +2,7 @@ package br.inatel.thisismeapi.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Skill;
+import br.inatel.thisismeapi.exceptions.SkillAlreadyExistsException;
 import br.inatel.thisismeapi.repositories.SkillRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.SkillService;
@@ -25,6 +26,8 @@ public class SkillServiceImpl implements SkillService {
         if (skill.getName().isBlank())
             throw new IllegalArgumentException("Nome da skill não pode ser vazio");
 
+        if (skillRepository.findByNameAndEmail(skill.getName(), email).isPresent())
+            throw new SkillAlreadyExistsException("Skill já existe");
 
         skill.setEmail(email);
         skill = skillRepository.save(skill);
