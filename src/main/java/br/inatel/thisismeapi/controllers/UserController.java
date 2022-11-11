@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.controllers.dtos.requests.UserResetPasswordRequestD
 import br.inatel.thisismeapi.controllers.dtos.requests.UserVerifyResetPasswordDTO;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
+    @Schema(description = "Cria uma nova conta de usuário")
     public void createNewAccount(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO, HttpServletResponse response) {
 
         LOGGER.info("m=createNewAccount, email={}", userCreatingAccountRequestDTO.getEmail());
@@ -48,6 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/reset/forgot-password")
+    @Schema(description = "Envia um email para o usuário com um link para resetar a senha")
     public ResponseEntity<String> forgotPasswordSendEmail(@RequestParam("email") String email) {
 
         LOGGER.info("m=forgotPasswordSendEmail, email={}", email);
@@ -59,6 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/reset/verify-code-reset")
+    @Schema(description = "Verifica se o código enviado para o email do usuário é válido")
     public void verifyCodeResetPassword(@RequestBody UserVerifyResetPasswordDTO userVerifyResetPasswordDTO, HttpServletResponse response) {
 
         LOGGER.info("m=verifyCodeResetPassword, email={}", userVerifyResetPasswordDTO.getEmail());
@@ -72,6 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/reset/reset-password")
+    @Schema(description = "Reseta a senha do usuário")
     public void resetPassword(@RequestBody UserResetPasswordRequestDTO userResetPasswordRequestDTO, HttpServletRequest request) {
 
         LOGGER.info("m=resetPassword");
@@ -90,6 +95,7 @@ public class UserController {
     }
 
     @GetMapping("/helloUser")
+    @Schema(description = "Endpoint para testar se o usuário está logado")
     public String helloUser() {
         LOGGER.info("m=helloUser");
         return "Hello User";

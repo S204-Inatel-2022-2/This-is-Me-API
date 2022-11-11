@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.DateTimeException;
 import java.time.Instant;
 
 @ControllerAdvice
@@ -22,7 +23,11 @@ public class GlobalControllerExceptions {
             ConstraintViolationException.class,
             OnCreateDataException.class,
             QuestValidationsException.class,
-            IllegalArgumentException.class})
+            IllegalArgumentException.class,
+            DateTimeException.class,
+            AlreadyDoneException.class,
+            OnCheckSubQuestException.class,
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<StandardError> badRequestHandler(Exception e, HttpServletRequest request) {
 

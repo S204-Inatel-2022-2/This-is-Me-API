@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.models.Day;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Document
 public class Quest implements Serializable {
@@ -39,8 +41,8 @@ public class Quest implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate endDate;
 
-    // TODO criar entidade skill
-    private String skill;
+    @DBRef
+    private Skill skill;
 
     private List<Day> week;
 
@@ -60,8 +62,9 @@ public class Quest implements Serializable {
         this.week = new ArrayList<>();
         this.total = 0L;
         this.desc = "";
-        this.skill = "";
         this.xpGained = 0L;
+        this.finalized = 0L;
+        this.skill = null;
     }
 
     public String getQuestId() {
@@ -124,11 +127,11 @@ public class Quest implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getSkill() {
+    public Skill getSkill() {
         return skill;
     }
 
-    public void setSkill(String skill) {
+    public void setSkill(Skill skill) {
         this.skill = skill;
     }
 
@@ -152,6 +155,10 @@ public class Quest implements Serializable {
         this.xpGained += xpGained;
     }
 
+    public void removeXpGained(Long xpGained) {
+        this.xpGained -= xpGained;
+    }
+
     public Long getTotalXp() {
         return totalXp;
     }
@@ -172,7 +179,12 @@ public class Quest implements Serializable {
         return finalized;
     }
 
-    public void setFinalized(Long finalized) {
-        this.finalized = finalized;
+    public void addFinishedSubQuest() {
+        this.finalized++;
     }
+
+    public void removeFinishedSubQuest() {
+        this.finalized--;
+    }
+
 }

@@ -27,7 +27,7 @@ public enum DayOfWeekCustom implements TemporalAccessor {
 
     private static final DayOfWeekCustom[] ENUMS = DayOfWeekCustom.values();
 
-    public static DayOfWeekCustom of(int dayOfWeek) {
+    public static DayOfWeekCustom of(int dayOfWeek) throws DateTimeException {
         if (dayOfWeek < 1 || dayOfWeek > 7) {
             throw new DateTimeException("Invalid value for DayOfWeek: " + dayOfWeek);
         }
@@ -67,5 +67,9 @@ public enum DayOfWeekCustom implements TemporalAccessor {
             throw new UnsupportedTemporalTypeException("Unsupported field: " + field);
         }
         return field.getFrom(this);
+    }
+
+    public String getDayOfWeekName() {
+        return this.name();
     }
 }

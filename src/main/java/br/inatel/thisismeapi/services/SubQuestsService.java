@@ -20,5 +20,5 @@ public interface SubQuestsService {
 
     void deleteSubQuestById(String subQuestId);
 
-    SubQuest doneSubQuest(Long id, String email);
+    SubQuest checkAndUncheckSubQuest(String id, String email);
 }

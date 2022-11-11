@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.controllers;
 import br.inatel.thisismeapi.controllers.dtos.responses.CardResponseDTO;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.services.SubQuestsService;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class SubQuestController {
     private SubQuestsService subQuestsService;
 
     @GetMapping("/today-cards")
+    @Schema(description = "Retorna as subQuests do dia do usuário")
     public List<CardResponseDTO> getAllSubQuestCurrentDayAsCards(Authentication authentication) {
 
         LOGGER.info("m=getAllSubQuestCurrentDayAsCards, email={}", authentication.getName());
@@ -31,6 +33,7 @@ public class SubQuestController {
     }
 
     @GetMapping("/weekly-cards")
+    @Schema(description = "Retorna as subQuests da semana do usuário")
     public List<CardResponseDTO> getAllSubQuestCurrentWeekAsCards(Authentication authentication) {
 
         LOGGER.info("m=getAllSubQuestCurrentWeekAsCards, email={}", authentication.getName());
@@ -40,6 +43,7 @@ public class SubQuestController {
     }
 
     @GetMapping("/next-week-cards")
+    @Schema(description = "Retorna as subQuests da próxima semana do usuário")
     public List<CardResponseDTO> getAllSubQuestNextWeekAsCards(Authentication authentication) {
 
         LOGGER.info("m=getAllSubQuestNextWeekAsCards, email={}", authentication.getName());
@@ -49,6 +53,7 @@ public class SubQuestController {
     }
 
     @GetMapping("/late-cards")
+    @Schema(description = "Retorna as subQuests atrasadas do usuário")
     public List<CardResponseDTO> getAllSubQuestLateAsCards(Authentication authentication) {
 
         LOGGER.info("m=getAllSubQuestLateAsCards, email={}", authentication.getName());
@@ -58,14 +63,16 @@ public class SubQuestController {
     }
 
     @PostMapping("/done")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public SubQuest doneSubQuest(@RequestParam Long id, Authentication authentication) {
+    @ResponseStatus(code = HttpStatus.OK)
+    @Schema(description = "Marca uma subQuest como concluída")
+    public SubQuest doneSubQuest(@RequestParam String id, Authentication authentication) {
         LOGGER.info("m=doneSubQuest, id={}, email={}", id, authentication.getName());
-        return subQuestsService.doneSubQuest(id, authentication.getName());
+        return subQuestsService.checkAndUncheckSubQuest(id, authentication.getName());
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @Schema(description = "Deleta uma subQuest")
     public void deleteSubQuestById(@RequestParam String subQuestId, Authentication authentication) {
 
         LOGGER.info("m=deleteSubQuestById, email={}", authentication.getName());

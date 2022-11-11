@@ -4,6 +4,7 @@ package br.inatel.thisismeapi.controllers;
 import br.inatel.thisismeapi.controllers.dtos.responses.CharacterInfoResponseDTO;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.services.CharacterService;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class CharacterController {
 
 
     @GetMapping("/get-character")
+    @Schema(description = "Retorna as informações da home do personagem do usuário logado")
     public ResponseEntity<CharacterInfoResponseDTO> getCharacter(Authentication authentication) {
 
         String email = authentication.getName();
@@ -35,7 +37,20 @@ public class CharacterController {
         return ResponseEntity.ok().body(new CharacterInfoResponseDTO(character));
     }
 
+    @GetMapping("/get-character-all-infos")
+    @Schema(description = "Retorna todas as informações do personagem")
+    public ResponseEntity<Character> getCharacterAllInfos(Authentication authentication) {
+
+        String email = authentication.getName();
+        LOGGER.info("m=getCharacter, email={}", email);
+
+        Character character = characterService.findCharacterByEmail(email);
+
+        return ResponseEntity.ok().body(character);
+    }
+
     @PostMapping("/set-clothes")
+    @Schema(description = "Altera a roupa do personagem")
     public ResponseEntity<CharacterInfoResponseDTO> setClothes(Long number, Authentication authentication) {
 
         String email = authentication.getName();

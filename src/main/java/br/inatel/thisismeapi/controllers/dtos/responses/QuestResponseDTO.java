@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.controllers.dtos.responses;
 
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.Skill;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +36,8 @@ public class QuestResponseDTO implements Serializable {
         this.name = quest.getName();
         this.desc = quest.getDesc();
         this.hexColor = quest.getHexColor();
-        this.skill = quest.getSkill();
+        Skill s = quest.getSkill();
+        this.skill = (s != null) ? s.getName() : "None";
         this.subQuests = quest.getFinalized() + "/" + quest.getTotal();
         this.status = quest.getStatus().toString();
         this.period = FMT.format(quest.getStartDate()) + " - " + FMT.format(quest.getEndDate());

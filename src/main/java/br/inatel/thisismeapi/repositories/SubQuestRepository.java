@@ -37,5 +37,5 @@ public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
                     "'email': ?1, " +
                     "}}"
     })
-    Optional<SubQuest> findByIdAndEmail(Long id, String email);
+    Optional<SubQuest> findByIdAndEmail(String id, String email);
 }
