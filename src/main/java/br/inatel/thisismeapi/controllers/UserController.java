@@ -5,7 +5,10 @@ import br.inatel.thisismeapi.controllers.dtos.requests.UserResetPasswordRequestD
 import br.inatel.thisismeapi.controllers.dtos.requests.UserVerifyResetPasswordDTO;
 import br.inatel.thisismeapi.exceptions.TokenInvalidException;
 import br.inatel.thisismeapi.services.impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,12 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Schema(description = "Cria uma nova conta de usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para criação de usuário"),
+            @ApiResponse(responseCode = "409", description = "Usuário já existe"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao criar usuário")
+    })
     public void createNewAccount(@RequestBody UserCreatingAccountRequestDTO userCreatingAccountRequestDTO, HttpServletResponse response) {
 
         LOGGER.info("m=createNewAccount, email={}", userCreatingAccountRequestDTO.getEmail());
@@ -50,7 +58,12 @@ public class UserController {
     }
 
     @PostMapping("/reset/forgot-password")
-    @Schema(description = "Envia um email para o usuário com um link para resetar a senha")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Email enviado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para envio de email", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao enviar email", content = @Content(schema = @Schema(hidden = true)))
+    })
     public ResponseEntity<String> forgotPasswordSendEmail(@RequestParam("email") String email) {
 
         LOGGER.info("m=forgotPasswordSendEmail, email={}", email);
@@ -62,7 +75,12 @@ public class UserController {
     }
 
     @PostMapping("/reset/verify-code-reset")
-    @Schema(description = "Verifica se o código enviado para o email do usuário é válido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Código verificado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para verificação de código"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao verificar código")
+    })
     public void verifyCodeResetPassword(@RequestBody UserVerifyResetPasswordDTO userVerifyResetPasswordDTO, HttpServletResponse response) {
 
         LOGGER.info("m=verifyCodeResetPassword, email={}", userVerifyResetPasswordDTO.getEmail());
@@ -76,7 +94,12 @@ public class UserController {
     }
 
     @PostMapping("/reset/reset-password")
-    @Schema(description = "Reseta a senha do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Senha resetada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para resetar senha"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao resetar senha")
+    })
     public void resetPassword(@RequestBody UserResetPasswordRequestDTO userResetPasswordRequestDTO, HttpServletRequest request) {
 
         LOGGER.info("m=resetPassword");
@@ -95,7 +118,10 @@ public class UserController {
     }
 
     @GetMapping("/helloUser")
-    @Schema(description = "Endpoint para testar se o usuário está logado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Usuário não logado")
+    })
     public String helloUser() {
         LOGGER.info("m=helloUser");
         return "Hello User";

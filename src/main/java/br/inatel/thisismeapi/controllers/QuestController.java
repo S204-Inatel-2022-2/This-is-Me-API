@@ -3,7 +3,10 @@ package br.inatel.thisismeapi.controllers;
 import br.inatel.thisismeapi.controllers.dtos.responses.QuestResponseDTO;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +26,25 @@ public class QuestController {
     private QuestServiceImpl questService;
 
     @PostMapping
-    @Schema(description = "Cria uma nova quest")
-    public Quest createNewQuest(@RequestBody Quest quest, Authentication authentication) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Quest criada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Há dados inválidos na requisição"),
+            @ApiResponse(responseCode = "401", description = "Não esta logado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public void createNewQuest(@RequestBody Quest quest, Authentication authentication) {
 
         LOGGER.info("m=createNewQuest, email={}", authentication.getName());
-        return questService.createNewQuest(quest, authentication.getName());
+        questService.createNewQuest(quest, authentication.getName());
     }
 
     @GetMapping
-    @Schema(description = "Retorna todas as quests do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna todas as quests do usuário"),
+            @ApiResponse(responseCode = "401", description = "Não esta logado", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Não há quests cadastradas", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
+    })
     public QuestResponseDTO getQuestById(@RequestParam String id, Authentication authentication) {
 
         LOGGER.info("m=getQuestById, email={}", authentication.getName());
@@ -40,7 +53,12 @@ public class QuestController {
 
     @Deprecated
     @GetMapping("/today-cards")
-    @Schema(description = "Retorna as quests do dia do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna todas as quests do usuário"),
+            @ApiResponse(responseCode = "401", description = "Não esta logado", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Não há quests cadastradas", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
+    })
     public List<Quest> getDayCards(Authentication authentication) {
 
         LOGGER.info("m=getDayCards, email={}", authentication.getName());
