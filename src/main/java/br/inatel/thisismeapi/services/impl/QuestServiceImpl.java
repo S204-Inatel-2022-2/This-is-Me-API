@@ -53,7 +53,7 @@ public class QuestServiceImpl implements QuestService {
         quest.setEmail(email);
         quest.setStatus(QuestStatus.IN_PROGRESS);
 
-        Skill skill = this.createSkill(quest.getSkill(), character ,email);
+        Skill skill = this.createSkill(quest.getSkill(), character, email);
 
         quest.setSkill(skill);
         Quest savedQuest = questRepository.save(quest);
@@ -64,8 +64,6 @@ public class QuestServiceImpl implements QuestService {
             questRepository.delete(savedQuest);
             throw new QuestValidationsException(e.getMessage());
         }
-
-
 
         savedQuest.setTotal((long) subQuests.size());
         savedQuest.setTotalXp(this.calcutateTotalXp(subQuests));
@@ -86,22 +84,22 @@ public class QuestServiceImpl implements QuestService {
     @Override
     public Quest getQuestById(String id, String email) {
 
-            LOGGER.info("m=getQuestById, email={}, id={}", email, id);
+        LOGGER.info("m=getQuestById, email={}, id={}", email, id);
 
-            return questRepository.findQuestByIdAndEmail(id, email)
-                    .orElseThrow(() -> new NotFoundException("Quest não encontrada!"));
+        return questRepository.findQuestByIdAndEmail(id, email)
+                .orElseThrow(() -> new NotFoundException("Quest não encontrada!"));
     }
 
     @Override
     public void updateQuest(Quest quest, String email) {
 
-            LOGGER.info("m=updateQuest, email={}, questName={}", email, quest.getName());
-            this.validateQuest(quest);
+        LOGGER.info("m=updateQuest, email={}, questName={}", email, quest.getName());
+        this.validateQuest(quest);
 
-            if (quest.getQuestId() == null)
-                throw new QuestValidationsException("Quest não pode ser atualizada sem id");
+        if (quest.getQuestId() == null)
+            throw new QuestValidationsException("Quest não pode ser atualizada sem id");
 
-            questRepository.save(quest);
+        questRepository.save(quest);
     }
 
     public void deleteAllQuestsByEmail(String email) {
@@ -137,19 +135,19 @@ public class QuestServiceImpl implements QuestService {
 
     private Long calcutateTotalXp(List<SubQuest> subQuest) {
 
-            LOGGER.info("m=calcutateTotalXp");
-            Long totalXp = 0L;
-            for (SubQuest sub : subQuest) {
-                totalXp += sub.getXp();
-            }
-            return totalXp;
+        LOGGER.info("m=calcutateTotalXp");
+        Long totalXp = 0L;
+        for (SubQuest sub : subQuest) {
+            totalXp += sub.getXp();
+        }
+        return totalXp;
     }
 
-    private Skill createSkill(Skill skill, Character character ,String email) {
+    private Skill createSkill(Skill skill, Character character, String email) {
         if (skill != null) {
             Optional<Skill> skillOptional = skillRepository.findByNameAndEmail(skill.getName(), email);
             if (skillOptional.isPresent()) {
-                return  skillOptional.get();
+                return skillOptional.get();
             } else {
                 skill.setEmail(email);
                 skill = skillRepository.save(skill);

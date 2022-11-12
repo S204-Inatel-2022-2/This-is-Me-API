@@ -2,33 +2,33 @@ package br.inatel.thisismeapi.enums;
 
 public enum SkillLevel {
 
-    BEGINNER_1("Beginner 1", 1, 0, 13),
-    BEGINNER_2("Beginner 2", 2, 12, 39),
-    BEGINNER_3("Beginner 3", 3, 40, 78),
-    BEGINNER_4("Beginner 4", 4, 79, 130),
-    BEGINNER_5("Beginner 5", 5, 131, 195),
-    BEGINNER_6("Beginner 6", 6, 196, 273),
+    BEGINNER_1("Beginner I", 1, 0, 26),
+    BEGINNER_2("Beginner II", 2, 27, 78),
+    BEGINNER_3("Beginner III", 3, 79, 156),
+    BEGINNER_4("Beginner IV", 4, 157, 260),
+    BEGINNER_5("Beginner V", 5, 261, 390),
+    BEGINNER_6("Beginner VI", 6, 391, 546),
 
-    INTERMEDIATE_1("Intermediate 1", 7, 274, 364),
-    INTERMEDIATE_2("Intermediate 2", 8, 365, 468),
-    INTERMEDIATE_3("Intermediate 3", 9, 469, 585),
-    INTERMEDIATE_4("Intermediate 4", 10, 586, 715),
-    INTERMEDIATE_5("Intermediate 5", 11, 716, 858),
+    INTERMEDIATE_1("Intermediate I", 7, 547, 728),
+    INTERMEDIATE_2("Intermediate II", 8, 729, 936),
+    INTERMEDIATE_3("Intermediate III", 9, 937, 1170),
+    INTERMEDIATE_4("Intermediate IV", 10, 1171, 1430),
+    INTERMEDIATE_5("Intermediate V", 11, 1431, 1716),
 
+    ADVANCED_1("Advanced I", 12, 1717, 2028),
+    ADVANCED_2("Advanced II", 13, 2029, 2366),
+    ADVANCED_3("Advanced III", 14, 2367, 2730),
+    ADVANCED_4("Advanced IV", 15, 2731, 3120),
 
-    ADVANCED_1("Advanced 1", 12, 859, 1034),
-    ADVANCED_2("Advanced 2", 13, 1035, 1227),
-    ADVANCED_3("Advanced 3", 14, 1228, 1438),
-    ADVANCED_4("Advanced 4", 15, 1439, 1665),
+    ESPECIALIST_1("Especialist I", 16, 3121, 3536),
+    ESPECIALIST_2("Especialist II", 17, 3537, 3978),
+    ESPECIALIST_3("Especialist III", 18, 3979, 4446),
 
-    ESPECIALIST_1("Especialist 1", 16, 1666, 1948),
-    ESPECIALIST_2("Especialist 2", 17, 1949, 2256),
-    ESPECIALIST_3("Especialist 3", 18, 2257, 2589),
+    EXPERT_1("Expert I", 19, 4447, 4940),
+    EXPERT_2("Expert II", 20, 4941, 5460),
 
-    EXPERT_1("Expert 1", 19, 2590, 3063),
-    EXPERT_2("Expert 2", 20, 3064, 3589),
+    LEGENDARY("Legendary", 21, 5461, 999999999);
 
-    LEGENDARY("Legendary", 21, 3590, 999999999);
 
     private String levelName;
 

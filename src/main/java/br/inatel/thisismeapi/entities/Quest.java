@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Document
 public class Quest implements Serializable {
@@ -30,7 +29,7 @@ public class Quest implements Serializable {
 
     private String hexColor;
 
-    @NotNull
+    @NotNull(message = "Nome da quest não pode ser nulo")
     private String name;
 
     private String desc;

@@ -22,7 +22,7 @@ public class Skill {
     @NotBlank(message = "Nome da habilidade não pode ser vazio")
     @NotNull(message = "Nome da habilidade não pode ser nulo")
     @Size(max = 30, message = "Nome da habilidade deve ter no máximo 30 caracteres")
-    @Schema(example = "Java", description = "Name of the skill", required = true,  maxLength = 30)
+    @Schema(example = "Java", description = "Name of the skill", required = true, maxLength = 30)
     private String name;
 
     @Schema(hidden = true)
@@ -42,9 +42,9 @@ public class Skill {
         return skillId;
     }
 
-//    public void setSkillId(String skillId) {
-//        this.skillId = skillId;
-//    }
+    public void setSkillId(String skillId) {
+        this.skillId = skillId;
+    }
 
     public String getEmail() {
         return email;
@@ -78,5 +78,9 @@ public class Skill {
 
     public SkillLevel getLevel() {
         return level;
+    }
+
+    public Integer getPercentage() {
+        return (int) ((this.xp - this.level.getMinXP()) * 100 / (this.level.getMaxXP() - this.level.getMinXP()));
     }
 }

@@ -44,7 +44,7 @@ public class CardResponseDTO implements Serializable {
         this.name = subQuest.getQuest().getName();
         this.color = subQuest.getQuest().getHexColor();
         Skill s = subQuest.getQuest().getSkill();
-        this.skill = (s != null) ? s.getName() : "None";
+        this.skill = (s != null) ? s.getName() : "-----";
         this.date = subQuest.getStart().toLocalDate().toString();
         this.startTime = FMT.format(subQuest.getStart());
         this.endTime = FMT.format(subQuest.getEnd());
