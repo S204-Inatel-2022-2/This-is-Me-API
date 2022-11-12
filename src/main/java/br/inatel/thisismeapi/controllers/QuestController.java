@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.controllers;
 import br.inatel.thisismeapi.controllers.dtos.responses.QuestResponseDTO;
 import br.inatel.thisismeapi.entities.Quest;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,6 +33,7 @@ public class QuestController {
             @ApiResponse(responseCode = "401", description = "Não esta logado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @Operation(summary = "Cria uma nova quest")
     public void createNewQuest(@RequestBody Quest quest, Authentication authentication) {
 
         LOGGER.info("m=createNewQuest, email={}", authentication.getName());
@@ -45,6 +47,7 @@ public class QuestController {
             @ApiResponse(responseCode = "404", description = "Não há quests cadastradas", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
+    @Operation(summary = "Retorna a quest do Usuário pelo id")
     public QuestResponseDTO getQuestById(@RequestParam String id, Authentication authentication) {
 
         LOGGER.info("m=getQuestById, email={}", authentication.getName());

@@ -4,6 +4,7 @@ package br.inatel.thisismeapi.controllers;
 import br.inatel.thisismeapi.controllers.dtos.responses.CharacterInfoResponseDTO;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.services.CharacterService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +35,7 @@ public class CharacterController {
             @ApiResponse(responseCode = "404", description = "Não há personagem cadastrado", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
-
+    @Operation(summary = "Retorna informações basica do personagem do usuário")
     public ResponseEntity<CharacterInfoResponseDTO> getCharacter(Authentication authentication) {
 
         String email = authentication.getName();
@@ -52,6 +53,7 @@ public class CharacterController {
             @ApiResponse(responseCode = "404", description = "Não há personagem cadastrado", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
+    @Operation(summary = "Retorna todas as informações do personagem")
     public ResponseEntity<Character> getCharacterAllInfos(Authentication authentication) {
 
         String email = authentication.getName();
@@ -69,6 +71,7 @@ public class CharacterController {
             @ApiResponse(responseCode = "401", description = "Não esta logado", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
+    @Operation(summary = "Altera a roupa do personagem")
     public ResponseEntity<CharacterInfoResponseDTO> setClothes(Long number, Authentication authentication) {
 
         String email = authentication.getName();
