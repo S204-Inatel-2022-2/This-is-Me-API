@@ -1,13 +1,19 @@
 package br.inatel.thisismeapi.units.services.impl;
 
+import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.Skill;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
 import br.inatel.thisismeapi.enums.QuestStatus;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateDataException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.models.Day;
+import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.repositories.SkillRepository;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
+import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.impl.SubQuestsServiceImpl;
 import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import org.junit.jupiter.api.Test;
@@ -23,9 +29,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -37,8 +43,18 @@ public class SubQuestsServiceTest {
     @Autowired
     private SubQuestsServiceImpl subQuestsService;
 
+
     @MockBean
     private SubQuestRepository subQuestRepository;
+
+    @MockBean
+    private CharacterService characterService;
+
+    @MockBean
+    private QuestRepository questRepository;
+
+    @MockBean
+    private SkillRepository skillRepository;
 
     @Test
     void testCreateSubQuestByQuestSuccess() {
@@ -224,4 +240,105 @@ public class SubQuestsServiceTest {
         this.subQuestsService.deleteSubQuestById("123456");
         verify(subQuestRepository).deleteById(any());
     }
+
+    @Test
+    void testCheckAndUncheckSubQuestThrowExceptionWhenDontFindSubQuest() {
+
+        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.empty());
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            this.subQuestsService.checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Sub Quest não encontrada!", exception.getMessage());
+    }
+
+    @Test
+    void testCheckAndUncheckSubQuestWithSubQuestChecked() {
+
+        Quest quest = new Quest();
+        SubQuest subQuest = new SubQuest();
+        subQuest.setQuest(quest);
+        subQuest.setCheck(true);
+        subQuest.setXp(10L);
+
+        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(subQuest));
+        when(characterService.findCharacterByEmail(any())).thenReturn(new Character());
+        SubQuest actual = this.subQuestsService.checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+
+        assertFalse(subQuest.isCheck());
+        verify(subQuestRepository).save(any());
+    }
+
+    @Test
+    void testCheckAndUncheckSubQuestWithSubQuestUnchecked() {
+
+        Quest quest = new Quest();
+        SubQuest subQuest = new SubQuest();
+        subQuest.setQuest(quest);
+        subQuest.setCheck(false);
+        subQuest.setXp(10L);
+
+        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(subQuest));
+        when(characterService.findCharacterByEmail(any())).thenReturn(new Character());
+        this.subQuestsService.checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+
+        assertTrue(subQuest.isCheck());
+        verify(subQuestRepository).save(any());
+    }
+
+    @Test
+    void testCheckAndUncheckedSubQuestWhenSubQuestIsCheckedAndSkillIsNotNull() {
+
+        Quest quest = new Quest();
+        SubQuest subQuest = new SubQuest();
+        subQuest.setQuest(quest);
+        subQuest.setCheck(true);
+        subQuest.setXp(10L);
+        subQuest.getQuest().setSkill(new Skill());
+
+        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(subQuest));
+        when(characterService.findCharacterByEmail(any())).thenReturn(new Character());
+        this.subQuestsService.checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+
+        assertFalse(subQuest.isCheck());
+        verify(subQuestRepository).save(any());
+    }
+
+    @Test
+    void testCheckAndUncheckedSubQuestWhenSubQuestIsUncheckedAndSkillIsNotNull() {
+
+        Quest quest = new Quest();
+        SubQuest subQuest = new SubQuest();
+        subQuest.setQuest(quest);
+        subQuest.setCheck(false);
+        subQuest.setXp(10L);
+        subQuest.getQuest().setSkill(new Skill());
+
+        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(subQuest));
+        when(characterService.findCharacterByEmail(any())).thenReturn(new Character());
+        this.subQuestsService.checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+
+        assertTrue(subQuest.isCheck());
+        verify(subQuestRepository).save(any());
+    }
+
+//    @Test
+//    void testCheckAndUncheckSubQuestSuccessWhenSubQuestIsNotCheckedAndHasSkill() {
+//
+//        SubQuest subQuest = new SubQuest();
+//        Quest quest = new Quest();
+//        quest.setSkill(new Skill());
+//        subQuest.setCheck(false);
+//
+//        when(subQuestRepository.findByIdAndEmail(any(), any())).thenReturn(Optional.of(subQuest));
+//        when(characterService.findCharacterByEmail(any())).thenReturn(new Character());
+//        when(skillRepository.save(any())).thenReturn(new Skill());
+//        when(questRepository.save(any())).thenReturn(quest);
+//        when(characterService.updateCharacter(any())).thenReturn(new Character());
+//        when(subQuestRepository.save(any())).thenReturn(subQuest);
+//
+//
+//        verify(subQuestRepository).save(any());
+//    }
+
 }

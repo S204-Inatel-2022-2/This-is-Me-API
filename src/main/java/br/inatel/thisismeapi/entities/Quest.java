@@ -70,6 +70,10 @@ public class Quest implements Serializable {
         return questId;
     }
 
+    public void setQuestId(String questId) {
+        this.questId = questId;
+    }
+
     public String getEmail() {
         return email;
     }

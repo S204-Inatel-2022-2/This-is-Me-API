@@ -138,6 +138,17 @@ class SubQuestControllerTests {
         verify(subQuestsService).deleteSubQuestById(anyString());
     }
 
+    @Test
+    void testCheckAndUncheckSubQuestSuccess() {
+
+        when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
+        when(subQuestsService.checkAndUncheckSubQuest(anyString(), anyString())).thenReturn(new SubQuest());
+
+        subQuestController.checkAndUncheckSubQuest("123456", authentication);
+
+        verify(subQuestsService).checkAndUncheckSubQuest("123456", EmailConstToTest.EMAIL_DEFAULT);
+    }
+
     private SubQuest getInstanceOfSubQuest() {
 
         SubQuest subQuest = new SubQuest();

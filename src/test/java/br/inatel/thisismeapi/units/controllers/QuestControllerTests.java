@@ -46,6 +46,8 @@ class QuestControllerTests {
         when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
         Mockito.when(questService.createNewQuest(any(), anyString())).thenReturn(expectedQuest);
 
+        questController.createNewQuest(expectedQuest, authentication);
+
         verify(questService).createNewQuest(any(), anyString());
     }
 

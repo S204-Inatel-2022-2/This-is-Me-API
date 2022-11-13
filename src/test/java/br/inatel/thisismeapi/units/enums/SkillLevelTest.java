@@ -13,7 +13,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelName() {
         SkillLevel skillLevel = SkillLevel.BEGINNER_1;
-        String expectedLevelName = "Beginner 1";
+        String expectedLevelName = "Beginner I";
         String actualLevelName = skillLevel.getLevelName();
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -21,7 +21,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelNameWhenLevelIsIntermediate() {
         SkillLevel skillLevel = SkillLevel.INTERMEDIATE_2;
-        String expectedLevelName = "Intermediate 2";
+        String expectedLevelName = "Intermediate II";
         String actualLevelName = skillLevel.getLevelName();
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -29,7 +29,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelNameWhenLevelIsAdvanced() {
         SkillLevel skillLevel = SkillLevel.ADVANCED_3;
-        String expectedLevelName = "Advanced 3";
+        String expectedLevelName = "Advanced III";
         String actualLevelName = skillLevel.getLevelName();
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -37,7 +37,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelNameWhenLevelIsExpert() {
         SkillLevel skillLevel = SkillLevel.EXPERT_2;
-        String expectedLevelName = "Expert 2";
+        String expectedLevelName = "Expert II";
         String actualLevelName = skillLevel.getLevelName();
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -93,7 +93,7 @@ public class SkillLevelTest {
     @Test
     void testGetMinXPWhenLevelIsIntermediate() {
         SkillLevel skillLevel = SkillLevel.INTERMEDIATE_2;
-        Integer expectedMinXP = 365;
+        Integer expectedMinXP = 729;
         Integer actualMinXP = skillLevel.getMinXP();
         assertEquals(expectedMinXP, actualMinXP);
     }
@@ -101,7 +101,7 @@ public class SkillLevelTest {
     @Test
     void testGetMinXPWhenLevelIsAdvanced() {
         SkillLevel skillLevel = SkillLevel.ADVANCED_3;
-        Integer expectedMinXP = 1228;
+        Integer expectedMinXP = 2367;
         Integer actualMinXP = skillLevel.getMinXP();
         assertEquals(expectedMinXP, actualMinXP);
     }
@@ -109,7 +109,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelNameByXP() {
         Integer xp = 365;
-        String expectedLevelName = "Intermediate 2";
+        String expectedLevelName = "Beginner V";
         String actualLevelName = SkillLevel.getLevelNameByXP(xp);
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -117,7 +117,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelNameByXPWhenXPIsZero() {
         Integer xp = 0;
-        String expectedLevelName = "Beginner 1";
+        String expectedLevelName = "Beginner I";
         String actualLevelName = SkillLevel.getLevelNameByXP(xp);
         assertEquals(expectedLevelName, actualLevelName);
     }
@@ -140,7 +140,7 @@ public class SkillLevelTest {
     @Test
     void testGetLevelByXP() {
         Integer xp = 365;
-        Integer expectedLevel = 8;
+        Integer expectedLevel = 5;
         Integer actualLevel = SkillLevel.getLevelByXP(xp);
         assertEquals(expectedLevel, actualLevel);
     }
@@ -200,7 +200,7 @@ public class SkillLevelTest {
     @Test
     void testSkillLevelByXP() {
         Integer xp = 365;
-        SkillLevel expectedSkillLevel = SkillLevel.INTERMEDIATE_2;
+        SkillLevel expectedSkillLevel = SkillLevel.BEGINNER_5;
         SkillLevel actualSkillLevel = SkillLevel.getSkillLevelByXP(xp);
         assertEquals(expectedSkillLevel, actualSkillLevel);
     }
@@ -230,7 +230,7 @@ public class SkillLevelTest {
 
     @Test
     void testGetLevelByLevelName() {
-        String levelName = "Intermediate 2";
+        String levelName = "Intermediate II";
         Integer expectedLevel = 8;
         Integer actualLevel = SkillLevel.getLevelByLevelName(levelName);
         assertEquals(expectedLevel, actualLevel);
@@ -259,7 +259,7 @@ public class SkillLevelTest {
 
     @Test
     void testGetSkillLevelByLevelName() {
-        String levelName = "Intermediate 2";
+        String levelName = "Intermediate II";
         SkillLevel expectedSkillLevel = SkillLevel.INTERMEDIATE_2;
         SkillLevel actualSkillLevel = SkillLevel.getSkillLevelByLevelName(levelName);
         assertEquals(expectedSkillLevel, actualSkillLevel);

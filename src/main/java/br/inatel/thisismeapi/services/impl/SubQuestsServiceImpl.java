@@ -172,9 +172,6 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         subQuest.getQuest().addFinishedSubQuest();
         subQuest.getQuest().addXpGained(subQuest.getXp());
 
-        if (subQuest.getQuest().getQuestId() == null)
-            throw new NotFoundException("Quest não encontrada!");
-
         questRepository.save(subQuest.getQuest());
         characterService.updateCharacter(character);
         return subQuestRepository.save(subQuest);
