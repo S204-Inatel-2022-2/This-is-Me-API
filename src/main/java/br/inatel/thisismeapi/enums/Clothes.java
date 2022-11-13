@@ -30,4 +30,8 @@ public enum Clothes {
 
         throw new NotFoundException("Roupa com número [" + number + "] não encontrada!");
     }
+
+    public String getClothesName() {
+        return this.name();
+    }
 }

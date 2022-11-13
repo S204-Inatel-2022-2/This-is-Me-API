@@ -6,15 +6,12 @@ import br.inatel.thisismeapi.controllers.dtos.requests.UserCreatingAccountReques
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

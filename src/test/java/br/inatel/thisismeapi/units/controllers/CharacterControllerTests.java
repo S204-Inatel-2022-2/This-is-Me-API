@@ -5,6 +5,7 @@ import br.inatel.thisismeapi.controllers.CharacterController;
 import br.inatel.thisismeapi.controllers.dtos.responses.CharacterInfoResponseDTO;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.services.CharacterService;
+import br.inatel.thisismeapi.units.classesToTest.EmailConstToTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,21 @@ class CharacterControllerTests {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(newClothes, responseDTO.getClothes());
+    }
+
+    @Test
+    void testGetCharacterAllInfosSuccess() {
+
+        Character character = this.getCharacter();
+
+        when(authentication.getName()).thenReturn(EmailConstToTest.EMAIL_DEFAULT);
+        when(characterService.findCharacterByEmail(character.getEmail())).thenReturn(character);
+
+        ResponseEntity<Character> charActual = this.characterController.getCharacterAllInfos(authentication);
+
+        assertEquals(HttpStatus.OK, charActual.getStatusCode());
+        assertEquals(character, charActual.getBody());
+        verify(characterService).findCharacterByEmail(character.getEmail());
     }
 
     private Character getCharacter() {

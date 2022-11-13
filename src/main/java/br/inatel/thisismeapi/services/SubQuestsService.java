@@ -19,4 +19,6 @@ public interface SubQuestsService {
     List<SubQuest> findAllSubQuestsLate(String email);
 
     void deleteSubQuestById(String subQuestId);
+
+    SubQuest checkAndUncheckSubQuest(String id, String email);
 }

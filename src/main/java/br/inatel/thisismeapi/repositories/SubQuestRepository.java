@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
 
@@ -29,4 +30,12 @@ public interface SubQuestRepository extends MongoRepository<SubQuest, String> {
     List<SubQuest> findAllSubQuestNotCheckUntilDate(String email, LocalDateTime start);
 
     void deleteAllByEmail(String email);
+
+    @Aggregation(pipeline = {
+            "{'$match': {" +
+                    "'_id': ?0, " +
+                    "'email': ?1, " +
+                    "}}"
+    })
+    Optional<SubQuest> findByIdAndEmail(String id, String email);
 }

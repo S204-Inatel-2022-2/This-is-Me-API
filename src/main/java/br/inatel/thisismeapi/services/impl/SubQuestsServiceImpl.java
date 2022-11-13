@@ -1,11 +1,17 @@
 package br.inatel.thisismeapi.services.impl;
 
+import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.Skill;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.models.Day;
+import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.repositories.SkillRepository;
 import br.inatel.thisismeapi.repositories.SubQuestRepository;
+import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.SubQuestsService;
 import br.inatel.thisismeapi.utils.WeekCalculatorUtils;
 import org.slf4j.Logger;
@@ -20,6 +26,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubQuestsServiceImpl implements SubQuestsService {
@@ -28,6 +35,15 @@ public class SubQuestsServiceImpl implements SubQuestsService {
 
     @Autowired
     private SubQuestRepository subQuestRepository;
+
+    @Autowired
+    private CharacterService characterService;
+
+    @Autowired
+    private QuestRepository questRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Transactional
     public List<SubQuest> createSubQuestByQuest(Quest quest, String email) throws OnCreateSubQuestException {
@@ -121,11 +137,63 @@ public class SubQuestsServiceImpl implements SubQuestsService {
         subQuestRepository.deleteById(subQuestId);
     }
 
+    @Override
+    @Transactional
+    public SubQuest checkAndUncheckSubQuest(String id, String email) {
+
+        LOGGER.info("m=dcheckAndUncheckSubQuest, id={}, email={}", id, email);
+        Optional<SubQuest> subQuestOptional = subQuestRepository.findByIdAndEmail(id, email);
+
+        if (subQuestOptional.isEmpty())
+            throw new NotFoundException("Sub Quest não encontrada!");
+
+        SubQuest subQuest = subQuestOptional.get();
+
+        return (subQuest.isCheck()) ? this.uncheckSubQuest(subQuest, email) : this.checkSubQuest(subQuest, email);
+    }
 
     public void deleteAllSubQuestByEmail(String email) {
 
         LOGGER.info("m=deleteAllSubQuestByEmail, email={}", email);
         this.subQuestRepository.deleteAllByEmail(email);
+    }
+
+    private SubQuest checkSubQuest(SubQuest subQuest, String email) {
+
+        subQuest.setCheck(true);
+        Character character = characterService.findCharacterByEmail(email);
+        character.addXp(subQuest.getXp());
+
+        if (subQuest.getQuest().getSkill() != null) {
+            Skill skill = subQuest.getQuest().getSkill();
+            skill.addXp(subQuest.getXp());
+            skillRepository.save(skill);
+        }
+        subQuest.getQuest().addFinishedSubQuest();
+        subQuest.getQuest().addXpGained(subQuest.getXp());
+
+        questRepository.save(subQuest.getQuest());
+        characterService.updateCharacter(character);
+        return subQuestRepository.save(subQuest);
+    }
+
+    private SubQuest uncheckSubQuest(SubQuest subQuest, String email) {
+
+        subQuest.setCheck(false);
+        Character character = characterService.findCharacterByEmail(email);
+        character.removeXp(subQuest.getXp());
+
+        if (subQuest.getQuest().getSkill() != null) {
+            Skill skill = subQuest.getQuest().getSkill();
+            skill.removeXp(subQuest.getXp());
+            skillRepository.save(skill);
+        }
+        subQuest.getQuest().removeFinishedSubQuest();
+        subQuest.getQuest().removeXpGained(subQuest.getXp());
+
+        questRepository.save(subQuest.getQuest());
+        characterService.updateCharacter(character);
+        return subQuestRepository.save(subQuest);
     }
 
     private Long calculateXp(Day day) {

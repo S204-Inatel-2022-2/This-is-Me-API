@@ -52,10 +52,6 @@ public class SubQuest {
         this.email = email;
     }
 
-    public Boolean getCheck() {
-        return check;
-    }
-
     public void setCheck(Boolean check) {
         this.check = check;
     }
@@ -98,5 +94,9 @@ public class SubQuest {
 
     public void setXp(Long xp) {
         this.xp = xp;
+    }
+
+    public boolean isCheck() {
+        return check;
     }
 }

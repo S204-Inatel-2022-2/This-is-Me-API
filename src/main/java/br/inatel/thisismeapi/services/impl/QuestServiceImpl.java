@@ -2,12 +2,14 @@ package br.inatel.thisismeapi.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.Skill;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.QuestStatus;
 import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.repositories.SkillRepository;
 import br.inatel.thisismeapi.services.CharacterService;
 import br.inatel.thisismeapi.services.QuestService;
 import br.inatel.thisismeapi.services.SubQuestsService;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestServiceImpl implements QuestService {
@@ -35,6 +38,9 @@ public class QuestServiceImpl implements QuestService {
     @Autowired
     private SubQuestsService subQuestsService;
 
+    @Autowired
+    private SkillRepository skillRepository;
+
 
     @Override
     @Transactional
@@ -46,6 +52,10 @@ public class QuestServiceImpl implements QuestService {
         Character character = characterService.findCharacterByEmail(email);
         quest.setEmail(email);
         quest.setStatus(QuestStatus.IN_PROGRESS);
+
+        Skill skill = this.createSkill(quest.getSkill(), character, email);
+
+        quest.setSkill(skill);
         Quest savedQuest = questRepository.save(quest);
         List<SubQuest> subQuests = new ArrayList<>();
         try {
@@ -57,9 +67,9 @@ public class QuestServiceImpl implements QuestService {
 
         savedQuest.setTotal((long) subQuests.size());
         savedQuest.setTotalXp(this.calcutateTotalXp(subQuests));
-
         savedQuest = questRepository.save(savedQuest);
         character.getQuests().add(savedQuest);
+
         characterService.updateCharacter(character);
         return savedQuest;
     }
@@ -74,10 +84,22 @@ public class QuestServiceImpl implements QuestService {
     @Override
     public Quest getQuestById(String id, String email) {
 
-            LOGGER.info("m=getQuestById, email={}, id={}", email, id);
+        LOGGER.info("m=getQuestById, email={}, id={}", email, id);
 
-            return questRepository.findQuestByIdAndEmail(id, email)
-                    .orElseThrow(() -> new NotFoundException("Quest não encontrada!"));
+        return questRepository.findQuestByIdAndEmail(id, email)
+                .orElseThrow(() -> new NotFoundException("Quest não encontrada!"));
+    }
+
+    @Override
+    public void updateQuest(Quest quest, String email) {
+
+        LOGGER.info("m=updateQuest, email={}, questName={}", email, quest.getName());
+        this.validateQuest(quest);
+
+        if (quest.getQuestId() == null)
+            throw new QuestValidationsException("Quest não pode ser atualizada sem id");
+
+        questRepository.save(quest);
     }
 
     public void deleteAllQuestsByEmail(String email) {
@@ -113,11 +135,30 @@ public class QuestServiceImpl implements QuestService {
 
     private Long calcutateTotalXp(List<SubQuest> subQuest) {
 
-            LOGGER.info("m=calcutateTotalXp");
-            Long totalXp = 0L;
-            for (SubQuest sub : subQuest) {
-                totalXp += sub.getXp();
+        LOGGER.info("m=calcutateTotalXp");
+        Long totalXp = 0L;
+        for (SubQuest sub : subQuest) {
+            totalXp += sub.getXp();
+        }
+        return totalXp;
+    }
+
+    private Skill createSkill(Skill skill, Character character, String email) {
+        if (skill != null) {
+            Optional<Skill> skillOptional = skillRepository.findByNameAndEmail(skill.getName(), email);
+            if (skillOptional.isPresent()) {
+                return skillOptional.get();
+            } else {
+                skill.setEmail(email);
+                skill = skillRepository.save(skill);
+                List<Skill> skills = character.getSkills();
+                skills.add(skill);
+                character.setSkills(skills);
+                characterService.updateCharacter(character);
+                return skill;
             }
-            return totalXp;
+        }
+
+        return null;
     }
 }

@@ -11,4 +11,6 @@ public interface QuestService {
     List<Quest> getQuestToday(String email);
 
     Quest getQuestById(String id, String email);
+
+    void updateQuest(Quest quest, String email);
 }

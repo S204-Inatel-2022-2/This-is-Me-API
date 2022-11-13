@@ -1,5 +1,6 @@
 package br.inatel.thisismeapi.controllers.dtos.responses;
 
+import br.inatel.thisismeapi.entities.Skill;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.utils.TimeUtils;
 
@@ -42,7 +43,8 @@ public class CardResponseDTO implements Serializable {
         this.subQuestId = subQuest.getSubQuestId();
         this.name = subQuest.getQuest().getName();
         this.color = subQuest.getQuest().getHexColor();
-        this.skill = subQuest.getQuest().getSkill();
+        Skill s = subQuest.getQuest().getSkill();
+        this.skill = (s != null) ? s.getName() : "-----";
         this.date = subQuest.getStart().toLocalDate().toString();
         this.startTime = FMT.format(subQuest.getStart());
         this.endTime = FMT.format(subQuest.getEnd());
@@ -50,7 +52,7 @@ public class CardResponseDTO implements Serializable {
         this.xp = subQuest.getXp();
         this.total = subQuest.getQuest().getTotal();
         this.finalized = subQuest.getQuest().getFinalized();
-        this.check = subQuest.getCheck();
+        this.check = subQuest.isCheck();
     }
 
     public String getQuestId() {

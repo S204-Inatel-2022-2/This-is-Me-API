@@ -2,6 +2,7 @@ package br.inatel.thisismeapi.units.services.impl;
 
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.Quest;
+import br.inatel.thisismeapi.entities.Skill;
 import br.inatel.thisismeapi.entities.SubQuest;
 import br.inatel.thisismeapi.enums.DayOfWeekCustom;
 import br.inatel.thisismeapi.exceptions.NotFoundException;
@@ -9,6 +10,7 @@ import br.inatel.thisismeapi.exceptions.OnCreateSubQuestException;
 import br.inatel.thisismeapi.exceptions.QuestValidationsException;
 import br.inatel.thisismeapi.models.Day;
 import br.inatel.thisismeapi.repositories.QuestRepository;
+import br.inatel.thisismeapi.repositories.SkillRepository;
 import br.inatel.thisismeapi.services.impl.CharacterServiceImpl;
 import br.inatel.thisismeapi.services.impl.QuestServiceImpl;
 import br.inatel.thisismeapi.services.impl.SubQuestsServiceImpl;
@@ -43,6 +45,9 @@ class QuestServiceImplTest {
     @MockBean
     private SubQuestsServiceImpl subQuestsService;
 
+    @MockBean
+    private SkillRepository skillRepository;
+
     @Test
     void testCreateNewQuestSuccess() throws OnCreateSubQuestException {
 
@@ -66,6 +71,58 @@ class QuestServiceImplTest {
         Quest result = questService.createNewQuest(quest, email);
 
         // then
+        assertEquals(email, result.getEmail());
+        assertEquals("quest", result.getName());
+    }
+
+    @Test
+    void testCreateNewQuestWithNewSkillSuccess() throws OnCreateSubQuestException{
+
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+        Quest quest = this.getInstanceOfQuest();
+        quest.setSkill(new Skill());
+        quest.setStartDate(LocalDate.now());
+        quest.setEndDate(LocalDate.now().plusDays(1));
+        List<SubQuest> subQuestList = new ArrayList<>();
+        subQuestList.add(getInstanceOfSubQuest());
+        Character character = new Character();
+        character.setEmail(email);
+
+        when(characterService.findCharacterByEmail(email)).thenReturn(character);
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(subQuestsService.createSubQuestByQuest(quest, email)).thenReturn(subQuestList);
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(characterService.updateCharacter(character)).thenReturn(character);
+        when(skillRepository.save(any(Skill.class))).thenReturn(new Skill());
+
+        Quest result = questService.createNewQuest(quest, email);
+
+        assertEquals(email, result.getEmail());
+        assertEquals("quest", result.getName());
+    }
+
+    @Test
+    void testCreateNewQuestWithSkillAlreadyExistsSuccess() throws OnCreateSubQuestException{
+
+        String email = EmailConstToTest.EMAIL_DEFAULT;
+        Quest quest = this.getInstanceOfQuest();
+        quest.setSkill(new Skill());
+        quest.setStartDate(LocalDate.now());
+        quest.setEndDate(LocalDate.now().plusDays(1));
+        List<SubQuest> subQuestList = new ArrayList<>();
+        subQuestList.add(getInstanceOfSubQuest());
+        Character character = new Character();
+        character.setEmail(email);
+
+        when(characterService.findCharacterByEmail(email)).thenReturn(character);
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(subQuestsService.createSubQuestByQuest(quest, email)).thenReturn(subQuestList);
+        when(questRepository.save(quest)).thenReturn(quest);
+        when(characterService.updateCharacter(character)).thenReturn(character);
+        when(skillRepository.findByNameAndEmail(anyString(), anyString())).thenReturn(Optional.of(new Skill()));
+
+        Quest result = questService.createNewQuest(quest, email);
+
         assertEquals(email, result.getEmail());
         assertEquals("quest", result.getName());
     }
@@ -236,6 +293,38 @@ class QuestServiceImplTest {
 
         assertEquals("Quest não encontrada!", exception.getMessage());
     }
+
+    @Test
+    void testUpdateQuestSuccess() {
+
+        Quest quest = this.getInstanceOfQuest();
+        List<Day> week = new ArrayList<>();
+        week.add(new Day());
+        quest.setWeek(week);
+        quest.setQuestId("123456");
+
+        when(questRepository.save(quest)).thenReturn(quest);
+
+        questService.updateQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+
+        verify(questRepository).save(quest);
+    }
+
+    @Test
+    void testUpdateQuestThrowExceptionWhenQuestIdIsNull() {
+
+        Quest quest = this.getInstanceOfQuest();
+        List<Day> week = new ArrayList<>();
+        week.add(new Day());
+        quest.setWeek(week);
+
+        QuestValidationsException exception = assertThrows(QuestValidationsException.class, () -> {
+            questService.updateQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
+        });
+
+        assertEquals("Quest não pode ser atualizada sem id", exception.getMessage());
+    }
+
 
     private Quest getInstanceOfQuest(){
 
