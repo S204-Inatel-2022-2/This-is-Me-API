@@ -80,6 +80,7 @@ public class Skill {
         return level;
     }
 
+    @Schema(hidden = true)
     public Integer getPercentage() {
         return (int) ((this.xp - this.level.getMinXP()) * 100 / (this.level.getMaxXP() - this.level.getMinXP()));
     }
