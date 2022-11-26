@@ -3,6 +3,7 @@ package br.inatel.thisismeapi.services.impl;
 import br.inatel.thisismeapi.entities.Character;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.enums.RoleName;
+import br.inatel.thisismeapi.exceptions.NotFoundException;
 import br.inatel.thisismeapi.exceptions.UnregisteredUserException;
 import br.inatel.thisismeapi.exceptions.mongo.UniqueViolationConstraintException;
 import br.inatel.thisismeapi.models.Roles;
@@ -130,7 +131,7 @@ public class AdminServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            throw new UnregisteredUserException("Usuário com email [" + email + "] não encontrado!");
+            throw new NotFoundException("Usuário com email [" + email + "] não encontrado!");
         }
         return userOptional.get();
     }
