@@ -90,7 +90,7 @@ public class SubQuestController {
         return subQuestList.stream().map(CardResponseDTO::new).toList();
     }
 
-    @PostMapping("/check-sub-quest/{id}")
+    @PatchMapping("/check-sub-quest/")
     @ResponseStatus(code = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quest concluída ou quest desconcluída com sucesso"),
@@ -99,7 +99,7 @@ public class SubQuestController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
     @Operation(summary = "Conclui ou desconclui uma sub quest")
-    public SubQuest checkAndUncheckSubQuest(@PathVariable String id, Authentication authentication) {
+    public SubQuest checkAndUncheckSubQuest(String id, Authentication authentication) {
         LOGGER.info("m=doneSubQuest, id={}, email={}", id, authentication.getName());
         return subQuestsService.checkAndUncheckSubQuest(id, authentication.getName());
     }
