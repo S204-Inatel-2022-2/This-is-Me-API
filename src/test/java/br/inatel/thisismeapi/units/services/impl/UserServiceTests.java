@@ -96,7 +96,7 @@ class UserServiceTests {
             userService.saveNewAccount(email, password, verifyPassword, charName);
         });
 
-        assertEquals("Nome do personagem não pode ser deixado em branco!", exception.getMessage());
+        assertEquals("Nome do personagem inválido!", exception.getMessage());
     }
 
     @Test

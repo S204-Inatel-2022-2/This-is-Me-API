@@ -189,8 +189,7 @@ public class UserServiceImpl implements UserService {
 
         if (characterName == null || characterName.isEmpty())
             throw new IllegalArgumentException("Nome do personagem inválido!");
-        if (characterName.isBlank())
-            throw new IllegalArgumentException("Nome do personagem não pode ser deixado em branco!");
+
         if (characterName.length() > 15)
             throw new IllegalArgumentException("Nome do personagem pode ter no máximo 15 caracteres!");
     }
