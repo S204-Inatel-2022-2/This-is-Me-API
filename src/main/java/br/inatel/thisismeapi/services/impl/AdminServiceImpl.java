@@ -126,4 +126,12 @@ public class AdminServiceImpl implements UserService {
         roles.add(new Roles(RoleName.ROLE_ADMIN));
         return roles;
     }
+
+    public User getUserByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new UnregisteredUserException("Usuário com email [" + email + "] não encontrado!");
+        }
+        return userOptional.get();
+    }
 }

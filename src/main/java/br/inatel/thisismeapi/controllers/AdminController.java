@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.controllers.dtos.requests.UserCreatingAccountRequestDTO;
+import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.exceptions.StandardError;
 import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,6 +60,10 @@ public class AdminController {
     public void deleteUserByEmail(@RequestParam String email) {
         LOGGER.info("m=deleteUserByEmail, email={}", email);
         this.adminService.deleteUserByEmail(email);
+    }
+
+    public User getUserByEmail(String email) {
+        return this.adminService.getUserByEmail(email);
     }
 
     @GetMapping("/helloAdmin")
