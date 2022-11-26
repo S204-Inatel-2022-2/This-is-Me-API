@@ -62,6 +62,7 @@ public class AdminController {
         this.adminService.deleteUserByEmail(email);
     }
 
+    @GetMapping("/get-user-by-email")
     public User getUserByEmail(String email) {
         return this.adminService.getUserByEmail(email);
     }
