@@ -1,6 +1,7 @@
 package br.inatel.thisismeapi.controllers;
 
 import br.inatel.thisismeapi.controllers.dtos.requests.UserCreatingAccountRequestDTO;
+import br.inatel.thisismeapi.controllers.dtos.responses.UserResponseDTO;
 import br.inatel.thisismeapi.entities.User;
 import br.inatel.thisismeapi.exceptions.StandardError;
 import br.inatel.thisismeapi.services.impl.AdminServiceImpl;
@@ -63,8 +64,8 @@ public class AdminController {
     }
 
     @GetMapping("/get-user-by-email")
-    public User getUserByEmail(String email) {
-        return this.adminService.getUserByEmail(email);
+    public UserResponseDTO getUserByEmail(String email) {
+        return new UserResponseDTO(this.adminService.getUserByEmail(email));
     }
 
     @GetMapping("/helloAdmin")
