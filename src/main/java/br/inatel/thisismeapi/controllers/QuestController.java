@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ public class QuestController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @Operation(summary = "Cria uma nova quest")
-    public void createNewQuest(@RequestBody Quest quest, Authentication authentication) {
+    public void createNewQuest(@RequestBody @Valid Quest quest, Authentication authentication) {
 
         LOGGER.info("m=createNewQuest, email={}", authentication.getName());
         questService.createNewQuest(quest, authentication.getName());

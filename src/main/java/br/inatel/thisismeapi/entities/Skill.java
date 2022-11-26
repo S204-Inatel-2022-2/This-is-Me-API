@@ -21,8 +21,8 @@ public class Skill {
 
     @NotBlank(message = "Nome da habilidade não pode ser vazio")
     @NotNull(message = "Nome da habilidade não pode ser nulo")
-    @Size(max = 30, message = "Nome da habilidade deve ter no máximo 30 caracteres")
-    @Schema(example = "Java", description = "Name of the skill", required = true, maxLength = 30)
+    @Size(max = 20, message = "Nome da habilidade deve ter no máximo 20 caracteres")
+    @Schema(example = "Java", description = "Name of the skill", required = true, maxLength = 20)
     private String name;
 
     @Schema(hidden = true)

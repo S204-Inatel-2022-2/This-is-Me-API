@@ -103,6 +103,35 @@ public class SkillServiceImplTests {
         assertEquals("Skill já existe", exception.getMessage());
     }
 
+    @Test
+    public void testCreateSkillThrowExceptionWhenSkillNameHasMoreThanMaximumCharacters(){
+
+        Skill skill = new Skill();
+        skill.setName("nome com mais de 20 caracters");
+        skill.setEmail(EmailConstToTest.EMAIL_DEFAULT);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                skillService.createSkill(skill, EmailConstToTest.EMAIL_DEFAULT));
+
+        assertEquals("Nome da skill não pode ter mais de 20 caracteres", exception.getMessage());
+    }
+
+    @Test
+    public void testCreateSkillThrowExceptionOnSave(){
+
+            Skill skill = new Skill();
+            skill.setName("SkillTest");
+            skill.setEmail(EmailConstToTest.EMAIL_DEFAULT);
+
+            when(skillRepository.findByNameAndEmail(any(), any())).thenReturn(Optional.empty());
+            when(skillRepository.save(any())).thenThrow(new RuntimeException());
+
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                    skillService.createSkill(skill, EmailConstToTest.EMAIL_DEFAULT));
+
+            assertEquals("Erro ao salvar skill", exception.getMessage());
+    }
+
     private List<Skill> getInstanceOfSkillListWithSize2() {
 
         List<Skill> skillList = new ArrayList<>();

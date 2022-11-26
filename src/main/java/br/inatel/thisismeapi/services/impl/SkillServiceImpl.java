@@ -26,11 +26,18 @@ public class SkillServiceImpl implements SkillService {
         if (skill.getName().isBlank())
             throw new IllegalArgumentException("Nome da skill não pode ser vazio");
 
+        if (skill.getName().length() > 20)
+            throw new IllegalArgumentException("Nome da skill não pode ter mais de 20 caracteres");
+
         if (skillRepository.findByNameAndEmail(skill.getName(), email).isPresent())
             throw new SkillAlreadyExistsException("Skill já existe");
 
         skill.setEmail(email);
-        skill = skillRepository.save(skill);
+        try{
+            skill = skillRepository.save(skill);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Erro ao salvar skill");
+        }
         Character character = characterService.findCharacterByEmail(email);
         List<Skill> skills = character.getSkills();
         skills.add(skill);
