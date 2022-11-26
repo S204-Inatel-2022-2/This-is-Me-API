@@ -167,7 +167,7 @@ class QuestServiceImplTest {
             questService.createNewQuest(quest, EmailConstToTest.EMAIL_DEFAULT);
         });
 
-        assertEquals("Nome da quest não pode ser deixado em branco!", exception.getMessage());
+        assertEquals("Quest deve ter um nome!", exception.getMessage());
     }
 
     @Test

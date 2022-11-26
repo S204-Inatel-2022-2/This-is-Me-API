@@ -112,8 +112,8 @@ public class QuestServiceImpl implements QuestService {
 
         LOGGER.info("m=validateQuest");
 
-        if (quest.getName().isBlank())
-            throw new QuestValidationsException("Nome da quest não pode ser deixado em branco!");
+        if (quest.getName() == null || quest.getName().isEmpty())
+            throw new QuestValidationsException("Quest deve ter um nome!");
 
         if (quest.getStartDate() == null || quest.getEndDate() == null)
             throw new QuestValidationsException("Período não pode ser nulo!");

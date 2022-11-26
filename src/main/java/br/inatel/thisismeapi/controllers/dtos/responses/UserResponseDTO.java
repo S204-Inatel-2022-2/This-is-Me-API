@@ -11,6 +11,9 @@ public class UserResponseDTO {
     private String email;
     private List<Roles> roles;
 
+    public UserResponseDTO() {
+    }
+
     public UserResponseDTO(User user) {
         this.id = user.getId();
         this.email = user.getEmail();

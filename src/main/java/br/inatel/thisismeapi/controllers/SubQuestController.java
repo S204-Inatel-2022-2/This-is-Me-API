@@ -99,9 +99,9 @@ public class SubQuestController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(hidden = true)))
     })
     @Operation(summary = "Conclui ou desconclui uma sub quest")
-    public SubQuest checkAndUncheckSubQuest(String id, Authentication authentication) {
+    public void checkAndUncheckSubQuest(String id, Authentication authentication) {
         LOGGER.info("m=doneSubQuest, id={}, email={}", id, authentication.getName());
-        return subQuestsService.checkAndUncheckSubQuest(id, authentication.getName());
+        subQuestsService.checkAndUncheckSubQuest(id, authentication.getName());
     }
 
     @DeleteMapping("/delete")

@@ -1,33 +1,47 @@
 package br.inatel.thisismeapi.cucumber.steps;
 
 import br.inatel.thisismeapi.cucumber.config.RestAssuredExtension;
+import br.inatel.thisismeapi.cucumber.models.CreateAccountContext;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
-import org.junit.jupiter.api.Assertions;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateNewAccountSteps {
 
     private static ResponseOptions<Response> response;
+    private static ResponseOptions<Response> user;
+    private CreateAccountContext createAccountContext;
 
-    @Dado("que o usuário preencheu o formulário de cadastro com os dados válidos")
-    public void queOUsuárioPreencheuOFormulárioDeCadastroComOsDadosVálidos() {
+    @Before
+    public void setup() {
+        RestAssuredExtension restAssuredExtension = new RestAssuredExtension();
+        createAccountContext = new CreateAccountContext();
     }
 
-    @Dado("que o usuário não está logado")
-    public void queOUsuárioNãoEstáLogado() {
-
+    @After
+    public void tearDown() {
+        if (user.getBody().jsonPath().get("email") != null) {
+            String email = user.getBody().jsonPath().get("email");
+            RestAssuredExtension.DeleteAdminOps("/admin/delete-user-by-email?email=" + email);
+        }
     }
 
-    @Então("o usuário deve receber uma mensagem de erro")
-    public void oUsuárioDeveReceberUmaMensagemDeErro() {
-
-
+    @Dado("que o usuário preencheu o formulário de cadastro com as seguintes informações")
+    public void queOUsuárioPreencheuOFormulárioDeCadastroComAsSeguintesInformações(CreateAccountContext createAccount) {
+        createAccountContext.setCharacterName(createAccount.getCharacterName());
+        createAccountContext.setEmail(createAccount.getEmail());
+        createAccountContext.setPassword(createAccount.getPassword());
+        createAccountContext.setVerifyPassword(createAccount.getVerifyPassword());
     }
 
     @E("o status da resposta deve ser {int}")
@@ -40,4 +54,39 @@ public class CreateNewAccountSteps {
         response = RestAssuredExtension.GetOps("/helloUser");
     }
 
+    @Quando("o usuário clicar no botão de cadastro e enviar o formulário")
+    public void oUsuárioClicarNoBotãoDeCadastroEEnviarOFormulário() {
+        response = RestAssuredExtension.PostOps("/user/register", createAccountContext);
+    }
+
+    @Então("o usuário deve ser cadastrado com sucesso")
+    public void oUsuárioDeveSerCadastradoComSucesso() {
+        user = RestAssuredExtension.GetAdminOps("/admin/get-user-by-email?email=" + createAccountContext.getEmail());
+        assert user != null;
+        assertEquals(createAccountContext.getEmail(), user.getBody().jsonPath().get("email"));
+    }
+
+    @E("a mensagem de erro deve ser {string}")
+    public void aMensagemDeErroDeveSer(String message) {
+        assertEquals(message, response.getBody().jsonPath().get("message"));
+    }
+
+    @Dado("que o usuario já está cadastrado no sistema")
+    public void queOUsuarioJáEstáCadastradoNoSistema(CreateAccountContext createAccount) {
+        response = RestAssuredExtension.PostOps("/user/register", createAccount);
+    }
+
+    @DataTableType(replaceWithEmptyString = "[BLANK]")
+    public CreateAccountContext createAccountEntryTransformer(Map<String, String> entry) {
+        return new CreateAccountContext(
+                entry.get("characterName"),
+                entry.get("email"),
+                entry.get("password"),
+                entry.get("verifyPassword")
+        );
+    }
+
+    @Dado("que não está logado")
+    public void queNãoEstáLogado() {
+    }
 }
