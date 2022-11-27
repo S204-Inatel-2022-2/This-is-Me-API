@@ -44,6 +44,8 @@ public class RestAssuredExtension {
 
     public static ResponseOptions<Response> PostOps(String url, Object body) {
         try {
+            var respose = REQUEST.body(body).post(url);
+            var token = respose.getCookie("token");
             return REQUEST.body(body).post(url);
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,12 +83,40 @@ public class RestAssuredExtension {
     private String LoginWithAdmin() {
         try {
             var response =  REQUEST.body("{\"email\":\"admin@admin.com\", " + "\"password\":\"admin456\"}").post("/user/login");
-            System.out.println(response.getCookie("token"));
             return response.getCookie("token");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static ResponseOptions<Response> LoginWithUser(String url, Object body) {
+        RequestSpecBuilder requestSpecBuilderLogged = new RequestSpecBuilder();
+        requestSpecBuilderLogged.setBaseUri(BASE_URL);
+        requestSpecBuilderLogged.setContentType("application/json");
+
+        ResponseOptions<Response> response = null;
+        try {
+            response = REQUEST.body(body).post(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            requestSpecBuilderLogged.addCookie("token", response.getCookie("token"));
+        }
+
+        var requestSpecLogged = requestSpecBuilderLogged.build();
+        REQUEST = RestAssured.given().spec(requestSpecLogged);
+
+        return response;
+    }
+
+    public static void loggout() {
+        RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
+        requestSpecBuilder.setBaseUri(BASE_URL);
+        requestSpecBuilder.setContentType("application/json");
+        var requestSpec = requestSpecBuilder.build();
+        REQUEST = RestAssured.given().spec(requestSpec);
     }
 
     public static ResponseOptions<Response> DeleteAdminOps(String url) {

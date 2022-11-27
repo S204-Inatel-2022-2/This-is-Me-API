@@ -50,6 +50,5 @@ public class SkillServiceImpl implements SkillService {
     public List<Skill> getAllSkills(String email) {
 
         return skillRepository.findAllByEmail(email);
-
     }
 }

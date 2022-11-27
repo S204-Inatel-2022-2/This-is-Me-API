@@ -118,7 +118,7 @@ public class QuestServiceImpl implements QuestService {
         if (quest.getStartDate() == null || quest.getEndDate() == null)
             throw new QuestValidationsException("Período não pode ser nulo!");
 
-        if (quest.getHexColor().isBlank())
+        if (quest.getHexColor() == null || quest.getHexColor().isEmpty())
             throw new QuestValidationsException("Cor não pode ser nula!");
 
         if (quest.getStartDate().isBefore(LocalDate.now()))
@@ -144,7 +144,7 @@ public class QuestServiceImpl implements QuestService {
     }
 
     private Skill createSkill(Skill skill, Character character, String email) {
-        if (skill != null) {
+        if (skill != null && skill.getName() != null && !skill.getName().isEmpty()) {
             Optional<Skill> skillOptional = skillRepository.findByNameAndEmail(skill.getName(), email);
             if (skillOptional.isPresent()) {
                 return skillOptional.get();

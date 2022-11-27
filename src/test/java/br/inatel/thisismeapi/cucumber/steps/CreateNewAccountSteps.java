@@ -30,7 +30,7 @@ public class CreateNewAccountSteps {
 
     @After
     public void tearDown() {
-        if (user.getBody().jsonPath().get("email") != null) {
+        if (user != null) {
             String email = user.getBody().jsonPath().get("email");
             RestAssuredExtension.DeleteAdminOps("/admin/delete-user-by-email?email=" + email);
         }
@@ -86,7 +86,4 @@ public class CreateNewAccountSteps {
         );
     }
 
-    @Dado("que não está logado")
-    public void queNãoEstáLogado() {
-    }
 }
