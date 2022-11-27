@@ -15,7 +15,7 @@ Feature: Everything about User API
     """
 
     ### Registro do Usuário - Post User
-  Scenario: Post User, Registrar usuário com todas as informações válidas(preenchidas automaticamente), realizar login, deletar email criado (Success)
+  Scenario: Post User, Registrar usuário com todas as informações válidas(preenchidas automaticamente), realizar login, deletar email criado (Ok)
     Given path '/user/register'
     And def email = createdEmail()
     And request email.register
@@ -168,7 +168,7 @@ Feature: Everything about User API
 
 
     ### Usuário Logado - Get User
-  Scenario: Get User, Verifica se usuário está logado. Usuário Logado. (Success)
+  Scenario: Get User, Verifica se usuário está logado. Usuário Logado. (Ok)
     Given path '/user/register'
     And def email = createdEmail()
     And request email.register
@@ -208,17 +208,131 @@ Feature: Everything about User API
 
 
 
-#   Utilizado apenas quando reset o banco e precisa de um email para realizar os outros testes.
-#  Scenario: Post User, registrando apenas o email que será utilizada na maioria dos testes
-#    Given path '/user/register'
-#    And request {"email": "testeOutros@test.com", "password": "12345", "verifyPassword": "12345", "characterName": "littleTest"}
-#    When method post
-#    Then status 201
-#    And print response
-#
-#  Scenario: Post User, registrando apenas o email que será utilizada na maioria dos testes
-#    Given path '/user/register'
-#    And request {"email": "gakira1217@hempyl.com", "password": "12345", "verifyPassword": "12345", "characterName": "littleTest"}
-#    When method post
-#    Then status 201
-#    And print response
+
+    ### Resetar senha - Enviar código por email
+  Scenario: Post User, Registrar usuário, logar, solicitar código para reset de senha enviado através do email (Ok)
+    Given path '/user/register'
+    And def email = createdEmail()
+    And request email.register
+    When method post
+    Then status 201
+    And print response
+
+    Given path '/user/login'
+    And request email.login
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/user/reset/forgot-password'
+    And param email = email.login.email
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/user/login'
+    And request {"email": "admin@admin.com", "password": "admin456"}
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/admin/delete-user-by-email'
+    And param email = email.login.email
+    When method delete
+    Then status 204
+    And print response
+
+
+  Scenario: Post User, Solicitar código para reset de senha enviado através do email em branco (Bad Request)
+    Given path '/user/reset/forgot-password'
+    And param email = ""
+    When method post
+    Then status 400
+    And print response
+
+
+  Scenario: Post User, Registrar usuário, não logar, solicitar código para reset de senha enviado através do email (Ok)
+    Given path '/user/register'
+    And def email = createdEmail()
+    And request email.register
+    When method post
+    Then status 201
+    And print response
+
+    Given path '/user/reset/forgot-password'
+    And param email = email.login.email
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/user/login'
+    And request {"email": "admin@admin.com", "password": "admin456"}
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/admin/delete-user-by-email'
+    And param email = email.login.email
+    When method delete
+    Then status 204
+    And print response
+
+
+  Scenario: Post User, Solicitar código para reset de senha enviado através de um email não cadastrado no sistema (Unauthorized)
+    Given path '/user/reset/forgot-password'
+    And param email = "testeResetSenha@teste.com"
+    When method post
+    Then status 401
+    And print response
+
+
+  Scenario: Post User, Não enviar o email (Bad Request)
+    Given path '/user/reset/forgot-password'
+    When method post
+    Then status 400
+    And print response
+
+
+  Scenario: Post User, Registrar usuário, logar, solicitar código para reset de senha enviado através de um email inválido (Bad Request)
+    Given path '/user/register'
+    And def email = createdEmail()
+    And request email.register
+    When method post
+    Then status 201
+    And print response
+
+    Given path '/user/reset/forgot-password'
+    And param email = "testetestet.com"
+    When method post
+    Then status 400
+    And print response
+
+    Given path '/user/login'
+    And request {"email": "admin@admin.com", "password": "admin456"}
+    When method post
+    Then status 200
+    And print response
+
+    Given path '/admin/delete-user-by-email'
+    And param email = email.login.email
+    When method delete
+    Then status 204
+    And print response
+
+
+
+
+    ### Cenário de teste servindo para os próximos cenários
+  Scenario: Post User, Registrar usuário, solicitar código para reset de senha enviado através do email (Ok)
+    Given path '/user/register'
+    And request {"email": "jaxiri6605@nubotel.com" , "password": "12345", "verifyPassword": "12345", "characterName": "test123"}
+    When method post
+    Then assert responseStatus == 201 || responseStatus == 409
+    And print response
+
+    Given path '/user/reset/forgot-password'
+    And param email = "jaxiri6605@nubotel.com"
+    When method post
+    Then status 200
+    And print response
+
