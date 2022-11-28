@@ -34,10 +34,12 @@ public class Quest implements Serializable {
 
     private String desc;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    @Schema(name = "startDate", description = "Data inicial da quest")
     private LocalDate startDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    @Schema(name = "endDate", description = "Data final da quest")
     private LocalDate endDate;
 
     @DBRef
