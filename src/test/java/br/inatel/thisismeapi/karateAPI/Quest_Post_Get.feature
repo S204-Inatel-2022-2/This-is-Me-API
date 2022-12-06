@@ -23,8 +23,8 @@ Feature: Everything about Quest API
       "hexColor": "string",
       "name": "string",
       "desc": "string",
-      "startDate": "2022-11-23",
-      "endDate": "2022-11-23",
+      "startDate": "23-12-2022",
+      "endDate": "23-12-2022",
       "skill": {
         "name": "Java",
         "percentage": 0
@@ -64,8 +64,8 @@ Feature: Everything about Quest API
       "hexColor": "string",
       "name": "string",
       "desc": "string",
-      "startDate": "2022-11-23",
-      "endDate": "2022-11-23",
+      "startDate": "23-11-2022",
+      "endDate": "23-11-2022",
       "skill": {
         "name": "Java",
         "percentage": 0
@@ -117,8 +117,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -170,8 +170,8 @@ Feature: Everything about Quest API
       "hexColor": "0xFFFFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "",
         "percentage": 0
@@ -223,8 +223,8 @@ Feature: Everything about Quest API
       "hexColor": "",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -276,8 +276,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -329,8 +329,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-11-26",
-      "endDate": "2022-09-10",
+      "startDate": "26-11-2022",
+      "endDate": "10-09-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -382,8 +382,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2025-12-26",
-      "endDate": "2025-12-27",
+      "startDate": "26-12-2025",
+      "endDate": "27-12-2025",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -435,8 +435,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
@@ -488,8 +488,8 @@ Feature: Everything about Quest API
       "hexColor": "#FFFFFF",
       "name": "QuestTest",
       "desc": "string",
-      "startDate": "2022-12-15",
-      "endDate": "2022-12-30",
+      "startDate": "15-12-2022",
+      "endDate": "30-12-2022",
       "skill": {
         "name": "skill",
         "percentage": 0
